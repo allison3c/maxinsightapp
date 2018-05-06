@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.MainPage"
+			       xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:pages="clr-namespace:MaxInsight.Mobile.Pages;assembly=MaxInsight.Mobile"
+             Title="区域管理系统">
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ECF0F1">
+      <StackLayout Orientation="Vertical">
+        <!--轮训图片-->
+        <StackLayout HorizontalOptions="FillAndExpand">
+          <control:ImageGallery x:Name="imageGallery" />
+        </StackLayout>
+        <!--通知-->
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10,10,5,10">
+          <Image Source="horn" WidthRequest="20" HeightRequest="20"></Image>
+          <Label x:Name="lblMessage" Text="" FontSize="18" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+        </StackLayout>
+        <!--模块-->
+        <StackLayout Orientation="Vertical"
+          HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand">
+          <Grid x:Name="grid" RowSpacing="1" ColumnSpacing="1"></Grid>
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</pages:BaseContentPage>

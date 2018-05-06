@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Improve.ImproveDistributionPage"
+             xmlns:cv="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.CarouselView"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+	         xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             Title="改善分配详细">
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ECF0F1">
+      <StackLayout Padding="0,10,0,10">
+        <ScrollView VerticalOptions="Start" HorizontalOptions="FillAndExpand">
+          <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="#FFFFFF">
+              <StackLayout Orientation="Horizontal" HorizontalOptions="Start" IsVisible="{Binding IsEdit}">
+                <Label Text = "是否分配"  FontAttributes="Bold" FontSize="16" VerticalOptions="Center" />
+                <controls:CheckBox
+                  VerticalOptions="Center"
+                  WidthRequest="40"
+                  DefaultText=""
+                  FontSize="25"
+                  HorizontalOptions="Start"
+                  Checked="{Binding AllocateYN}" IsEnabled="True" CheckedChanged="OnCheckedChanged" />
+              </StackLayout>
+              <StackLayout Orientation="Horizontal" HorizontalOptions="Start" IsVisible="{Binding IsShow}">
+                <Label Text = "是否分配"  FontAttributes="Bold" FontSize="16" VerticalOptions="Center" />
+                <rcontrol:ECheckBox
+                  VerticalOptions="Center"
+                  WidthRequest="40"
+                  DefaultText=""
+                  FontSize="25"
+                  HorizontalOptions="Start"
+                  Checked="{Binding AllocateYN}" IsEnabled="False" CheckedChanged="OnCheckedChanged" />
+              </StackLayout>
+              <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                <!--<Label Text="责任部门"  FontSize = "14" TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                     FontAttributes="Bold"
+                     WidthRequest="100" VerticalOptions="Center"></Label>-->
+                <Label x:Name="departmentLbl" Text="{Binding ExecDepartmentName}" IsVisible="{Binding IsShow}" HorizontalOptions="EndAndExpand" VerticalOptions="Center" ></Label>
+                <StackLayout x:Name="sldepartment" HorizontalOptions="EndAndExpand" VerticalOptions="Center">
+                  <controls:ImageButton x:Name="departmentBtn"
+                                               BackgroundColor="#FFFFFF"
+                                               HeightRequest="35"
+                                               ImageHeightRequest="16"
+                                               ImageWidthRequest="12"
+                                               Orientation="ImageToRight"
+                                               Text="{Binding DepartmentSelect}"
+                                               FontSize="12"
+                                               WidthRequest="160"
+                                               HorizontalOptions="EndAndExpand"
+                                               Source="arrow"
+                                               Clicked="OnOpenDepartmentPopupPage">
+
+                  </controls:ImageButton>
+                </StackLayout>
+              </StackLayout>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="#FFFFFF">
+              <Label Text="计划审批" FontAttributes="Bold" FontSize="16"></Label>
+              <Label Text="{Binding PlanApproal}" HorizontalOptions="EndAndExpand"></Label>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="#FFFFFF">
+              <Label Text="结果审批" FontAttributes="Bold" FontSize="16"></Label>
+              <Label Text="{Binding ResultApproal}" HorizontalOptions="EndAndExpand"></Label>
+            </StackLayout>
+            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="#FFFFFF">
+              <Label Text="服务经理指示" FontAttributes="Bold" FontSize="16"></Label>
+              <Editor x:Name="txtInstruction"
+                      VerticalOptions="FillAndExpand"
+                        HorizontalOptions="FillAndExpand" HeightRequest="120" FontSize="14" IsEnabled="{Binding IsEdit}"
+                        Text="{Binding ImprovementCaption}"></Editor>
+            </StackLayout>
+            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="#FFFFFF">
+              <Label Text="失分说明" FontAttributes="Bold" FontSize="16"></Label>
+              <Label Text="{Binding LostDescription}"  FontSize="14"></Label>
+              <!--<Editor x:Name="txtExplanation"
+                      VerticalOptions="FillAndExpand"
+                        HorizontalOptions="FillAndExpand" HeightRequest="120" FontSize="14" IsEnabled="{Binding IsEdit}"
+                        Text="{Binding LostDescription}"></Editor>-->
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" Padding="10" BackgroundColor="#FFFFFF" x:Name="image">
+              <Label Text = "照片标准" FontAttributes="Bold" FontSize="16"
+                HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+              <Image x:Name="oneImage" Source="icon_hide" HorizontalOptions="EndAndExpand">
+              </Image>
+            </StackLayout>
+            <StackLayout x:Name="stackImage">
+              <StackLayout  Orientation="Horizontal" Padding="10,5" BackgroundColor="#FFFFFF" VerticalOptions="Start">
+                <ListView
+                    ItemsSource="{Binding PicDescList}"
+                    SelectedItem="{Binding SelectedPicDesc}"
+                    SeparatorVisibility="Default"
+                    HeightRequest="{Binding PicDescLstHeight}">
+                  <ListView.Header>
+                    <StackLayout>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="40" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="70" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="序号" FontAttributes="Bold" FontSize="16" Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand"/>
+                        <Label Text="标准名称" FontAttributes="Bold" FontSize="16" Grid.Row="0" Grid.Column="1" HorizontalOptions="StartAndExpand"/>
+                        <Label Text="预览" FontAttributes="Bold" FontSize="16" Grid.Row="0" Grid.Column="2" HorizontalOptions="CenterAndExpand"/>
+                      </Grid>
+                    </StackLayout>
+                  </ListView.Header>
+                  <b:Interaction.Behaviors>
+                    <b:BehaviorCollection>
+                      <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                    </b:BehaviorCollection>
+                  </b:Interaction.Behaviors>
+                  <ListView.ItemTemplate>
+                    <DataTemplate>
+                      <ViewCell>
+                        <StackLayout>
+                          <Grid>
+                            <Grid.RowDefinitions>
+                              <RowDefinition Height="40" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                              <ColumnDefinition Width="40" />
+                              <ColumnDefinition Width="*" />
+                              <ColumnDefinition Width="70" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding SeqNo}" FontSize="14" Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand"  VerticalOptions="CenterAndExpand"/>
+                            <Label Text="{Binding PicDesc}" FontSize="14" Grid.Row="0" Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                            <rcontrol:ECheckBox  IsEnabled="False"	Checked="{Binding IsPreview, Mode=TwoWay}" Grid.Row="0" Grid.Column="2" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+		                                               	/>
+
+                          </Grid>
+                        </StackLayout>
+                      </ViewCell>
+                    </DataTemplate>
+                  </ListView.ItemTemplate>
+                </ListView>
+              </StackLayout>
+              <StackLayout  Orientation="Horizontal" Padding="10" BackgroundColor="#FFFFFF">
+                <Label Text = "照片" FontAttributes="Bold" FontSize="16"
+                  HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
+              </StackLayout>
+              <!--<StackLayout  Orientation="Horizontal" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" VerticalOptions="FillAndExpand">
+                <cv:CarouselView ItemsSource="{Binding PicList}"
+                  HeightRequest="120"
+                  WidthRequest="200"
+                  Position="{Binding CurrentPos}"
+                  HorizontalOptions="CenterAndExpand">
+                  <cv:CarouselView.ItemTemplate>
+                    <DataTemplate>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="*"/>
+                          <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <ffimageloading:CachedImage Grid.RowSpan="2" Aspect="AspectFill"
+                    Source="{Binding Url}"
+                    HeightRequest="120"
+                    WidthRequest="200"
+                    LoadingPlaceholder="loading"
+                    DownsampleToViewSize="true"
+                    FadeAnimationEnabled="true">
+                        </ffimageloading:CachedImage>
+                        <StackLayout Grid.Row="1" BackgroundColor="#80000000" Padding="12" >
+                          <Label TextColor="White"
+                    Text="{Binding TypeName}"
+                    FontSize="13"
+                    HorizontalOptions="Center"
+                    VerticalOptions="CenterAndExpand"/>
+                        </StackLayout>
+                      </Grid>
+                    </DataTemplate>
+                  </cv:CarouselView.ItemTemplate>
+                </cv:CarouselView>
+                <StackLayout HorizontalOptions="EndAndExpand" Orientation="Vertical">
+                  -->
+              <!--<Image Source="icon_preview"
+                      VerticalOptions="StartAndExpand"
+                      x:Name="previewImage"
+                      Margin="0, 30, 0, 0"/>-->
+              <!--
+                  <Button VerticalOptions="CenterAndExpand" FontSize="10" TextColor="#FFFFFF"  BackgroundColor="#3d91bf"  Text="预览"  Margin="30,0,0,0"  WidthRequest="45"  HeightRequest="35" Command="{Binding PreviewCommand}"></Button>
+                </StackLayout>
+              </StackLayout>-->
+              <StackLayout  Orientation="Horizontal" Padding="10,5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" VerticalOptions="FillAndExpand">
+                <rcontrol:MListView  x:Name="lossImageList"
+                          ItemsSource="{Binding PicList}"
+                          RowHeight="40"
+                          HeightRequest="{Binding LossImageList}"
+                                  SelectedItem="{Binding LossPicAttachItem}"
+                          SeparatorVisibility="Default">
+                  <b:Interaction.Behaviors>
+                    <b:BehaviorCollection>
+                      <b:EventToCommand EventName="ItemTapped" Command="{Binding PreviewImageCommand}" />
+                    </b:BehaviorCollection>
+                  </b:Interaction.Behaviors>
+                  <rcontrol:MListView.ItemTemplate>
+                    <DataTemplate>
+                      <ViewCell>
+                        <ViewCell.View>
+                          <StackLayout Orientation="Horizontal" Margin="20, 5, 20, 5">
+                            <Label Text="{Binding PicName}"
+                          FontSize="14"
+                              TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                          HorizontalOptions="Start"
+                          VerticalOptions="Center"/>
+                          </StackLayout>
+                        </ViewCell.View>
+                      </ViewCell>
+                    </DataTemplate>
+                  </rcontrol:MListView.ItemTemplate>
+                </rcontrol:MListView>
+              </StackLayout>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" 	Padding="10" BackgroundColor="#FFFFFF" x:Name="standard">
+              <Label Text = "检查标准" FontAttributes="Bold" FontSize="16"  HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+              <Image x:Name="twoImage" Source="icon_hide" HorizontalOptions="EndAndExpand">
+              </Image>
+            </StackLayout>
+            <StackLayout x:Name="stackStandard">
+              <StackLayout Orientation="Horizontal" Padding="10,5" BackgroundColor="#FFFFFF">
+                <ListView
+                    ItemsSource="{Binding StandardList}"
+                    SeparatorVisibility="Default"
+                    HeightRequest="{Binding StandardLstHeight}">
+                  <ListView.Header>
+                    <StackLayout >
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="40" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="序号" FontAttributes="Bold" FontSize="16" Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                        <Label Text="检查标准" FontAttributes="Bold" FontSize="16" Grid.Row="0" Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand"/>
+                        <Label Text="不合格" FontAttributes="Bold" FontSize="16" Grid.Row="0" Grid.Column="2" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"/>
+                      </Grid>
+                    </StackLayout>
+                  </ListView.Header>
+                  <ListView.ItemTemplate>
+                    <DataTemplate>
+                      <ViewCell>
+                        <Grid>
+                          <Grid.RowDefinitions>
+                            <RowDefinition Height="40" />
+                          </Grid.RowDefinitions>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="40" />
+                          </Grid.ColumnDefinitions>
+                          <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="Center" FontSize="14"/>
+                          <Label Text="{Binding CContent}" Grid.Row="0" Grid.Column="1" VerticalTextAlignment="Center" FontSize="14"/>
+                          <Label Text="{Binding Result}" Grid.Row="0" Grid.Column="2" VerticalTextAlignment="Center" FontSize="14"/>
+                        </Grid>
+                      </ViewCell>
+                    </DataTemplate>
+                  </ListView.ItemTemplate>
+                </ListView>
+              </StackLayout>
+              <StackLayout  Orientation="Horizontal" Padding="10" BackgroundColor="#FFFFFF">
+                <Label Text = "计划完成日期" FontSize = "16" FontAttributes="Bold"/>
+                <Label Text="{Binding PlanFinishDate}" HorizontalOptions="EndAndExpand"></Label>
+              </StackLayout>
+
+              <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="#FFFFFF">
+                <Label Text = "结果完成日期" FontSize = "16" FontAttributes="Bold"/>
+                <Label Text="{Binding ResultFinishDate}" HorizontalOptions="EndAndExpand"></Label>
+              </StackLayout>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal" Padding="10" BackgroundColor="#FFFFFF">
+              <Label Text="得分" FontAttributes="Bold" FontSize="16"></Label>
+              <Label Text="{Binding Score}" HorizontalOptions="EndAndExpand"></Label>
+            </StackLayout>
+          </StackLayout>
+        </ScrollView>
+        <StackLayout VerticalOptions="End" HorizontalOptions="FillAndExpand" Orientation="Horizontal" Padding="10" BackgroundColor="#FFFFFF" IsVisible="False">
+          <Button Text="提交"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand"
+              Command="{Binding CommitCommand}"
+                  BackgroundColor="#398FC0" TextColor="#FFFFFF"
+                />
+          <Button Text="取消"
+              VerticalOptions="FillAndExpand"
+              HorizontalOptions="FillAndExpand"
+              Command="{Binding CancelCommand}"
+                  BackgroundColor="#398FC0" TextColor="#FFFFFF"
+                 />
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

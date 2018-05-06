@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Calendar.CalendarIndexPage">
+
+  <ContentPage.Content>
+    <StackLayout BackgroundColor="#ecf0f1"  HorizontalOptions="FillAndExpand" Orientation="Vertical" VerticalOptions="FillAndExpand">
+      <RelativeLayout x:Name="relativeLayout" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <control:ECalendarView
+          RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=X, Factor=0, Constant=0}"
+          RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Y, Factor=0, Constant=0}"
+          RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent,Property=Width,Factor = 1,Constant=0}"
+            RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent,Property=Height,Factor=1,Constant=0}"
+              x:Name="calendar"
+              HighlightedDays="{Binding EventDates}"
+              DisplayedMonth="{Binding DisplayedMonth}"
+        />
+      </RelativeLayout>
+      <StackLayout x:Name="listViewRelativeLayout" HeightRequest="{Binding LstHeight}"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="10" BackgroundColor="#FFFFFF">
+        <ListView ItemsSource="{Binding CalendarBydateList}"
+                    SelectedItem="{Binding CalendarItem}"
+                    HasUnevenRows="True"
+                    HeightRequest="{Binding LstHeight}"
+                    VerticalOptions="Center"
+                    SeparatorVisibility="None"
+                    HorizontalOptions="FillAndExpand"
+                        >
+          <b:Interaction.Behaviors>
+            <b:BehaviorCollection>
+              <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+            </b:BehaviorCollection>
+          </b:Interaction.Behaviors>
+          <control:MListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <StackLayout Orientation="Vertical">
+                  <StackLayout HeightRequest="2"></StackLayout>
+
+                  <StackLayout Orientation="Vertical" BackgroundColor="{Binding BgColor}"
+                  Padding="10, 0, 10, 0">
+                    <StackLayout>
+                      <Label Text = "{Binding Title}" FontAttributes="Bold" TextColor="{Binding ForeColor}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                      <Label Text = "{Binding Period}" TextColor="{Binding ForeColor}"/>
+                    </StackLayout>
+
+                  </StackLayout>
+                </StackLayout>
+              </ViewCell>
+            </DataTemplate>
+          </control:MListView.ItemTemplate>
+        </ListView>
+      </StackLayout>
+      <StackLayout  Padding="2" Orientation="Horizontal" HeightRequest="50" HorizontalOptions="Center">
+        <Button Text="今天" BackgroundColor="#6DB2EA" HeightRequest="44"  Clicked="OnSetToday" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="80" HorizontalOptions="StartAndExpand" ></Button>
+        <Button Text="添加" BackgroundColor="#6DB2EA" HeightRequest="44"  Command="{Binding CalendarRegCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="80" HorizontalOptions="StartAndExpand"></Button>
+      </StackLayout>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>
+

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.MultiSelectPopPage"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms">
+  <StackLayout VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Padding="20, 20, 20,20">
+    <StackLayout BackgroundColor="White">
+      <controls:CheckBox  DefaultText="选择所有"
+                          FontSize="25"
+                          HorizontalOptions="StartAndExpand"
+                          TextColor="Black"
+                          Checked="{Binding IsAllChecked}"
+                          CheckedChanged="OnCheckedChanged"
+                          x:Name="_IsAllCheckedName"/>
+      <ListView
+        ItemsSource="{Binding AllDisItems}"
+        x:Name="_lvMulstiselectSample"
+        ItemSelected="OnItemSelected">
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <ViewCell>
+                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" VerticalOptions="Center">
+                  <controls:CheckBox CheckedText="{Binding DisName}"
+                                     DefaultText="{Binding DisCode}"
+                                     FontSize="20"
+                                     HorizontalOptions="StartAndExpand"
+                                     TextColor="Black"
+                                     UncheckedText="{Binding DisName}"
+                                     Checked="{Binding IsChecked}"
+                                     CheckedChanged="OnOneCheckedChanged"/>
+                </StackLayout>
+            </ViewCell>
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+      <Button Text="完成"   BackgroundColor="#E8E8E8" TextColor="#000000" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Clicked="ClosePopupPage"/>    
+    </StackLayout>
+  </StackLayout>
+</pages:PopupPage>

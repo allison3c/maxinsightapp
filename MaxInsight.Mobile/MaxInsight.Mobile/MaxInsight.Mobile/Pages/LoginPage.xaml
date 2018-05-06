@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.LoginPage"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             Title="Login"
+             BackgroundImage="bg_login">
+  <ContentPage.Content>
+      <StackLayout>
+        <StackLayout HeightRequest="50"></StackLayout>
+        <StackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Start">
+          <StackLayout VerticalOptions="Start">
+            <Image Source="icon" WidthRequest="80" HeightRequest="80"></Image>
+          </StackLayout>
+          <StackLayout HeightRequest="20"></StackLayout>
+          <StackLayout Orientation="Horizontal" BackgroundColor="#FFFFFF" Padding="2">
+            <Image Source="user" WidthRequest="25" HeightRequest="25"></Image>
+            <controls:ExtendedEntry x:Name="userName" Text="{Binding UserName}" Placeholder="Enter your login id" WidthRequest="200"
+                                    HasBorder="True"></controls:ExtendedEntry>
+          </StackLayout>
+          <StackLayout HeightRequest="5"></StackLayout>
+          <StackLayout Orientation="Horizontal" BackgroundColor="#FFFFFF" Padding="2">
+            <Image Source="password" WidthRequest="25" HeightRequest="25"></Image>
+            <controls:ExtendedEntry Text="{Binding Password}" Placeholder="Enter your password" IsPassword="True" WidthRequest="200"
+                                    HasBorder="True"></controls:ExtendedEntry>
+          </StackLayout>
+          <StackLayout HeightRequest="5"></StackLayout>
+          <Button Text="登  录" BackgroundColor="#398FC0" Command="{Binding LoginCommand}" TextColor="#FFFFFF" BorderRadius="10">
+            <Button.HeightRequest>
+              <OnPlatform x:TypeArguments="x:Double" Android="55" iOS="40" />
+            </Button.HeightRequest>
+          </Button>
+        </StackLayout>
+      </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

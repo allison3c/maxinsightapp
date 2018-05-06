@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.NotifiMngSearchConditionPage"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             Title="通知查询条件">
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ECF0F1">
+      <StackLayout>
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical" >
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="通知状态:" WidthRequest="70" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ImageButton x:Name="statusBtn"
+						         Source="arrow"
+	                   BackgroundColor="#FFFFFF"
+	                   HeightRequest="35"
+	                   ImageHeightRequest="16"
+	                   ImageWidthRequest="14"
+	                   Orientation="ImageToRight"
+	                   Text="{Binding StatusSelectName}"
+	                   FontSize="13"
+                     TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+	               	   WidthRequest="160"
+	              	   HorizontalOptions="EndAndExpand"
+	                   Clicked="OnOpenStatusPopupPage">
+            </controls:ImageButton>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="是否反馈:" VerticalOptions="Center" HorizontalOptions="Start" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <control:EBindableRadioGroup x:Name="replyRdo"
+                               SelectedIndex="{Binding ReplySelected}"
+                               FontSize="14"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+								               VerticalOptions="Center"
+                               HorizontalOptions="EndAndExpand"
+                               Orientation="Horizontal" />
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}"  HeightRequest="40">
+            <Label Text="查询期间:" WidthRequest="100" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+              <DatePicker x:Name="startDateDP" HorizontalOptions="StartAndExpand"  Date="{Binding StartDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+              <Label Text="~" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"
+                              FontSize="14"
+                              TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+              <DatePicker x:Name="endDateDP" HorizontalOptions="CenterAndExpand"  Date="{Binding EndDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+            </StackLayout>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+              <Label Text="通知对象" WidthRequest="120" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+              <Label x:Name="distributorLbl" HorizontalOptions="CenterAndExpand" IsVisible="false" VerticalOptions="Center"  FontSize="14"
+                              TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+              <controls:ImageButton x:Name="distributorBtn"
+                                   Source="arrow"
+                                   BackgroundColor="#FFFFFF"
+                                   HeightRequest="36"
+                                   ImageHeightRequest="16"
+                                   ImageWidthRequest="12"
+                                   Orientation="ImageToRight"
+                                   Text="{Binding NoticeSelectDis}"
+                                   FontSize="13"
+                                   TextColor="{Binding NoticeColorDis}"
+                                   WidthRequest="120"
+                                   Clicked="OnOpenDisPopupPage">
+              </controls:ImageButton>
+            </StackLayout>
+            <StackLayout HorizontalOptions="FillAndExpand">
+              <Label x:Name="departmentLbl" HorizontalOptions="CenterAndExpand" IsVisible="false" VerticalOptions="Center" FontSize="14"
+                              TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+              <controls:ImageButton x:Name="departmentBtn"
+                                   Source="arrow"
+                                   BackgroundColor="#FFFFFF"
+                                   HeightRequest="36"
+                                   ImageHeightRequest="16"
+                                   ImageWidthRequest="12"
+                                   Orientation="ImageToRight"
+                                   Text="{Binding NoticeSelectDep}"
+                                   FontSize="13"
+                                   TextColor="{Binding NoticeColorDep}"
+                                   WidthRequest="120"
+                                   Clicked="OnOpenDepPopupPage">
+              </controls:ImageButton>
+            </StackLayout>
+          </StackLayout>
+          <Label Text="注：不选择部门时默认查询通知到服务经理的数据。"  HorizontalOptions="StartAndExpand"  VerticalOptions="Start" FontAttributes="Bold" FontSize="10" TextColor="#FF0000"  Margin="10,0,0,0"/>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="通知标题:" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ExtendedEntry
+             Text="{Binding NoticeTitle}"
+             HorizontalOptions="FillAndExpand"
+             HasBorder="true"
+             x:Name="noticeTitleLbl"
+             FontSize="14"
+             TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+            </controls:ExtendedEntry>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="通知编号:" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ExtendedEntry
+							Text="{Binding NoticeNo}"
+							HorizontalOptions="FillAndExpand"
+							HasBorder="true"
+							x:Name="noticeNoLbl"
+              FontSize="14"
+              TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+            </controls:ExtendedEntry>
+          </StackLayout>
+          <StackLayout HorizontalOptions="FillAndExpand" Padding="20, 5, 20, 5">
+            <Button Text="查  询" HeightRequest="50" BorderRadius="20" BackgroundColor="#F39801" TextColor="#FFFFFF" Command="{Binding PassNoticeConditionCommand}" ></Button>
+          </StackLayout>
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

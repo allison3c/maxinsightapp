@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.NotifiMngPage"
+             Title="{Binding NoticeMngPageTitle}">
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ECF0F1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All"
+                AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <!--<StackLayout Padding="0,10,0,10">-->
+        <ScrollView VerticalOptions="Start"  HorizontalOptions="FillAndExpand" >
+          <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="通知标题"  VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+              <Entry x:Name="noticetitleEntry" Text="{Binding NoticeTitle}" HorizontalOptions="EndAndExpand" WidthRequest="260" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Entry>
+              <Label x:Name="noticetitleLabel" Text="{Binding NoticeTitle}" HorizontalOptions="EndAndExpand" WidthRequest="260" FontSize="14" IsVisible="False" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" x:Name="noticenoSLayout" IsVisible="False">
+              <Label Text="通知编号"  VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+              <Label x:Name="noticenoLabel" Text="{Binding NoticeNo}" HorizontalOptions="EndAndExpand" WidthRequest="260" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="通知有效期" WidthRequest="100" HorizontalOptions="Start" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+              <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                <DatePicker x:Name="startDateDP" HorizontalOptions="StartAndExpand"  Date="{Binding StartNoticeDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                  <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+                </DatePicker>
+                <controls:ExtendedLabel x:Name="lblstartDateDP" HorizontalOptions="StartAndExpand" Text="{Binding StartDateStr}" IsVisible="False" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                <Label Text="~" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+                <controls:ExtendedLabel x:Name="lblendDateDP" HorizontalOptions="CenterAndExpand" Text="{Binding EndDateStr}" IsVisible="False" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                <DatePicker x:Name="endDateDP" HorizontalOptions="CenterAndExpand"  Date="{Binding EndNoticeDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                  <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+                </DatePicker>
+              </StackLayout>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+                <Label Text="通知对象" WidthRequest="120" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                <Label x:Name="distributorLbl" HorizontalOptions="CenterAndExpand" IsVisible="false" VerticalOptions="Center" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+                <controls:ImageButton x:Name="distributorBtn"
+                                     Source="arrow"
+                                     BackgroundColor="#FFFFFF"
+                                     HeightRequest="36"
+                                     ImageHeightRequest="16"
+                                     ImageWidthRequest="12"
+                                     Orientation="ImageToRight"
+                                     Text="{Binding NoticeReadersSelect}"
+                                      FontSize="13"
+                                     TextColor="{Binding NoticeReadersColor}"
+                                     WidthRequest="120"
+                                     Clicked="OnOpenDisPopupPage">
+                </controls:ImageButton>
+              </StackLayout>
+              <StackLayout HorizontalOptions="FillAndExpand">
+                <Label x:Name="departmentLbl" HorizontalOptions="CenterAndExpand" IsVisible="false" VerticalOptions="Center" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+                <controls:ImageButton x:Name="departmentBtn"
+                                     Source="arrow"
+                                     BackgroundColor="#FFFFFF"
+                                     HeightRequest="36"
+                                     ImageHeightRequest="16"
+                                     ImageWidthRequest="12"
+                                     Orientation="ImageToRight"
+                                     Text="{Binding NoticeSelectDep}"
+                                      FontSize="13"
+                                     TextColor="{Binding NoticeColorDep}"
+                                     WidthRequest="120"
+                                     Clicked="OnOpenDepPopupPage">
+                </controls:ImageButton>
+              </StackLayout>
+            </StackLayout>
+            <Label Text="注：不选择部门时默认通知到服务经理。"  HorizontalOptions="StartAndExpand"  VerticalOptions="Start" FontAttributes="Bold" FontSize="10" TextColor="#FF0000" Margin="10,0,0,0"/>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="结果反馈" VerticalOptions="Center"  FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+              <Grid x:Name="gridReplySelecte">
+                <control:EBindableRadioGroup x:Name="replyRdo"
+                                             FontName="AmericanTypewriter"
+                                             Orientation="Horizontal"
+                                             SelectedIndex="{Binding ReplySelected}"
+                                             FontSize="14"
+                                             TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              </Grid>
+              <controls:ExtendedLabel x:Name="lblReplySelecte" Text="{Binding ReplySelectedName}" IsVisible="False"
+                                           FontSize="14"
+                                           TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="通知内容" VerticalOptions="Center" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+              <Editor x:Name="noticecontentEditor" Text="{Binding NoticeContent}" HorizontalOptions="EndAndExpand" HeightRequest="60" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}" WidthRequest="260"></Editor>
+              <controls:ExtendedLabel x:Name="noticecontentLbl"
+                HorizontalOptions="FillAndExpand"
+                Text="{Binding NoticeContent}"
+                FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                IsVisible="False"/>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="附件" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
+            
+              <controls:ImageButton x:Name="btnAttachUploadFile"
+                         BackgroundColor="Transparent"
+                         Source="files"
+                         ImageHeightRequest="20"
+                         ImageWidthRequest="16"
+                         Orientation="ImageToLeft"
+                         Text="上传文件"
+                         FontSize="12"
+                         TextColor="#3998c0"
+                         WidthRequest="100"
+                         HeightRequest="35"
+                         CommandParameter="F"
+                         Command="{Binding PickPhotoCommand}"></controls:ImageButton>
+              <controls:ImageButton x:Name="btnAttachUpload"
+                                    BackgroundColor="Transparent"
+                                    Source="picture"
+                                    ImageHeightRequest="20"
+                                    ImageWidthRequest="16"
+                                    Orientation="ImageToLeft"
+                                    Text="上传图片"
+                                    FontSize="12"
+                                    TextColor="#3998c0"
+                                    WidthRequest="100"
+                                    HeightRequest="35"
+                                    CommandParameter="P"
+                                    Command="{Binding PickPhotoCommand}"></controls:ImageButton>
+               <controls:ImageButton x:Name="btnAttachUploadVedio"
+                          BackgroundColor="Transparent"
+                          Source="vedios"
+                          ImageHeightRequest="20"
+                          ImageWidthRequest="16"
+                          Orientation="ImageToLeft"
+                          Text="上传视频"
+                          FontSize="12"
+                          TextColor="#3998c0"
+                          WidthRequest="100"
+                          HeightRequest="35"
+                          CommandParameter="V"
+                          Command="{Binding PickPhotoCommand}"></controls:ImageButton>
+              
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <rcontrol:MListView ItemsSource="{Binding NotifiAttachmentList}"
+                        SelectedItem="{Binding NotifiAttachItem}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        x:Name="lstNotifiAttach"
+                        HeightRequest="{Binding LstHeight}"
+                        RowHeight="30">
+                <b:Interaction.Behaviors>
+                  <b:BehaviorCollection>
+                    <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                  </b:BehaviorCollection>
+                </b:Interaction.Behaviors>
+                <rcontrol:MListView.ItemTemplate>
+                  <DataTemplate>
+                    <ViewCell>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="40" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                        <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End"/>
+                        <controls:ImageButton Source="delete_gray"
+                                              BackgroundColor="Transparent"
+                                              ImageHeightRequest="18"
+                                              ImageWidthRequest="18"
+                                              WidthRequest="20"
+                                              CommandParameter="{Binding SeqNo}"
+                                              Clicked="OnDeleteAttechment"
+                                              Grid.Row="0" Grid.Column="2" ></controls:ImageButton>
+                      </Grid>
+                    </ViewCell>
+                  </DataTemplate>
+                </rcontrol:MListView.ItemTemplate>
+              </rcontrol:MListView>
+              <rcontrol:MListView ItemsSource="{Binding NotifiAttachmentList}"
+                        SelectedItem="{Binding NotifiAttachItem}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        x:Name="lstNotifiAttachNoDelete"
+                        HeightRequest="{Binding LstHeight}"
+                        RowHeight="30"
+                        IsVisible="False">
+                <b:Interaction.Behaviors>
+                  <b:BehaviorCollection>
+                    <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                  </b:BehaviorCollection>
+                </b:Interaction.Behaviors>
+                <rcontrol:MListView.ItemTemplate>
+                  <DataTemplate>
+                    <ViewCell>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="20" />
+                          <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                        <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End"/>
+                      </Grid>
+                    </ViewCell>
+                  </DataTemplate>
+                </rcontrol:MListView.ItemTemplate>
+              </rcontrol:MListView>
+            </StackLayout>
+          </StackLayout>
+        </ScrollView>
+        <StackLayout Padding="2" Orientation="Horizontal" VerticalOptions="EndAndExpand">
+          <Button  x:Name="tempSaveBtn" Text="暂存" BackgroundColor="#F39801" HeightRequest="44" CommandParameter="T" Command="{Binding SaveNoticeCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="90" HorizontalOptions="StartAndExpand"></Button>
+          <Button  x:Name="commitBtn" Text="提交" BackgroundColor="#F39801" HeightRequest="44" CommandParameter="S" Command="{Binding SaveNoticeCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="90" HorizontalOptions="CenterAndExpand"></Button>
+          <Button  x:Name="cancelBtn" Text="取消" BackgroundColor="#F39801" HeightRequest="44" CommandParameter="C" Command="{Binding SaveNoticeCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="90" HorizontalOptions="EndAndExpand"></Button>
+        </StackLayout>
+      </StackLayout>
+      <ContentView AbsoluteLayout.LayoutFlags="All"
+					IsVisible="{Binding IsLoading}"
+					BackgroundColor="#80000000"
+					HorizontalOptions="FillAndExpand"
+					VerticalOptions="FillAndExpand"
+                   	AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                     IsRunning="{Binding IsLoading}"
+                     Color="#6281AB"
+                     VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand" />
+      </ContentView>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

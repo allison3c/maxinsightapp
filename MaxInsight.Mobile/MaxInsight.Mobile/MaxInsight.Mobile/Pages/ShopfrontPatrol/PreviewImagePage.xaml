@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage
+		xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+		xmlns:cv="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.CarouselView"
+		xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+		xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+		x:Class="MaxInsight.Mobile.PreviewImagePage">
+  <!-- Content -->
+  <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="Black" Padding="5">
+    <cv:CarouselView ItemsSource="{Binding Images}"
+				VerticalOptions="FillAndExpand"
+				HorizontalOptions="FillAndExpand"
+				Position="{Binding CurrentPos}"
+				x:Name="carouseView">
+      <cv:CarouselView.ItemTemplate>
+        <DataTemplate>
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*"/>
+              <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--<Image Grid.RowSpan="2" Aspect="AspectFill" x:Name="imageView"
+							Source="{Binding ImageStream}">
+						</Image>-->
+            <ffimageloading:CachedImage Grid.RowSpan="2"
+							Source="{Binding Url}"
+              				DownsampleWidth="300"
+							FadeAnimationEnabled="true">
+            </ffimageloading:CachedImage>
+            <StackLayout x:Name="stack" Grid.Row="1" Padding="12">
+              <Button TextColor="White" Text="关闭" FontSize="13" Clicked="Handle_Clicked"
+                HorizontalOptions="Center"
+                VerticalOptions="CenterAndExpand"/>
+            </StackLayout>
+          </Grid>
+        </DataTemplate>
+      </cv:CarouselView.ItemTemplate>
+    </cv:CarouselView>
+  </StackLayout>
+</pages:PopupPage>

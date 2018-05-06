@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Cases.PushInfoPage"
+             Title="Push详细">
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ECF0F1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All"
+                AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView VerticalOptions="Start"  HorizontalOptions="FillAndExpand" >
+          <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"
+                         Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+              <controls:ExtendedLabel x:Name="lblImpResultContent" Text="{Binding PushTitle}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+            </StackLayout>                                 
+          </StackLayout>
+        </ScrollView>
+        <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+          <Editor
+            Text="{Binding PushContent}"
+            HeightRequest="400"
+            TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+            FontSize="14"
+            IsEnabled="True"
+            WidthRequest="300">
+          </Editor>
+        </StackLayout>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

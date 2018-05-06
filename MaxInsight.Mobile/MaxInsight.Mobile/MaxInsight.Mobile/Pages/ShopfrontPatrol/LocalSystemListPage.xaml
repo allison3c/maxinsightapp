@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             x:Class="MaxInsight.Mobile.Pages.ShopfrontPatrol.LocalSystemListPage">
+
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ecf0f1">
+      <StackLayout VerticalOptions="FillAndExpand">
+        <ListView  x:Name="listView"
+							ItemsSource="{Binding SystemList}"
+							SelectedItem="{Binding SystemDto}"
+							HasUnevenRows="true"
+							SeparatorVisibility="None">
+
+          <b:Interaction.Behaviors>
+            <b:BehaviorCollection>
+              <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+            </b:BehaviorCollection>
+          </b:Interaction.Behaviors>
+
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <StackLayout>
+                  <StackLayout Orientation="Vertical" BackgroundColor="White"
+									 	Padding="10, 5, 10, 5">
+                    <StackLayout BackgroundColor="White">
+                      <Label Text="{Binding Title}"
+                        TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                    VerticalOptions="Center"
+                    FontSize="20"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                      <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                        <Label Text = "序号:" HorizontalOptions="StartAndExpand" FontAttributes="Bold" FontSize="14"
+													VerticalTextAlignment="Center" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        <Label Text = "{Binding SeqNo}" VerticalTextAlignment="Center" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                      </StackLayout>
+                      <StackLayout Orientation="Horizontal" >
+                        <Label Text = "执行顺序:"  HorizontalOptions="StartAndExpand" FontAttributes="Bold" FontSize="14"
+                               VerticalTextAlignment="Center" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        <Label Text = "{Binding SeqNo}" VerticalTextAlignment="Center" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                      </StackLayout>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal" IsVisible="True">
+                      <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                        <Label Text = "改善计划:"
+                            HorizontalOptions="StartAndExpand"
+                            FontAttributes="Bold" FontSize="14"
+                            VerticalTextAlignment="Center"
+                            TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        <Label Text = "{Binding PlanApproalYNText}" VerticalTextAlignment="Center" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                      </StackLayout>
+                      <StackLayout Orientation="Horizontal">
+                        <Label Text = "改善结果:"
+                            HorizontalOptions="StartAndExpand"
+                            FontAttributes="Bold" FontSize="14"
+                            VerticalTextAlignment="Center"
+                            TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        <Label Text = "{Binding ResultApproalYNText}" VerticalTextAlignment="Center" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                      </StackLayout>
+                    </StackLayout>
+
+                    <StackLayout Orientation="Horizontal">
+                      <StackLayout Orientation="Horizontal" HorizontalOptions="StartAndExpand">
+                        <Label Text = "通过与否:" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center"
+                               FontAttributes="Bold" FontSize="14"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        <Label Text = "{Binding StrPassYN}" VerticalTextAlignment="Center" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                      </StackLayout>
+                    </StackLayout>
+                  </StackLayout>
+                  <StackLayout BackgroundColor="#ECF0F1">
+                    <StackLayout.HeightRequest>
+                      <OnPlatform x:TypeArguments="x:Double" Android="0" iOS="5" />
+                    </StackLayout.HeightRequest>
+                  </StackLayout>
+                </StackLayout>
+              </ViewCell>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+        <Label x:Name="taskId" Text="{Binding Id}" IsVisible="false" />
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

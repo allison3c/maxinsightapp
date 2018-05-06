@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+		x:Class="MaxInsight.Mobile.IOSWelcomPage">
+	<ContentPage.Content>
+		<control:IOSWelcomView x:Name="welcomScroll" Images="{Binding Images}" />
+	</ContentPage.Content>
+</ContentPage>

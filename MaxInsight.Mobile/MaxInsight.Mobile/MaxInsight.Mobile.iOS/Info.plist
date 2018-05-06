@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>MinimumOSVersion</key>
+	<string>8.0</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.eland.maxinsight.rmmt</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Assets.xcassets/LaunchImage.launchimage</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0.0.1</string>
+	<key>CFBundleName</key>
+	<string>大众进口汽车区域管理工具包</string>
+	<key>NSUbiquitousContainerIsDocumentScopePublic</key>
+	<true/>
+	<key>UISupportedExternalAccessoryProtocols</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to capture photo</string>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Used to pick vedio</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to pick Photo</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>used to  麦克风</string>
+</dict>
+</plist>

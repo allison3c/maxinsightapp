@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+		        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		        xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+		        x:Class="MaxInsight.Mobile.Pages.Notifi.NotifiMngReaderListPage"
+            xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+		        x:Name="NotifiMngReaderListPage"
+            Title = "通知对象列表">
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ecf0f1">
+      <StackLayout VerticalOptions="FillAndExpand">
+        <statics:MListView
+                ItemsSource="{Binding NoticeReaderList}"
+                SelectedItem="{Binding SelectedReaderItem}"
+                HasUnevenRows="True"
+                SeparatorVisibility="None"
+                VerticalOptions="FillAndExpand"
+                HorizontalOptions="FillAndExpand">
+          <b:Interaction.Behaviors>
+            <b:BehaviorCollection>
+              <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+            </b:BehaviorCollection>
+          </b:Interaction.Behaviors>
+          <statics:MListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <StackLayout Orientation="Vertical">
+                  <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10,5">
+                    <Label Text="{Binding NoticeReaderName}" HorizontalOptions="StartAndExpand" FontAttributes="Bold" FontSize="20"
+                             TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                    <Grid IsVisible="{Binding FirstShowGrid}">
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                      </Grid.RowDefinitions>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                      </Grid.ColumnDefinitions>
+                      <StackLayout Grid.Row="0" Orientation="Horizontal" Grid.ColumnSpan="2" >
+                        <Label Text="通知状态：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                        <Label Text="{Binding StatusName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                      </StackLayout>
+                    </Grid>
+                    <Grid IsVisible="{Binding ShowGrid}">
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                      </Grid.RowDefinitions>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="55*" />
+                        <ColumnDefinition Width="45*" />
+                      </Grid.ColumnDefinitions>
+                      <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                        <Label Text="通知状态：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14"  />
+                        <Label Text="{Binding StatusName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                      </StackLayout>
+                      <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" >
+                        <Label Text="批次：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14"  />
+                        <Label Text="{Binding SeqNo}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                      </StackLayout>
+                      <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" >
+                        <Label Text="审核时间：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14"  />
+                        <Label Text="{Binding ReplyDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                      </StackLayout>
+                      <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal" >
+                        <Label Text="反馈时间：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                        <Label Text="{Binding FeedbackDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                      </StackLayout>
+                    </Grid>
+                  </StackLayout>
+                  <StackLayout BackgroundColor="#ECF0F1">
+                    <StackLayout.HeightRequest>
+                      <OnPlatform x:TypeArguments="x:Double" Android="0" iOS="5" />
+                    </StackLayout.HeightRequest>
+                  </StackLayout>
+                </StackLayout>
+              </ViewCell>
+            </DataTemplate>
+          </statics:MListView.ItemTemplate>
+        </statics:MListView>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

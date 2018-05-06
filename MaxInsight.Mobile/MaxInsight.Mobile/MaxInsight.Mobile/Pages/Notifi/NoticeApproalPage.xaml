@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.NoticeApproalPage">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="通知详细" Command="{Binding NoticeDetailCommand}"/>
+    <ToolbarItem Text="审核记录" Command="{Binding ApproalLogCommand}"/>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView BackgroundColor="#ecf0f1">
+          <StackLayout>
+
+            <!--<StackLayout Padding="10, 5, 10, 5" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">-->
+           <StackLayout  Orientation="Horizontal" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <!--<Label Text = "通知标题:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>-->
+              <Label Text = "通知标题:" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>
+              <!--<Label Text = "{Binding Title}" FontSize = "15"
+                WidthRequest="220"/>-->
+             <Label Text = "{Binding Title}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+              WidthRequest="220"/>
+            </StackLayout>
+
+            <!--<StackLayout Padding="10, 5, 10, 5" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">-->
+            <StackLayout  Orientation="Horizontal" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <!--<Label Text = "反馈内容:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>-->
+              <Label Text = "反馈内容:" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>
+              <Label Text = "{Binding FeedbackContent}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                WidthRequest="220"/>
+            </StackLayout>
+
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="附件"  VerticalOptions="StartAndExpand" WidthRequest="80" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+              <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="#FFFFFF">
+                <statics:MListView ItemsSource="{Binding AttachList}"
+                          SelectedItem="{Binding FeedBackAttachItem}"
+                          HeightRequest="{Binding LstHeight}"
+                          RowHeight="30"
+                          VerticalOptions="Center"
+                          HorizontalOptions="FillAndExpand">
+
+                  <b:Interaction.Behaviors>
+                    <b:BehaviorCollection>
+                      <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                    </b:BehaviorCollection>
+                  </b:Interaction.Behaviors>
+                  <statics:MListView.ItemTemplate>
+                    <DataTemplate>
+                      <ViewCell>
+                        <Grid>
+                          <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                          </Grid.RowDefinitions>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                          </Grid.ColumnDefinitions>
+                          <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                          <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End" />
+                        </Grid>
+                      </ViewCell>
+                    </DataTemplate>
+                  </statics:MListView.ItemTemplate>
+                </statics:MListView>
+
+              </StackLayout>
+
+            </StackLayout>
+
+            <!--<StackLayout Padding="10, 5, 10, 5" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">-->
+            <StackLayout Padding="10, 5, 10, 5" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <!--<Label Text = "审核意见:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>-->
+              <Label Text = "审核意见:" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>
+              <Editor
+               Text="{Binding ReplyContent}"
+               FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="100"
+               IsEnabled="{Binding IsEditable}"
+               WidthRequest="220">
+              </Editor>
+            </StackLayout>
+            <StackLayout  Padding="2" Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="Center" IsVisible="{Binding IsEditable}">
+              <Button Text="通过" BackgroundColor="#F39801" HeightRequest="44"  Command="{Binding ApproalCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="120" HorizontalOptions="StartAndExpand"></Button>
+              <Button Text="驳回" BackgroundColor="#F39801" HeightRequest="44"  Command="{Binding RejectCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="120" HorizontalOptions="StartAndExpand"></Button>
+            </StackLayout>
+          </StackLayout>
+        </ScrollView>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

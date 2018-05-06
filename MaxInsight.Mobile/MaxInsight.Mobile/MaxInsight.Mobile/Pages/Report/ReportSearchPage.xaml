@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Report.ReportSearchPage">
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+
+        <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                     BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+          <Label Text = "查询期间:"
+            FontSize = "16"
+            FontAttributes="Bold"
+            TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+            VerticalOptions="Center"
+            WidthRequest="80"/>
+          <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+            <DatePicker x:Name="startDateDP" HorizontalOptions="StartAndExpand"  Date="{Binding StartDate}"
+                        TextColor="{x:Static statics:StaticColor.ContentFontColor}" >
+              <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+            </DatePicker>
+            <Label Text="~" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"></Label>
+            <DatePicker x:Name="endDateDP" HorizontalOptions="CenterAndExpand"  Date="{Binding EndDate}"
+                        TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+              <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+            </DatePicker>
+          </StackLayout>
+        </StackLayout>
+        <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                  BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+          <Label Text = "来源类型:"
+            FontSize = "16"
+            FontAttributes="Bold"
+            TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+            VerticalOptions="Center"
+            WidthRequest="80"/>
+          <controls:ImageButton x:Name="statusBtn"
+                   Source="arrow"
+                   BackgroundColor="#FFFFFF"
+                   HeightRequest="35"
+                   ImageHeightRequest="16"
+                   ImageWidthRequest="14"
+                   Orientation="ImageToRight"
+                   Text="{Binding SourceType}"
+                   FontSize="13"
+                   WidthRequest="130"
+                   TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                   HorizontalOptions="EndAndExpand"
+                   Command="{Binding OpenSourceTypeCommand}">
+          </controls:ImageButton>
+        </StackLayout>
+        <StackLayout  HorizontalOptions="FillAndExpand" Padding="20, 5, 20, 5">
+          <Button Text="查 询" BackgroundColor="#9DC02E" HeightRequest="50"  Command="{Binding SearchReportListCommand}" TextColor="#FFFFFF" BorderRadius="20"></Button>
+        </StackLayout>
+
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

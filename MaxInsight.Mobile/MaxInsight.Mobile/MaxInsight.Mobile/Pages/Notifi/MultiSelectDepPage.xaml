@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.MultiSelectDepPage"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile">
+    <StackLayout VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Padding="20">
+        <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand" Orientation="Vertical" Padding="5,20,5,20">
+          <controls:CheckBox  DefaultText="选择所有"
+                               FontSize="16"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               Checked="{Binding IsAllChecked}"
+                               CheckedChanged="OnCheckedChanged"
+                               WidthRequest="380"
+                               x:Name="_IsAllCheckedName"
+                                TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+          <ListView
+            ItemsSource="{Binding AllDepItems}"
+            x:Name="_lvMulstiselectSample"
+            SeparatorVisibility="Default"
+            ItemSelected="OnItemSelected">
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand">
+                    <controls:CheckBox CheckedText="{Binding DisName}"
+                                        DefaultText="{Binding DisCode}"
+                                        UncheckedText="{Binding DisName}"
+                                        Checked="{Binding IsChecked}"
+                                        CheckedChanged="OnOneCheckedChanged"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="CenterAndExpand"
+                                        WidthRequest="380"
+                                        FontSize="14"
+                                        TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>          
+          <Button Text="完成"   VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="#F39801" TextColor="#FFFFFF" Clicked="ClosePopupPage"/>
+        </StackLayout>
+      </StackLayout>
+</pages:PopupPage>

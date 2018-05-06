@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:PopupPage
+		xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+		xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+		x:Class="MaxInsight.Mobile.Pages.ShopfrontPatrol.PreviewImageGesturePage">
+  <!-- Content -->
+  <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="Black" Padding="5">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <control:ImageGesture x:Name="imageGesture" Grid.Row="0" />
+      <StackLayout x:Name="stack" Grid.Row="1" Padding="5">
+        <Button TextColor="White" Text="关闭" FontSize="13" Clicked="Handle_Clicked"
+          HorizontalOptions="Center"
+          VerticalOptions="EndAndExpand"/>
+      </StackLayout>
+    </Grid>
+  </StackLayout>
+</pages:PopupPage>
+

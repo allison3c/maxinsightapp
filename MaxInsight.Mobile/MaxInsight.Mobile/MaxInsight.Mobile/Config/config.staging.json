@@ -1,0 +1,46 @@
+﻿{
+  "Version": "1.0.0",
+  "TenantName": "Default",
+  "AppId": "rmmt",
+  "AppName": "MaxInsight",
+  "AppMode": "DEV",
+  "SessionLifetimeMinute": 20,
+  "Endpoints": {
+    "BaseUrl": "http://rmmtqaapi.elandcloud.com/rmmt/api/v1",
+    "Paths": {
+      "account": "/Users/Login",
+      "ImproveGetResult": "/ImprovementMng/GeImprovementItemFromScoreList",
+      "NotifiMng": "/NotifiMng",
+      "NotifiFeedB": "/NotifiFeedB",
+      "GetImpPlanOrResultDetail": "/ImprovementMng/GetImpPlanOrResultDetail",
+      "SaveImprovementItem": "/ImprovementMng/SaveImprovementItem",
+      "Shops": "/Tour/GetTourDistributorList",
+      "Plans": "/Tour/GetTaskListByDisId",
+      "CheckPlan": "/Tour/GetItemListByTaskId",
+      "SaveSystem": "/Tour/SaveItemApproalYN",
+      "NotifiApproval": "/NotifiApproval",
+      "SaveImprovementResult": "/ImprovementMng/SaveImprovementResult",
+      "UploadFile": "/uploadfile",
+      "InsertAllocateImprovementItem": "/ImprovementMng/InsertAllocateImprovementItem",
+      "SaveScore": "/Tour/SaveCheckResult",
+      "CaseSearch": "/CasesInfo",
+      "GetTypeFromHiddenCode": "/PlanTask/GetStatus",
+      "SaveMadeNotifi": "/NotifiMng/Save",
+      "SearchMadeNoticeInfo": "/NotifiMng/Search",
+      "UpdateReaderReadStatus": "/NotifiMng/Update",
+      "GetNoticeReaders": "/NotifiMng/GetList",
+      "SearchMadeNoticeList": "/NotifiMng/SearchLength",
+      "UpdatePsw": "/Users/UpdatePsw",
+      "GetAllTaskOfPlanForImp": "/ImprovementMng/GetAllTaskOfPlanForImp",
+      "GetReviewPlansList": "/PlanTask/GetReviewPlansList_Mobile",
+      "GetPlansDtlList": "/PlanTask/GetPlansDtlList",
+      "ReviewPlans": "/PlanTask/ReviewPlans"
+    }
+  },
+  "AliyunOss": {
+    "AccessKeyId": "3JkljJxvXgjLz80X",
+    "AccessKeySecret": "L2ERHORPk3WkjqfGUb27RlxvT8x5f3",
+    "Endpoint": "oss-cn-beijing.aliyuncs.com",
+    "Bucket": "vgic"
+  }
+}

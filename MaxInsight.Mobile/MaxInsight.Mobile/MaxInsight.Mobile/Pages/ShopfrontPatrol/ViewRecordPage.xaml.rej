@@ -1,0 +1,11 @@
+diff a/MaxInsight.Mobile/MaxInsight.Mobile/MaxInsight.Mobile/Pages/ShopfrontPatrol/ViewRecordPage.xaml b/MaxInsight.Mobile/MaxInsight.Mobile/MaxInsight.Mobile/Pages/ShopfrontPatrol/ViewRecordPage.xaml	(rejected hunks)
+@@ -6,8 +6,7 @@
+ 		x:Class="MaxInsight.Mobile.ViewRecordPage">
+   <ContentPage.Content>
+     <StackLayout Padding="0, 5, 0, 5" BackgroundColor="#ecf0f1" Orientation="Vertical">
+-      <StackLayout  Padding="10, 5, 10, 5" Orientation="Horizontal"
+-                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}"
++      <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="#FFFFFF"
+                     x:Name="stackDis"
+                     HeightRequest="40">
+         <Label Text="经销商:" WidthRequest="80" HorizontalOptions="StartAndExpand" VerticalOptions="Center"></Label>

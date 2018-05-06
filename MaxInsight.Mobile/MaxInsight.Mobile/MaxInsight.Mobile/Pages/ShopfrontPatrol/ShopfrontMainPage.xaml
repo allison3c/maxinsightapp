@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:statics="clr-namespace:MaxInsight.Mobile"
+		x:Class="MaxInsight.Mobile.ShopfrontMainPage"
+		xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+    xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+		xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors">
+  <ContentPage.Content>
+	<AbsoluteLayout BackgroundColor="#ecf0f1">
+    <StackLayout Orientation="Vertical" BackgroundColor="#ecf0f1" VerticalOptions="FillAndExpand" >
+      <StackLayout BackgroundColor="{x:Static statics:StaticColor._019}"
+				Orientation="Horizontal"
+				HeightRequest="100"
+				MinimumHeightRequest="100"
+        HorizontalOptions="FillAndExpand"
+        x:Name  ="MenuStack"
+				Padding="60, 0, 60, 0">
+        <StackLayout Orientation="Vertical"
+						x:Name="stackRecord"
+						HorizontalOptions="StartAndExpand"
+						VerticalOptions="Center">
+          <Image Source="icon_record"
+						HorizontalOptions="Center"
+						WidthRequest="50"
+						HeightRequest="50"/>
+          <Label Text="得分登记" 
+                 TextColor="{x:Static statics:StaticColor.ContentWhite}" 
+                 FontSize="17"
+                 FontAttributes="Bold"
+                 HorizontalOptions="Center"/>
+        </StackLayout>
+        <StackLayout Orientation="Vertical"
+						x:Name="stackViewRecord"
+						HorizontalOptions="EndAndExpand"
+						VerticalOptions="Center">
+          <Image Source="ImproveSearch"
+						HorizontalOptions="Center"
+						WidthRequest="50"
+						HeightRequest="50"/>
+          <Label Text="得分查看" TextColor="{x:Static statics:StaticColor.ContentWhite}" FontSize="15" HorizontalOptions="Center"/>
+        </StackLayout>
+        <StackLayout Orientation="Vertical"
+                    x:Name="stackImproveDistri"
+                    HorizontalOptions="EndAndExpand"
+                    VerticalOptions="Center"
+                    IsVisible="False">
+          <Image Source="ImproveDispatch"
+						HorizontalOptions="Center"
+						WidthRequest="50"
+						HeightRequest="50"/>
+          <Label Text="改善分配" 
+                 TextColor="{x:Static statics:StaticColor.ContentWhite}" 
+                 FontSize="17" 
+                 FontAttributes="Bold"
+                 HorizontalOptions="Center"/>
+        </StackLayout>
+      </StackLayout>
+      <StackLayout VerticalOptions="FillAndExpand">
+        <control:MListView  x:Name="listView"
+						ItemsSource="{Binding Shops}"
+						HasUnevenRows="true"
+						ItemTapped="Handle_ItemTapped"
+						SeparatorVisibility="Default">
+          <control:MListView.Header>
+            <StackLayout Orientation="Horizontal" BackgroundColor="White"
+              HeightRequest="40"
+              Padding="10,5">
+              <Label Text="经销商代码" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+              HorizontalOptions="Start"
+              VerticalOptions="Center" IsVisible="False"/>
+              <Label Text="经销商名称" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+								HorizontalOptions="StartAndExpand"
+								VerticalOptions="Center"/>
+            </StackLayout>
+          </control:MListView.Header>
+          <control:MListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <StackLayout Orientation="Horizontal" BackgroundColor="White" Padding="20,10,20,10">
+                  <Label Text="{Binding DisCode}"
+                         WidthRequest="65"
+                         FontSize="14"
+                         TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                         IsVisible="False"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+                  <Label Text="{Binding DisName}"
+                        TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                        HorizontalOptions="StartAndExpand"
+                        FontSize="14"
+                    VerticalOptions="Center"/>
+                  <Label Text="{Binding DisId}"
+                        IsVisible="false"
+						         />
+                </StackLayout>
+              </ViewCell>
+            </DataTemplate>
+          </control:MListView.ItemTemplate>
+        </control:MListView>
+        <rcontrol:MListView
+                  ItemsSource="{Binding ImproveDistriLst}"
+                  SelectedItem="{Binding SelectedImproveDistri}"
+                  HasUnevenRows="True"
+                  VerticalOptions="FillAndExpand"
+                  HorizontalOptions="FillAndExpand"
+                  SeparatorVisibility="None">
+          <b:Interaction.Behaviors>
+            <b:BehaviorCollection>
+              <b:EventToCommand EventName="ItemTapped" Command="{Binding ImroveItemTappedCommand}" />
+            </b:BehaviorCollection>
+          </b:Interaction.Behaviors>
+          <rcontrol:MListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <StackLayout Orientation="Vertical">
+                  <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10,5">
+                    <Label Text="{Binding TaskItemTitle}" HorizontalOptions="StartAndExpand"
+                           FontAttributes="Bold"
+                           FontSize="20"
+                           TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                    <Grid>
+                      <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                      </Grid.RowDefinitions>
+                      <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50*" />
+                        <ColumnDefinition Width="50*" />
+                      </Grid.ColumnDefinitions>
+                      <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                        <Label Text="体系号：" FontAttributes="Bold"
+                                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                                               FontSize="14"/>
+                        <Label Text="{Binding ItemId}"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                               FontSize="14"/>
+                      </StackLayout>
+                      <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" >
+                        <Label Text="打分时间：" FontAttributes="Bold"
+                                                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                                                FontSize="14" />
+                        <Label Text="{Binding DoScoreDate}"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                               FontSize="14"/>
+                      </StackLayout>
+                      <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                        <Label Text="来源类型：" FontAttributes="Bold"
+                                                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                                                FontSize="14" />
+                        <Label Text="{Binding SourceTypeName}"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                               FontSize="14"/>
+                      </StackLayout>
+                      <StackLayout Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="2">
+                        <Label Text="所属计划：" FontAttributes="Bold"
+                                                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                                                FontSize="14" />
+                        <Label Text="{Binding PlanTitle}"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                               FontSize="14"/>
+                      </StackLayout>
+                    </Grid>
+                  </StackLayout>
+                  <StackLayout BackgroundColor="#ECF0F1">
+                    <StackLayout.HeightRequest>
+                      <OnPlatform x:TypeArguments="x:Double" Android="0" iOS="5" />
+                    </StackLayout.HeightRequest>
+                  </StackLayout>
+                </StackLayout>
+              </ViewCell>
+            </DataTemplate>
+          </rcontrol:MListView.ItemTemplate>
+        </rcontrol:MListView>
+      </StackLayout>
+    </StackLayout>
+</AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

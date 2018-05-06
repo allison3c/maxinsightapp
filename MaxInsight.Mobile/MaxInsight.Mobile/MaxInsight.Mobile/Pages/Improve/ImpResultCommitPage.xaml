@@ -1,0 +1,235 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Improve.ImpResultCommitPage"
+             Title="{Binding ImpResultCommitPageTitle}">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="分配/详情" Command="{Binding AllocateDetailCommand}"/>
+    <ToolbarItem Text="计划详细" Command="{Binding ImpPlanCommand}"/>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <!--<ScrollView BackgroundColor="#ECF0F1">-->
+    <AbsoluteLayout BackgroundColor="#ECF0F1">
+      <!--<StackLayout Orientation="Vertical"
+                   HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">-->
+      <StackLayout AbsoluteLayout.LayoutFlags="All"
+                AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView VerticalOptions="Start"  HorizontalOptions="FillAndExpand" >
+          <StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"
+                         Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+              <Label Text="改善结果" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center" WidthRequest="70"></Label>
+              <Editor x:Name="txtImpResultContent"
+                      HorizontalOptions="FillAndExpand" HeightRequest="60" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                      Text="{Binding ImpResultContent}"
+                      IsVisible="False"></Editor>
+              <controls:ExtendedLabel x:Name="lblImpResultContent" Text="{Binding ImpResultContent}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+              <Label Text="附件" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
+
+              <controls:ImageButton x:Name="btnAttachUploadFile"
+                         BackgroundColor="Transparent"
+                         Source="files"
+                         ImageHeightRequest="20"
+                         ImageWidthRequest="16"
+                         Orientation="ImageToLeft"
+                         Text="上传文件"
+                         FontSize="12"
+                         TextColor="#3998c0"
+                         WidthRequest="100"
+                         HeightRequest="35"
+                         CommandParameter="F"
+                         Command="{Binding PickPhotoCommand}"
+                         IsVisible="False"></controls:ImageButton>
+              <controls:ImageButton x:Name="btnAttachUpload"
+                                   BackgroundColor="Transparent"
+                                   Source="picture"
+                                   ImageHeightRequest="20"
+                                   ImageWidthRequest="16"
+                                   Orientation="ImageToLeft"
+                                   Text="上传图片"
+                                   FontSize="12"
+                                   TextColor="#3998c0"
+                                   WidthRequest="100"
+                                   HeightRequest="35"
+                                   CommandParameter="P"
+                                   Command="{Binding PickPhotoCommand}"
+                                   IsVisible="False"></controls:ImageButton>
+              <controls:ImageButton x:Name="btnAttachUploadVedio"
+                          BackgroundColor="Transparent"
+                          Source="vedios"
+                          ImageHeightRequest="20"
+                          ImageWidthRequest="16"
+                          Orientation="ImageToLeft"
+                          Text="上传视频"
+                          FontSize="12"
+                          TextColor="#3998c0"
+                          WidthRequest="100"
+                          HeightRequest="35"
+                          CommandParameter="V"
+                          Command="{Binding PickPhotoCommand}"
+                          IsVisible="False"></controls:ImageButton>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+              <rcontrol:MListView ItemsSource="{Binding ImpResultAttachList}"
+                        SelectedItem="{Binding ImpResultAttachItem}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        x:Name="lstImpResultAttach"
+                        HeightRequest="{Binding LstHeight}"
+                        RowHeight="30"
+                        IsVisible="False">
+                <b:Interaction.Behaviors>
+                  <b:BehaviorCollection>
+                    <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                  </b:BehaviorCollection>
+                </b:Interaction.Behaviors>
+                <rcontrol:MListView.ItemTemplate>
+                  <DataTemplate>
+                    <ViewCell>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="40" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                        <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End"/>
+                        <controls:ImageButton Source="delete_gray"
+                                              BackgroundColor="Transparent"
+                                              ImageHeightRequest="18"
+                                              ImageWidthRequest="18"
+                                              WidthRequest="20"
+                                              CommandParameter="{Binding SeqNo}"
+                                              Command="{Binding DeleteResultAttachCommand}"
+                                              Clicked="OnDeleteResultAttechment"
+                                              Grid.Row="0" Grid.Column="2" ></controls:ImageButton>
+                      </Grid>
+                    </ViewCell>
+                  </DataTemplate>
+                </rcontrol:MListView.ItemTemplate>
+              </rcontrol:MListView>
+              <rcontrol:MListView ItemsSource="{Binding ImpResultAttachList}"
+                        SelectedItem="{Binding ImpResultAttachItem}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        x:Name="lstImpResultAttachNoDelete"
+                        HeightRequest="{Binding LstHeight}"
+                        RowHeight="30">
+                <b:Interaction.Behaviors>
+                  <b:BehaviorCollection>
+                    <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                  </b:BehaviorCollection>
+                </b:Interaction.Behaviors>
+                <rcontrol:MListView.ItemTemplate>
+                  <DataTemplate>
+                    <ViewCell>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="20" />
+                          <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                        <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End"/>
+                      </Grid>
+                    </ViewCell>
+                  </DataTemplate>
+                </rcontrol:MListView.ItemTemplate>
+              </rcontrol:MListView>
+            </StackLayout>
+            <StackLayout x:Name="layApply">
+                <StackLayout x:Name="layServeApply">
+              <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+                <Label Text="服务经理审核" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
+                <Grid x:Name="gridServerApplyYN">
+                  <control:EBindableRadioGroup x:Name="ServerApplyYN"
+                                               FontName="AmericanTypewriter"
+                                               Orientation="Horizontal"
+                                               SelectedIndex="{Binding ServerApplyYN}"
+                                               CheckedChanged="OnServerCheckedChanged"
+                                               FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                                               IsVisible="False"/>
+                </Grid>
+                <controls:ExtendedLabel x:Name="lblServerApplyYN" Text="{Binding ServerApplyYNName}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              </StackLayout>
+              <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+                <Label Text="审核意见" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center" WidthRequest="80"></Label>
+                <Editor x:Name="txtServerApplyMemo"
+                        HorizontalOptions="FillAndExpand" HeightRequest="60" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                        Text="{Binding ServerApplyMemo}"
+                        IsVisible="False"></Editor>
+                <controls:ExtendedLabel x:Name="lblServerApplyMemo" Text="{Binding ServerApplyMemo}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              </StackLayout>
+              <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+                <Label Text="审核时间" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center" WidthRequest="70"></Label>
+                <controls:ExtendedLabel x:Name="lblServerApplyDate" Text="{Binding SApprovalDate}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              </StackLayout>
+                  </StackLayout>
+              <StackLayout x:Name="layAreaApply">
+                <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+                  <Label Text="区域经理审核" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
+                  <Grid x:Name="gridAreaApplyYN">
+                    <control:EBindableRadioGroup x:Name="AreaApplyYN"
+                                                 FontName="AmericanTypewriter"
+                                                 Orientation="Horizontal"
+                                                 SelectedIndex="{Binding AreaApplyYN}"
+                                                 CheckedChanged="OnAreaCheckedChanged"
+                                                 FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                                                 IsVisible="False"/>
+                  </Grid>
+                  <controls:ExtendedLabel x:Name="lblArearApplyYN" Text="{Binding AreaApplyYNName}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                </StackLayout>
+                <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+                  <Label Text="审核意见" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center" WidthRequest="70"></Label>
+                  <Editor x:Name="txtAreaApplyMemo"
+                          HorizontalOptions="FillAndExpand" HeightRequest="60" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                          Text="{Binding AreaApplyMemo}"
+                          IsVisible="False"></Editor>
+                  <controls:ExtendedLabel x:Name="lblAreaApplyMemo" Text="{Binding AreaApplyMemo}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                </StackLayout>
+                <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" >
+                  <Label Text="审核时间" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center" WidthRequest="70"></Label>
+                  <controls:ExtendedLabel x:Name="lblAreaApplyDate" Text="{Binding ZApprovalDate}" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                </StackLayout>
+              </StackLayout>
+            </StackLayout>
+          </StackLayout>
+        </ScrollView>
+        <StackLayout  Orientation="Horizontal" HorizontalOptions="Center" Padding="10" BackgroundColor="Transparent" x:Name="sltSaveImpResult" IsVisible="False">
+          <controls:ImageButton x:Name="btnSaveImpResult"
+                                Command="{Binding SaveImpResultCommand}"
+                                Text="提 交"
+                                BackgroundColor="#398FC0"
+                                TextColor="#FFFFFF"
+                                HeightRequest = "40"
+                                WidthRequest = "150"
+                                ></controls:ImageButton>
+        </StackLayout>
+      </StackLayout>
+      <ContentView AbsoluteLayout.LayoutFlags="All"
+         IsVisible="{Binding IsLoading}"
+         BackgroundColor="#80000000"
+         HorizontalOptions="FillAndExpand"
+         VerticalOptions="FillAndExpand"
+                   AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                     IsRunning="{Binding IsLoading}"
+                     Color="#6281AB"
+                     VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand" />
+      </ContentView>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

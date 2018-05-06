@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.NotifiMngPage"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             BackgroundColor="#DCDCDC"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             Title="通知拟定">
+  <ContentPage.Content>
+    <StackLayout>
+          <StackLayout BackgroundColor="#FFFFFF" Padding="2" Orientation="Horizontal">
+            <Label Text="{Binding NoticeTitleLabel}" VerticalOptions="Center"/>
+            <Entry Text="{Binding NoticeTitle}" Placeholder="(必填)" HorizontalTextAlignment="Start" WidthRequest="280"></Entry>
+          </StackLayout>
+          <StackLayout BackgroundColor="#FFFFFF" Padding="2" Orientation="Horizontal">
+            <Label Text="{Binding NoticeAvailableDate}" VerticalOptions="Center" />
+            <DatePicker Date="{Binding StartNoticeDate}">
+              <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              <DatePicker.MinimumDate>
+                <sys:DateTime x:FactoryMethod="Parse">
+                  <x:Arguments>
+                    <x:String>Jan 1 2000</x:String>
+                  </x:Arguments>
+                </sys:DateTime>
+              </DatePicker.MinimumDate>
+              <DatePicker.MaximumDate>
+                <sys:DateTime x:FactoryMethod="Parse">
+                  <x:Arguments>
+                    <x:String>Dec 31 2100</x:String>
+                  </x:Arguments>
+                </sys:DateTime>
+              </DatePicker.MaximumDate>
+            </DatePicker>
+             <Label Text="~" VerticalOptions="Center" />
+            <DatePicker  Date="{Binding EndNoticeDate}">
+              <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              <DatePicker.MinimumDate>
+                <sys:DateTime x:FactoryMethod="Parse">
+                  <x:Arguments>
+                    <x:String>Jan 1 2000</x:String>
+                  </x:Arguments>
+                </sys:DateTime>
+              </DatePicker.MinimumDate>
+              <DatePicker.MaximumDate>
+                <sys:DateTime x:FactoryMethod="Parse">
+                  <x:Arguments>
+                    <x:String>Dec 31 2100</x:String>
+                  </x:Arguments>
+                </sys:DateTime>
+              </DatePicker.MaximumDate>
+            </DatePicker>
+         </StackLayout>
+          <StackLayout Padding="2" Orientation="Horizontal">
+              <StackLayout BackgroundColor="#FFFFFF"  Orientation="Horizontal" HorizontalOptions="Start">
+                   <Label Text="{Binding NoticeReadersLabel}" VerticalOptions="Center"/>
+                   <controls:ImageButton x:Name="GoogleButton"
+                                        BackgroundColor="#FFFFFF"
+                                        HeightRequest="30"
+                                        ImageHeightRequest="16"
+                                        ImageWidthRequest="12"
+                                        Orientation="ImageToRight"
+                                        Text="{Binding NoticeReadersSelect}"
+                                         FontSize="12"
+                                        TextColor="{Binding NoticeReadersColor}"
+                                        WidthRequest="160"
+                                        Clicked="OnOpenDisPopupPage">
+                      <controls:ImageButton.Source>
+                          <OnPlatform x:TypeArguments="ImageSource">
+                              <OnPlatform.Android>
+                                  <FileImageSource File="icon_forward.png" />
+                              </OnPlatform.Android>
+                          </OnPlatform>
+                      </controls:ImageButton.Source>
+                  </controls:ImageButton>
+               </StackLayout>
+                <StackLayout BackgroundColor="#FFFFFF" Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                   <controls:ImageButton x:Name="GoogleButton2"
+                                        BackgroundColor="#FFFFFF"
+                                        HeightRequest="30"
+                                        ImageHeightRequest="16"
+                                        ImageWidthRequest="12"
+                                        Orientation="ImageToRight"
+                                        Text="{Binding NoticeSelectDep}"
+                                         FontSize="12"
+                                        TextColor="{Binding NoticeColorDep}"
+                                        WidthRequest="120"
+                                        Clicked="OnOpenDepPopupPage">
+                      <controls:ImageButton.Source>
+                          <OnPlatform x:TypeArguments="ImageSource">
+                              <OnPlatform.Android>
+                                  <FileImageSource File="icon_forward.png" />
+                              </OnPlatform.Android>
+                          </OnPlatform>
+                      </controls:ImageButton.Source>
+                  </controls:ImageButton>
+               </StackLayout>
+        </StackLayout>
+          <StackLayout BackgroundColor="#FFFFFF" Padding="2" Orientation="Horizontal">
+              <Label Text="{Binding NoticeReplyLabel}" VerticalOptions="Center"/>
+              <controls:BindableRadioGroup x:Name="ansPicker"
+                                           SelectedIndex="{Binding ReplySelected}"
+                                           TextColor="Black" 
+                                           Orientation="Horizontal"
+                                           ItemsSource="{Binding NotifiReplyList}"/>
+          </StackLayout>
+          <StackLayout BackgroundColor="#FFFFFF" Padding="2" Orientation="Horizontal">
+            <Label Text="{Binding NoticeContentLabel}" VerticalOptions="Center"/>
+            <Editor Text="{Binding NoticeContent}" HeightRequest="160" WidthRequest="280"></Editor>
+          </StackLayout>
+        <StackLayout BackgroundColor="#FFFFFF" Padding="2">
+             <StackLayout Orientation="Horizontal" VerticalOptions="Start" HorizontalOptions="Start">
+                <!--<Label Text="{Binding NoticeAttachmentLabel}" VerticalOptions="Center"/>
+                <Button Text="上传附件" BackgroundColor="#398FC0" HeightRequest="30" FontSize="6" WidthRequest="80"  TextColor="#FFFFFF" BorderRadius="10" Command="{Binding PickPhotoCommand}"></Button>-->      
+                     <controls:ImageButton x:Name="GoogleButton3"
+                                          BackgroundColor="#FFFFFF"
+                                          HeightRequest="30"
+                                          ImageHeightRequest="20"
+                                          ImageWidthRequest="16"
+                                          Orientation="ImageToRight"
+                                          Text="上传附件"
+                                          FontSize="12"
+                                          TextColor="#3998c0"
+                                          WidthRequest="100"
+                                          Command="{Binding PickPhotoCommand}">
+                        <controls:ImageButton.Source>
+                            <OnPlatform x:TypeArguments="ImageSource">
+                                <OnPlatform.Android>
+                                    <FileImageSource File="upload.png" />
+                                </OnPlatform.Android>
+                            </OnPlatform>
+                        </controls:ImageButton.Source>
+                    </controls:ImageButton>               
+             </StackLayout>
+             <StackLayout VerticalOptions="Center">
+                <ListView
+                  ItemsSource="{Binding NotifiAttachmentList}"
+                  x:Name="_AttachmentList" 
+                  HasUnevenRows="True"
+                  VerticalOptions="FillAndExpand"
+                  HorizontalOptions="FillAndExpand"
+                  SelectedItem="{Binding SelectedRow, Mode=TwoWay}"
+                  ItemSelected="OnItemSelected">
+                  <ListView.ItemTemplate>
+                    <DataTemplate>
+                      <ViewCell>
+                            <StackLayout Orientation="Horizontal" >
+                              <Label Text="{Binding Name}" FontSize="16" HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                              <Button  HeightRequest="40" BackgroundColor="#FFFFFF" WidthRequest="40" CommandParameter="{Binding PathToFile}" Clicked="OnDeleteAttechment" HorizontalOptions="End"  VerticalOptions="Start" Image="remove"/>
+                            </StackLayout>
+                      </ViewCell>
+                    </DataTemplate>
+                  </ListView.ItemTemplate>
+                </ListView>
+           </StackLayout>
+        </StackLayout>
+        <StackLayout BackgroundColor="#FFFFFF" Padding="2" Orientation="Horizontal" VerticalOptions="EndAndExpand">
+          <Button Text="暂存" BackgroundColor="#398FC0" HeightRequest="44" CommandParameter="T" Command="{Binding AddAttechmentCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="60" HorizontalOptions="StartAndExpand"></Button>
+          <Button Text="提交" BackgroundColor="#398FC0" HeightRequest="44" CommandParameter="S" Command="{Binding AddAttechmentCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="60" HorizontalOptions="CenterAndExpand"></Button>
+          <Button Text="取消" BackgroundColor="#398FC0" HeightRequest="44" CommandParameter="C" Command="{Binding AddAttechmentCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="60" HorizontalOptions="EndAndExpand"></Button>
+        </StackLayout>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

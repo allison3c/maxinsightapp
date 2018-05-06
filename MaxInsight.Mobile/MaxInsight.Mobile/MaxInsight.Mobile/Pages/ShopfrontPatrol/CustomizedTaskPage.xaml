@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.ShopfrontPatrol.CustomizedTaskPage">
+
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <StackLayout>
+          <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text = "备注:" FontSize = "16"
+              VerticalOptions="Center"
+              WidthRequest="60"/>
+            <Editor
+             Text="{Binding CustomizedTask.Remarks}"
+             x:Name ="txtRemarks"
+             HeightRequest="120"
+             FontSize="14"
+             TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+             WidthRequest="280">
+            </Editor>
+          </StackLayout>
+
+          <StackLayout  Padding="2" Orientation="Horizontal" VerticalOptions="FillAndExpand" HorizontalOptions="Center" x:Name ="stackSave" >
+            <Button Text="保 存" BackgroundColor="#3d91bf" HeightRequest="44"  Command="{Binding SaveCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="120" HorizontalOptions="StartAndExpand"></Button>
+          </StackLayout>
+          <StackLayout>
+            <Label x:Name="lblVisible" Text="{Binding VisibleYN}" IsVisible="False"></Label>
+          </StackLayout>
+        </StackLayout>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

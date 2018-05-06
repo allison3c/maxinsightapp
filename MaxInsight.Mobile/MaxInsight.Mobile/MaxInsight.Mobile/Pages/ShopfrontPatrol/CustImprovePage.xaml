@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.ShopfrontPatrol.CustImprovePage"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms">
+
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView BackgroundColor="#ecf0f1">
+          <StackLayout>
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "计划任务:"
+                     FontSize = "16"
+                     VerticalOptions="Center"
+                     TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                     FontAttributes="Bold"
+                     WidthRequest="80"/>
+
+              <controls:ImageButton x:Name="plansBtn"
+                       Source="arrow"
+                       BackgroundColor="#FFFFFF"
+                       HeightRequest="35"
+                       ImageHeightRequest="16"
+                       ImageWidthRequest="14"
+                       Orientation="ImageToRight"
+                       Text="{Binding PlanName}"
+                       TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                       FontSize="13"
+                       WidthRequest="260"
+                       HorizontalOptions="EndAndExpand"
+                       Command="{Binding OpenPlanListCommand}">
+              </controls:ImageButton>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "类型:"
+                     FontSize = "16"
+                     VerticalOptions="Center"
+                     TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                     FontAttributes="Bold"
+                     WidthRequest="80"/>
+
+              <controls:ImageButton x:Name="cardBtn"
+                       Source="arrow"
+                       BackgroundColor="#FFFFFF"
+                       HeightRequest="35"
+                       ImageHeightRequest="16"
+                       ImageWidthRequest="14"
+                       Orientation="ImageToRight"
+                       Text="{Binding CardType}"
+                       TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                       FontSize="13"
+                       WidthRequest="260"
+                       HorizontalOptions="EndAndExpand"
+                       Command="{Binding OpenCardTypeListCommand}">
+              </controls:ImageButton>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "改善标题:"
+                     FontSize = "16"
+                     FontAttributes="Bold"
+                     TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                     VerticalOptions="Center"
+                     WidthRequest="80"/>
+              <Editor
+               Text="{Binding ImproveTitle}"
+               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="80"
+               FontSize="14"
+               WidthRequest="260">
+              </Editor>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                          BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="改善描述:"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="Center"
+                WidthRequest="80"/>
+              <Editor
+                Text="{Binding ImproveDesc}"
+                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                HeightRequest="100"
+                FontSize="14"
+                WidthRequest="260">
+              </Editor>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+              BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "计划审批:" FontSize = "16" TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                FontAttributes="Bold"
+                WidthRequest="100" VerticalOptions="Center"/>
+              <controls:CheckBox
+                VerticalOptions="Center"
+                WidthRequest="40"
+                DefaultText=""
+                FontSize="25"
+                HorizontalOptions="Start"
+                Checked="{Binding PlanApproalYN}"/>
+
+              <DatePicker HorizontalOptions="Start"  Date="{Binding PlanFinishDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" >
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+            </StackLayout>
+
+            <!--<StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+              BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "计划完成日期:" FontSize = "16" TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                FontAttributes="Bold"
+                WidthRequest="100" VerticalOptions="Center"/>
+              <DatePicker HorizontalOptions="Start"  Date="{Binding PlanFinishDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" >
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+            </StackLayout>-->
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                   BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "结果审批:" FontSize = "16" TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                  FontAttributes="Bold"
+                  WidthRequest="100" VerticalOptions="Center"/>
+              <controls:CheckBox
+                VerticalOptions="Center"
+                WidthRequest="40"
+                DefaultText=""
+                FontSize="25"
+                HorizontalOptions="Start"
+                Checked="{Binding ResultApproalYN}"/>
+
+              <DatePicker HorizontalOptions="Start"  Date="{Binding ResultFinishDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+            </StackLayout>
+
+            <!--<StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+              BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "结果完成日期:" FontSize = "16" TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                     FontAttributes="Bold"
+                WidthRequest="100" VerticalOptions="Center"/>
+              <DatePicker HorizontalOptions="Start"  Date="{Binding ResultFinishDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+            </StackLayout>-->
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="备注:"
+                FontSize="16"
+                FontAttributes="Bold"
+                TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="Center"
+                WidthRequest="80"/>
+              <Editor
+                Text="{Binding Remark}"
+                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                HeightRequest="100"
+                FontSize="14"
+                WidthRequest="260">
+              </Editor>
+            </StackLayout>
+
+            <StackLayout HorizontalOptions="FillAndExpand" Padding="20, 5, 20, 5">
+              <Button Text="保 存" HeightRequest="50" BorderRadius="20" BackgroundColor="#398FC0" TextColor="#FFFFFF" Command="{Binding SaveCommand}" ></Button>
+            </StackLayout>
+
+          </StackLayout>
+        </ScrollView>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

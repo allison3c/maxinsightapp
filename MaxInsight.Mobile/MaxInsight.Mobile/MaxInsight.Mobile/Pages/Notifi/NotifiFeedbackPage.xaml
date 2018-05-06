@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.NotifiFeedbackPage"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             Title="通知反馈">
+  <ContentPage.ToolbarItems>
+    <ToolbarItem Text="通知详细" Command="{Binding NoticeDetailCommand}"/>
+    <ToolbarItem Text="反馈记录" Command="{Binding ReplyLogCommand}"/>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ECF0F1">
+      <!--<StackLayout Padding="0,10,0,10">-->
+      <StackLayout AbsoluteLayout.LayoutFlags="All"
+              AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView VerticalOptions="Start"  HorizontalOptions="FillAndExpand" >
+          <StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="附件"  VerticalOptions="Center"
+                     FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+              <controls:ImageButton x:Name="btnAttachUploadFile"
+                         BackgroundColor="Transparent"
+                         Source="files"
+                         ImageHeightRequest="20"
+                         ImageWidthRequest="16"
+                         Orientation="ImageToLeft"
+                         Text="上传文件"
+                         FontSize="12"
+                         TextColor="#3998c0"
+                         WidthRequest="100"
+                         HeightRequest="35"
+                         CommandParameter="F"
+                         Command="{Binding PickPhotoCommand}"
+                         IsVisible="{Binding VisibleYN}"></controls:ImageButton>
+              <controls:ImageButton x:Name="btnAttachUpload"
+                                    BackgroundColor="Transparent"
+                                    Source="picture"
+                                    ImageHeightRequest="20"
+                                    ImageWidthRequest="16"
+                                    Orientation="ImageToLeft"
+                                    Text="上传图片"
+                                    FontSize="12"
+                                    TextColor="#3998c0"
+                                    WidthRequest="100"
+                                    HeightRequest="35"
+                                    CommandParameter="P"
+                                    Command="{Binding PickPhotoCommand}"
+                                    IsVisible="{Binding VisibleYN}"></controls:ImageButton>
+              <controls:ImageButton x:Name="btnAttachUploadVedio"
+                                    BackgroundColor="Transparent"
+                                    Source="vedios"
+                                    ImageHeightRequest="20"
+                                    ImageWidthRequest="16"
+                                    Orientation="ImageToLeft"
+                                    Text="上传视频"
+                                    FontSize="12"
+                                    TextColor="#3998c0"
+                                    WidthRequest="100"
+                                    HeightRequest="35"
+                                    CommandParameter="V"
+                                    Command="{Binding PickPhotoCommand}"
+                                    IsVisible="{Binding VisibleYN}"></controls:ImageButton>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <statics:MListView ItemsSource="{Binding CaseAttachList}"
+                        SelectedItem="{Binding CaseAttachItem}"
+                        HeightRequest="{Binding LstHeight}"
+                        RowHeight="30"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        x:Name="lstCaseInofAttachWithDelete"
+                        IsVisible="{Binding VisibleYN}">                      
+                <b:Interaction.Behaviors>
+                  <b:BehaviorCollection>
+                    <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                  </b:BehaviorCollection>
+                </b:Interaction.Behaviors>
+                <statics:MListView.ItemTemplate>
+                  <DataTemplate>
+                    <ViewCell>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="20" />
+                          <ColumnDefinition Width="*" />
+                          <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                        <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End" />
+                        <controls:ImageButton Source="delete_gray"
+                                              BackgroundColor="Transparent"
+                                              ImageHeightRequest="18"
+                                              ImageWidthRequest="18"
+                                              WidthRequest="20"
+                                              CommandParameter="{Binding SeqNo}"
+                                              Clicked="OnDeleteCaseAttechment"
+                                              Grid.Row="0" Grid.Column="2" ></controls:ImageButton>
+                      </Grid>
+                    </ViewCell>
+                  </DataTemplate>
+                </statics:MListView.ItemTemplate>
+              </statics:MListView>
+
+              <statics:MListView ItemsSource="{Binding CaseAttachList}"
+                          SelectedItem="{Binding CaseAttachItem}"
+                          HeightRequest="{Binding LstHeight}"
+                          RowHeight="30"
+                          VerticalOptions="Center"
+                          HorizontalOptions="FillAndExpand"
+                          x:Name="lstCaseInofAttach"
+                          IsVisible="{Binding VisibleNY}">
+                <b:Interaction.Behaviors>
+                  <b:BehaviorCollection>
+                    <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+                  </b:BehaviorCollection>
+                </b:Interaction.Behaviors>
+                <statics:MListView.ItemTemplate>
+                  <DataTemplate>
+                    <ViewCell>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="20" />
+                          <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" />
+                        <Label Text="{Binding AttachName}"  Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End" />
+                      </Grid>
+                    </ViewCell>
+                  </DataTemplate>
+                </statics:MListView.ItemTemplate>
+              </statics:MListView>
+            </StackLayout>
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text = "反馈内容:" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>
+              <Editor
+               Text="{Binding FeedbackContent}"
+               FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="100"
+               WidthRequest="220"
+               IsEnabled="{Binding VisibleYN}">
+              </Editor>
+            </StackLayout>
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" IsVisible="{Binding ISshowYN}">
+              <Label Text = "审核意見:" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>
+              <Editor
+               Text="{Binding ReplyContent}"
+               FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="100"
+               WidthRequest="220"
+               IsEnabled="False">
+              </Editor>
+            </StackLayout>  
+        </StackLayout>
+        </ScrollView>       
+        <StackLayout Padding="2" Orientation="Horizontal" VerticalOptions="EndAndExpand">       
+          <Button  x:Name="commitBtn" Text="提交" BackgroundColor="#398FC0" HeightRequest="44" CommandParameter="S" Command="{Binding SaveFeedBackNoticeCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="90" HorizontalOptions="CenterAndExpand" IsVisible="{Binding VisibleYN}"></Button>
+          <Button  x:Name="cancelBtn" Text="取消" BackgroundColor="#398FC0" HeightRequest="44" CommandParameter="C" Command="{Binding CancelFeedBackNoticeCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="90" HorizontalOptions="CenterAndExpand" IsVisible="{Binding VisibleYN}"></Button>
+        </StackLayout>
+      </StackLayout>
+      <ContentView AbsoluteLayout.LayoutFlags="All"
+          IsVisible="{Binding IsLoading}"
+          BackgroundColor="#80000000"
+          HorizontalOptions="FillAndExpand"
+          VerticalOptions="FillAndExpand"
+                    AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                     IsRunning="{Binding IsLoading}"
+                     Color="#6281AB"
+                     VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand" />
+      </ContentView>
+    </AbsoluteLayout>
+</ContentPage.Content>
+</ContentPage>

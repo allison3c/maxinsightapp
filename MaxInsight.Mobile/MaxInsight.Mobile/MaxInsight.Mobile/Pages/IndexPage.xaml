@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:MaxInsight.Mobile.Pages;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.IndexPage">
+
+  <pages:MessagePage Title="消 息" Icon="message"/>
+  <pages:MainPage  Title="服 务" Icon="server"/>
+  <pages:UserPage  Title="我 的" Icon="me"/>
+
+</TabbedPage>

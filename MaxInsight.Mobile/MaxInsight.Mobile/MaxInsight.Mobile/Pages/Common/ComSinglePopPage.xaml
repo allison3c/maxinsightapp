@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+			       xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Common.ComSinglePopPage">
+    <StackLayout VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Padding="20">
+        <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand" Orientation="Vertical">
+          <rcontrol:MListView x:Name="statusLst"
+				        SeparatorVisibility="Default"
+              	ItemTapped="PassSelectItem"
+                ItemsSource="{Binding SourceList}" 
+                HeightRequest="{Binding LstHeight}"
+                RowHeight="30">
+            <rcontrol:MListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout Orientation="Horizontal"
+								VerticalOptions="CenterAndExpand"
+								HorizontalOptions="CenterAndExpand">
+                    <Label Text="{Binding Name}"></Label>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </rcontrol:MListView.ItemTemplate>
+          </rcontrol:MListView>
+          <Button Text="关闭"
+                  VerticalOptions="FillAndExpand"
+                  HorizontalOptions="FillAndExpand"
+                  Clicked="Cancel"
+                  BackgroundColor="{Binding CloseBtnColor}" TextColor="#FFFFFF" />
+        </StackLayout>
+    </StackLayout>
+</pages:PopupPage>

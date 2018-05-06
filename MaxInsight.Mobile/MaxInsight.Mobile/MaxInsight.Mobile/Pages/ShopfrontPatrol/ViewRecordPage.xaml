@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:statics="clr-namespace:MaxInsight.Mobile"
+    xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+		x:Class="MaxInsight.Mobile.ViewRecordPage">
+  <ContentPage.Content>
+    <StackLayout Padding="0, 5, 0, 5" BackgroundColor="#ecf0f1" Orientation="Vertical">
+      <StackLayout  Padding="10, 5, 10, 5" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}"
+                    x:Name="stackDis"
+                    HeightRequest="40">
+        <Label Text="经销商:" WidthRequest="80" HorizontalOptions="StartAndExpand"
+               VerticalOptions="Center"
+               FontSize="16"
+               FontAttributes="Bold"
+               TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+
+        <controls:ImageButton x:Name="statusBtn"
+                 Source="arrow"
+                 BackgroundColor="#FFFFFF"
+                 HeightRequest="35"
+                 ImageHeightRequest="16"
+                 ImageWidthRequest="14"
+                 Orientation="ImageToRight"
+                 Text="{Binding DistributorName}"
+                 FontSize="13"
+                 TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                 WidthRequest="200"
+                 HorizontalOptions="EndAndExpand"
+                 Command="{Binding OpenDistributorListCommand}">
+        </controls:ImageButton>
+      </StackLayout>
+      <StackLayout  Padding="10, 5, 10, 5" Orientation="Horizontal"
+                     BackgroundColor="{x:Static statics:StaticColor.ContentWhite}"
+                     HeightRequest="40">
+        <Label Text="来源类型:" WidthRequest="80" HorizontalOptions="StartAndExpand"
+               VerticalOptions="Center"
+               FontSize="16"
+               FontAttributes="Bold"
+               TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+
+        <controls:ImageButton x:Name="SourceTypeBtn"
+                 Source="arrow"
+                 BackgroundColor="#FFFFFF"
+                 HeightRequest="35"
+                 ImageHeightRequest="16"
+                 ImageWidthRequest="14"
+                 Orientation="ImageToRight"
+                 Text="{Binding SourceTypeName}"
+                 FontSize="13"
+                 TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                 WidthRequest="200"
+                 HorizontalOptions="EndAndExpand"
+                 Command="{Binding OpenSourceTypeCommand}">
+        </controls:ImageButton>
+
+      </StackLayout>
+      <StackLayout Padding="10, 5, 10, 5" Orientation="Horizontal"
+					BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+        <Label Text="期间:" WidthRequest="80" HorizontalOptions="StartAndExpand"
+               FontSize="16"
+               TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+               FontAttributes="Bold"
+               VerticalOptions="Center">
+
+        </Label>
+        <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+          <DatePicker x:Name="startDateDP" HorizontalOptions="Start"  Date="{Binding StartDate}" TextColor="{x:Static statics:StaticColor.ContentTitleColor}">
+            <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+          </DatePicker>
+          <Label Text="~" HorizontalOptions="Center" VerticalTextAlignment="Center"></Label>
+          <DatePicker x:Name="endDateDP" HorizontalOptions="EndAndExpand"  Date="{Binding EndDate}" TextColor="{x:Static statics:StaticColor.ContentTitleColor}">
+            <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+          </DatePicker>
+        </StackLayout>
+      </StackLayout>
+      <StackLayout Padding="20, 5, 20, 5" HorizontalOptions="FillAndExpand">
+        <Button BorderRadius="5"
+                Text="查 询"
+                HeightRequest="50"
+						    BackgroundColor="#3d91bf"
+						    TextColor="{x:Static statics:StaticColor.ContentWhite}"
+					      Command="{Binding Search}">
+        </Button>
+      </StackLayout>
+    </StackLayout>
+  </ContentPage.Content>
+</ContentPage>

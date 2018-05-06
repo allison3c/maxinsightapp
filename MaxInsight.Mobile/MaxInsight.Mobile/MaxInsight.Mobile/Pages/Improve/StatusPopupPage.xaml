@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:PopupPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+			 xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Improve.StatusPopupPage">
+  <!--<ScrollView BackgroundColor="#ECF0F1">-->
+    <StackLayout VerticalOptions="Center" HorizontalOptions="CenterAndExpand" Padding="20">
+      <!--<StackLayout VerticalOptions="Center"
+          HorizontalOptions="CenterAndExpand"
+          Orientation="Vertical"
+          BackgroundColor="#ECF0F1">-->
+        <StackLayout BackgroundColor="White" HorizontalOptions="CenterAndExpand" Orientation="Vertical">
+          <!--<rcontrol:MListView x:Name="planStatusLst"
+				SeparatorVisibility="Default"
+              	ItemTapped="PassPlanStatus">
+            <rcontrol:MListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout Orientation="Horizontal"
+								VerticalOptions="CenterAndExpand"
+								HorizontalOptions="CenterAndExpand">
+                    <Label Text="{Binding PName}"></Label>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </rcontrol:MListView.ItemTemplate>
+          </rcontrol:MListView>-->
+          <!--<rcontrol:MListView x:Name="resultStatusLst"
+				SeparatorVisibility="Default"
+	          	ItemTapped="PassResultStatus">
+            <rcontrol:MListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout Orientation="Horizontal"
+								VerticalOptions="CenterAndExpand"
+								HorizontalOptions="CenterAndExpand">
+                    <Label Text="{Binding RName}"></Label>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </rcontrol:MListView.ItemTemplate>
+          </rcontrol:MListView>-->
+          <rcontrol:MListView x:Name="impStatusLstView"
+				SeparatorVisibility="Default"
+              	ItemTapped="PassImpStatus">
+            <rcontrol:MListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout Orientation="Horizontal"
+								VerticalOptions="CenterAndExpand"
+								HorizontalOptions="CenterAndExpand">
+                    <Label Text="{Binding ImpStatusName}"></Label>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </rcontrol:MListView.ItemTemplate>
+          </rcontrol:MListView>
+          <Button Text="关闭"
+                  VerticalOptions="FillAndExpand"
+                  HorizontalOptions="FillAndExpand"
+                  Clicked="Cancel"
+                  BackgroundColor="#398FC0" TextColor="#FFFFFF" />
+        </StackLayout>
+      <!--</StackLayout>-->
+    </StackLayout>
+  <!--</ScrollView>-->
+</pages:PopupPage>

@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.ReviewPlans.ReviewPlansDtlPage"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile">
+  <ContentPage.ToolbarItems>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView BackgroundColor="#ecf0f1">
+          <StackLayout>
+            <StackLayout Padding="10, 5" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "标题:" FontSize = "14"
+                VerticalOptions="Center"
+                WidthRequest="80"  FontAttributes="Bold" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              <Editor
+               Text="{Binding Title}"
+               IsEnabled="False"
+               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="80"
+               FontSize="14"
+               WidthRequest="260">
+              </Editor>
+            </StackLayout>
+            <StackLayout Padding="10, 5" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text = "经销商:" FontSize = "14"
+                VerticalOptions="Center"
+                WidthRequest="80" FontAttributes="Bold" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              <Editor
+               Text="{Binding Name}"
+               IsEnabled="False"
+               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               FontSize="14"
+               WidthRequest="260" HeightRequest="80" VerticalOptions="StartAndExpand">
+              </Editor>
+            </StackLayout>
+            <StackLayout Padding="10, 5" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "拜访时间:" FontSize = "14"
+                VerticalOptions="Center"
+                WidthRequest="80" FontAttributes="Bold" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              <Editor
+               Text="{Binding VisitDateTime}"
+               IsEnabled="False"
+               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="80"
+               FontSize="14"
+               WidthRequest="260">
+              </Editor>
+            </StackLayout>
+            <StackLayout Padding="10, 5" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "拜访类型:" FontSize = "14"
+                VerticalOptions="Center"
+                WidthRequest="80" FontAttributes="Bold" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+              <Editor
+               Text="{Binding VisitTypeName}"
+               IsEnabled="False"
+               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               HeightRequest="80"
+               FontSize="14"
+               WidthRequest="260">
+              </Editor>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" Padding="10,5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" x:Name="image">
+              <Label Text = "任务详细"  FontSize="14"
+                HorizontalOptions="StartAndExpand" VerticalOptions="Center" FontAttributes="Bold" TextColor="{x:Static statics:StaticColor.ContentFontColor}" />
+              <Image x:Name="oneImage" Source="icon_hide" HorizontalOptions="EndAndExpand">
+              </Image>
+            </StackLayout>
+            <StackLayout x:Name="stackImage">
+              <StackLayout Orientation="Horizontal" Padding="10,5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                <ListView
+                    ItemsSource="{Binding PlansDtlDtoList}"
+                    SeparatorVisibility="Default"
+                    HeightRequest="{Binding LstHeight}">
+                  <ListView.Header>
+                    <StackLayout >
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="40" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="40" />
+                          <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackLayout Grid.Row="0" Grid.Column="0" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand">
+                          <Label Text="序号" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="0" Grid.Column="1" HorizontalOptions="StartAndExpand" VerticalOptions="CenterAndExpand">
+                          <Label Text="任务简介" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                        </StackLayout>
+                      </Grid>
+                    </StackLayout>
+                  </ListView.Header>
+                  <ListView.ItemTemplate>
+                    <DataTemplate>
+                      <ViewCell>
+                        <Grid>
+                          <Grid.RowDefinitions>
+                            <RowDefinition Height="32" />
+                          </Grid.RowDefinitions>
+                          <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40" />
+                            <ColumnDefinition Width="*" />
+                          </Grid.ColumnDefinitions>
+                          <Label Text="{Binding SeqNo}" Grid.Row="0" Grid.Column="0" VerticalTextAlignment="End" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                          <Label Text="{Binding TPTitle}" Grid.Row="0" Grid.Column="1" VerticalTextAlignment="End" FontSize="14" TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </Grid>
+                      </ViewCell>
+                    </DataTemplate>
+                  </ListView.ItemTemplate>
+                </ListView>
+              </StackLayout>
+            </StackLayout>
+            <StackLayout Padding="10,5" Orientation="Horizontal" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text = "审批意见:" FontSize = "14" FontAttributes="Bold" TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                VerticalOptions="StartAndExpand"
+                WidthRequest="80"/>
+              <Editor
+               Text="{Binding ReviewPlansContent}"
+               FontSize="14"
+               HeightRequest="100"
+               WidthRequest="220" TextColor = "{x:Static statics:StaticColor.ContentFontColor}">
+              </Editor>
+            </StackLayout>
+            <StackLayout  Orientation="Horizontal" HorizontalOptions="Center" Padding="10,5" BackgroundColor="Transparent">
+              <controls:ImageButton x:Name="btnPassImp"
+                                    Command="{Binding PassCommand}"
+                                    Text="通 过"
+                                    BackgroundColor="#398FC0"
+                                    TextColor="#FFFFFF"
+                                    HeightRequest = "40"
+                                    WidthRequest = "150"
+                                ></controls:ImageButton>
+              <controls:ImageButton x:Name="btnRefuseImp"
+                                    Command="{Binding RefuseCommand}"
+                                    Text="驳 回"
+                                    BackgroundColor="#398FC0"
+                                    TextColor="#FFFFFF"
+                                    HeightRequest = "40"
+                                    WidthRequest = "150"
+                                ></controls:ImageButton>
+            </StackLayout>
+          </StackLayout>
+        </ScrollView>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

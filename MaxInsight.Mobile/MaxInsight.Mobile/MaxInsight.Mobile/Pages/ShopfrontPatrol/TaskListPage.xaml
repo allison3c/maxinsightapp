@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:statics="clr-namespace:MaxInsight.Mobile"
+		x:Class="MaxInsight.Mobile.TaskListPage"
+		x:Name="TaskListViewPage">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <statics:InverseBool x:Key="ConvertToBealon" />
+      <statics:FinisCheckBool x:Key="ConvertToFinishBealon" />
+      <statics:TaskValueConvert x:Key="ConvertTaskValue" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ECF0F1">
+      <StackLayout VerticalOptions="FillAndExpand">
+        <ListView  x:Name="listView"
+							ItemsSource="{Binding TaskList}"
+							ItemTapped="Handle_ItemTapped"
+							HasUnevenRows="true"
+							SeparatorVisibility="None">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <ViewCell>
+                <StackLayout>
+                  <StackLayout Orientation="Vertical" BackgroundColor="White"
+                    Padding="10, 5, 10, 5">
+                    <StackLayout>
+                      <Label Text = "{Binding TCTitle}" FontSize="20" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                      <Label Text = "{Binding TPId}" IsVisible="false" />
+                    </StackLayout>
+                    <!--<StackLayout Orientation="Horizontal">
+                      <Label Text = "任务代码:" WidthRequest="150" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14" FontAttributes="Bold"/>
+                      <Label Text = "{Binding TCCode}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                    </StackLayout>-->
+                    <StackLayout Orientation="Horizontal">
+                      <Label Text = "计划任务:" WidthRequest="110" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14" FontAttributes="Bold"/>
+                      <Label Text = "{Binding PTitle}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                      <Label Text = "任务状态:" WidthRequest="110" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14" FontAttributes="Bold"/>
+                      <Label Text = "{Binding TPStatus, Converter={StaticResource ConvertTaskValue}}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                    </StackLayout>
+                    <!--<StackLayout Orientation="Horizontal">
+                      <Label Text = "来源类型:" WidthRequest="150" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14" FontAttributes="Bold"/>
+                      <Label Text = "{Binding SourceType}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                    </StackLayout>-->
+                    <StackLayout Orientation="Horizontal">
+                      <Label Text = "制作者:" WidthRequest="110" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14" FontAttributes="Bold"/>
+                      <Label Text = "{Binding UserName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                    </StackLayout>
+                  </StackLayout>
+                  <StackLayout BackgroundColor="#ECF0F1">
+                    <StackLayout.HeightRequest>
+                      <OnPlatform x:TypeArguments="x:Double" Android="0" iOS="5" />
+                    </StackLayout.HeightRequest>
+                  </StackLayout>
+                </StackLayout>
+              </ViewCell>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

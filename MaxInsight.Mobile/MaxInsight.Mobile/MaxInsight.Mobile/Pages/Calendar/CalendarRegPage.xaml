@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.Calendar.CalendarRegPage">
+
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ScrollView BackgroundColor="#ecf0f1">
+          <StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "标题:" 
+                FontSize = "16"
+                VerticalOptions="Center"
+                TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                WidthRequest="80"/>
+              <Editor
+               Text="{Binding Title}"
+               HeightRequest="80"
+               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+               FontSize="14"
+               IsEnabled="{Binding VisibleYN}"
+               WidthRequest="260">
+              </Editor>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                     BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "开始时间:" 
+                FontSize = "16"
+                TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="Center"
+                WidthRequest="80"/>
+              <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                <DatePicker x:Name="startDateDP" HorizontalOptions="Start"
+                            TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                            Date="{Binding StartDate}" IsEnabled="{Binding VisibleYN}">
+                  <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+                </DatePicker>
+                <TimePicker Time="{Binding StartTime}" 
+                            TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                            IsEnabled="{Binding VisibleYN}">
+                  <TimePicker.Format>HH:mm</TimePicker.Format>
+                </TimePicker>
+              </StackLayout>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                     BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+              <Label Text = "结束时间:" 
+                FontSize = "16"
+                TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                VerticalOptions="Center"
+                WidthRequest="80"/>
+              <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                <DatePicker x:Name="endDateDP" HorizontalOptions="Start"
+                            TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                            Date="{Binding EndDate}" IsEnabled="{Binding VisibleYN}">
+                  <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+                </DatePicker>
+                <TimePicker Time="{Binding EndTime}" 
+                            TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                            IsEnabled="{Binding VisibleYN}">
+                  <TimePicker.Format>HH:mm</TimePicker.Format>
+                </TimePicker>
+              </StackLayout>
+            </StackLayout>
+
+            <StackLayout Padding="10, 0, 10, 0" Orientation="Horizontal"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+              <Label Text="内容:" 
+                     FontSize="16"
+                     TextColor="{x:Static statics:StaticColor.ContentTitleColor}"
+                     VerticalOptions="Center"
+                     WidthRequest="80"/>
+              <Editor
+                Text="{Binding Content}"
+                HeightRequest="100"
+                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                FontSize="14"
+                IsEnabled="{Binding VisibleYN}"
+                WidthRequest="260">
+              </Editor>
+            </StackLayout>
+
+            <StackLayout  Padding="2" Orientation="Horizontal" HeightRequest="50" HorizontalOptions="Center" IsVisible="{Binding VisibleYN}">
+              <Button Text="保存" BackgroundColor="#6DB2EA" HeightRequest="44"  Command="{Binding CalendarSaveCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="80" HorizontalOptions="StartAndExpand" ></Button>
+              <Button Text="删除" x:Name="btnDelete"   BackgroundColor="#6DB2EA" HeightRequest="44"  Command="{Binding CalendarDeleteCommand}" TextColor="#FFFFFF" BorderRadius="10" WidthRequest="80" HorizontalOptions="StartAndExpand" ></Button>
+            </StackLayout>
+
+            <StackLayout IsVisible="False">
+              <Label Text="{Binding CType}" x:Name="lblCtype"></Label>
+            </StackLayout>
+          </StackLayout>
+        </ScrollView>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

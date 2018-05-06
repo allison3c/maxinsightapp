@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+		xmlns:statics="clr-namespace:MaxInsight.Mobile"
+		xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+		xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+		x:Class="MaxInsight.Mobile.ViewRegistScorePage">
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <statics:PicTypeConvert x:Key="ConvertToPicType" />
+      <statics:ScoreValueConvert x:Key="ConvertScore" />
+    </ResourceDictionary>
+  </ContentPage.Resources>
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All"
+                AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <Grid>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <ScrollView VerticalOptions="FillAndExpand">
+            <StackLayout VerticalOptions="FillAndExpand" Orientation="Vertical">
+              <StackLayout Padding="0, 5, 0, 5">
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                  <Label Text = "体系号" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    VerticalOptions="Center"
+                    WidthRequest="100"/>
+                  <Label Text = "{Binding CurrentSystem.TIId}" FontSize = "13"
+                    TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                    VerticalOptions="Center" HorizontalOptions="Start"/>
+                </StackLayout>
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                  <Label Text = "执行顺序" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    WidthRequest="100" VerticalOptions="Center"/>
+                  <Label Text = "{Binding CurrentSystem.SeqNo}" FontSize = "13"
+                    TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                    VerticalOptions="Center" HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"/>
+                </StackLayout>
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                  <Label Text = "指示名称" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    WidthRequest="100" VerticalOptions="Center"/>
+                  <Label Text = "{Binding CurrentSystem.Title}" FontSize = "13"
+                    TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                    VerticalOptions="Center" HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"/>
+                </StackLayout>
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                  <Label Text = "执行方式" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    WidthRequest="100" VerticalOptions="Center"/>
+                  <Label Text = "{Binding CurrentSystem.ExeMode}" FontSize = "13"
+                    TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                    VerticalOptions="Center" HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"/>
+                </StackLayout>
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                  <Label Text = "评分标准" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    WidthRequest="100" VerticalOptions="Center"/>
+                  <Label Text = "{Binding CurrentSystem.ScoreStandard}" FontSize = "13"
+                    TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                    VerticalOptions="Center" HorizontalOptions="Start"
+                    HorizontalTextAlignment="Start"/>
+                </StackLayout>
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    x:Name="picImage"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                  <Label Text = "照片" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                  <Image x:Name="oneImage" Source="icon_hide" HorizontalOptions="EndAndExpand">
+                    <!--<Image.GestureRecognizers>
+					          <TapGestureRecognizer Command="{Binding ShowTowOrHide}"/>
+					        </Image.GestureRecognizers>-->
+                  </Image>
+                </StackLayout>
+                <StackLayout x:Name="stackPic">
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                    <Label Text="现场照片"
+                          TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                      HorizontalOptions="Start"
+                      VerticalOptions="Center"
+                      FontSize="14"/>
+                    <Label Text="失分照片"
+                      IsVisible = "false"
+                          TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                      HorizontalOptions="CenterAndExpand"
+                      VerticalOptions="Center"
+                      FontSize="14"/>
+                  </StackLayout>
+                  <StackLayout Orientation="Horizontal" BackgroundColor="White" >
+                    <ListView  x:Name="piclistView"
+                        ItemsSource="{Binding CurrentSystem.PStandardList}"
+                        RowHeight="50"
+                        SelectedItem="{Binding CurrentPictureStand}"
+                        HeightRequest="{Binding PicRowHeight}"
+                        SeparatorVisibility="Default">
+                      <ListView.ItemTemplate>
+                        <DataTemplate>
+                          <ViewCell>
+                            <ViewCell.View>
+                              <StackLayout Orientation="Horizontal" Margin="20, 0, 20, 0">
+                                <Label Text="{Binding StandardPicName}"
+                              FontSize="14"
+                                  TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                              HorizontalOptions="Start"
+                              VerticalOptions="Center"/>
+                                <StackLayout Orientation="Horizontal"
+                                      HorizontalOptions="EndAndExpand">
+                                  <Image Source="{Binding SuccessImage}"
+                                                          BackgroundColor="Transparent"
+                                      WidthRequest="18"
+                                      HeightRequest="18">
+                                  </Image>
+                                  <controls:ImageButton
+                                                  FontSize="10"
+                                                  TextColor="{x:Static statics:StaticColor.ContentWhite}"
+                                                  BackgroundColor="#3d91bf"
+                                                  Text="预览"
+                                                  Margin="0,8,0,8"
+														                      WidthRequest="45"
+                                                  HeightRequest="30"
+														                      Clicked="OnPreviewPlanAttechment"
+				                                          CommandParameter="{Binding .}">
+                                  </controls:ImageButton>
+                                  <!--<controls:ImageButton Source="icon_preview"
+                                                          BackgroundColor="Transparent"
+                                      WidthRequest="30"
+                                      ImageWidthRequest="18"
+                                      ImageHeightRequest="18"
+                                      Clicked="OnPreviewPlanAttechment"
+                                                          CommandParameter="{Binding .}">
+                                  </controls:ImageButton>-->
+
+                                  <StackLayout.WidthRequest>
+                                    <OnPlatform x:TypeArguments="x:Double" Android="50" iOS="50" />
+                                  </StackLayout.WidthRequest>
+                                </StackLayout>
+                              </StackLayout>
+                            </ViewCell.View>
+                          </ViewCell>
+                        </DataTemplate>
+                      </ListView.ItemTemplate>
+                    </ListView>
+                  </StackLayout>
+                  <StackLayout Padding="20, 5, 20, 5" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                    <Label Text="失分照片"
+                          TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                      HorizontalOptions="StartAndExpand"
+                      VerticalOptions="Center"
+                      FontSize="14"/>
+                  </StackLayout>
+                  <StackLayout HorizontalOptions="FillAndExpand"
+                      VerticalOptions="FillAndExpand"
+                      Orientation="Horizontal"
+                      Padding="20, 0, 20, 0" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                    <rcontrol:MListView  x:Name="lossImageList"
+                        ItemsSource="{Binding CurrentSystem.SPicList}"
+                        RowHeight="50"
+                        HeightRequest="{Binding LossImageList}"
+                                SelectedItem="{Binding LossPicAttachItem}"
+                        SeparatorVisibility="Default">
+                      <b:Interaction.Behaviors>
+                        <b:BehaviorCollection>
+                          <b:EventToCommand EventName="ItemTapped" Command="{Binding PreviewImageCommand}" />
+                        </b:BehaviorCollection>
+                      </b:Interaction.Behaviors>
+                      <rcontrol:MListView.ItemTemplate>
+                        <DataTemplate>
+                          <ViewCell>
+                            <ViewCell.View>
+                              <StackLayout Orientation="Horizontal" Margin="20, 5, 20, 5">
+                                <Label Text="{Binding PicName}"
+                              FontSize="14"
+                                  TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                              HorizontalOptions="Start"
+                              VerticalOptions="Center"/>
+                              </StackLayout>
+                            </ViewCell.View>
+                          </ViewCell>
+                        </DataTemplate>
+                      </rcontrol:MListView.ItemTemplate>
+                    </rcontrol:MListView>
+                  </StackLayout>
+                </StackLayout>
+                <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal" HeightRequest="40" x:Name="checkImage"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                  <Label Text = "检查标准" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                    HorizontalOptions="StartAndExpand" VerticalOptions="Center"/>
+                  <Image x:Name="twoImage" Source="icon_hide" HorizontalOptions="EndAndExpand">
+                  </Image>
+                </StackLayout>
+                <StackLayout x:Name="stackCheck">
+                  <StackLayout BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                    <Label Text = "不合格" HorizontalOptions="EndAndExpand" FontSize="14" Margin="0,0,20,0"></Label>
+                    <ListView  x:Name="standerlistView"
+                        ItemsSource="{Binding CurrentSystem.CSList, Mode=TwoWay}"
+                        RowHeight="50"
+                        HeightRequest="{Binding RowHeight}"
+                        BackgroundColor="{x:Static statics:StaticColor.ContentWhite}"
+                        HorizontalOptions="FillAndExpand"
+                        SeparatorVisibility="Default">
+                      <ListView.ItemTemplate>
+                        <DataTemplate>
+                          <ViewCell>
+                            <StackLayout Orientation="Horizontal"
+                                  Margin="20, 0, 20, 0"
+                                  VerticalOptions="Center">
+                              <Label Text="{Binding CContent}"
+                                TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                            HorizontalOptions="StartAndExpand"
+                            WidthRequest="200"
+                            FontSize="14"
+                            VerticalOptions="Center"/>
+                              <rcontrol:ECheckBox VerticalOptions="Center"
+                                                            DefaultText=""
+                                    WidthRequest="40"
+                                    FontSize="25"
+                                    IsEnabled="false"
+                                    HorizontalOptions="EndAndExpand"
+                                    Checked="{Binding IsCheck, Mode=TwoWay}"/>
+                            </StackLayout>
+                          </ViewCell>
+                        </DataTemplate>
+                      </ListView.ItemTemplate>
+                    </ListView>
+                  </StackLayout>
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                    <Label Text = "得分" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                      VerticalOptions="Center"
+                      WidthRequest="100"/>
+                    <Label
+                      FontSize="14"
+                      WidthRequest="100"
+                      TextColor = "{x:Static statics:StaticColor.ContentFontColor}"
+                        Text="{Binding CurrentScore}"
+                                    HorizontalOptions="CenterAndExpand"
+                                    VerticalOptions="Center" />
+                  </StackLayout>
+
+
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                         BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                    <Label Text = "改善计划:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                      WidthRequest="100" VerticalOptions="Center"/>
+                    <rcontrol:ECheckBox
+                      VerticalOptions="Center"
+                      WidthRequest="40"
+                      DefaultText=""
+                      FontSize="25"
+                      IsEnabled="False"
+                      HorizontalOptions="Start"
+                      Checked="{Binding CurrentSystem.PlanApproalYN}"/>
+                  </StackLayout>
+
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                    <Label Text = "计划完成日期:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                      WidthRequest="100" VerticalOptions="Center"/>
+                    <Label Text="{Binding CurrentSystem.StrPlanFinishDate}" VerticalOptions="Center"></Label>
+                  </StackLayout>
+
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                         BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                    <Label Text = "改善结果:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                        WidthRequest="100" VerticalOptions="Center"/>
+                    <rcontrol:ECheckBox
+                      VerticalOptions="Center"
+                      WidthRequest="40"
+                      DefaultText=""
+                      FontSize="25"
+                      HorizontalOptions="Start"
+                      IsEnabled="False"
+                      Checked="{Binding CurrentSystem.ResultApproalYN}"/>
+                  </StackLayout>
+
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                    BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+                    <Label Text = "结果完成日期:" FontSize = "15" TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                      WidthRequest="100" VerticalOptions="Center"/>
+                    <Label Text="{Binding CurrentSystem.StrResultFinishDate}" VerticalOptions="Center"></Label>
+                  </StackLayout>
+
+                  <StackLayout Padding="20, 0, 20, 0" Orientation="Horizontal"
+                      BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+                    <Label Text="备注" FontSize="15"
+                      TextColor = "{x:Static statics:StaticColor.ContentBlack}"
+                      VerticalOptions="Center"
+                      WidthRequest="80"/>
+                    <Editor
+                      FontSize="14"
+                      IsEnabled="false"
+                      TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                      Text="{Binding CurrentSystem.Remarks}"
+                      HeightRequest="160"
+                      WidthRequest="240">
+                    </Editor>
+                  </StackLayout>
+                </StackLayout>
+              </StackLayout>
+            </StackLayout>
+          </ScrollView>
+          <StackLayout Grid.Row="1"
+              Orientation="Horizontal" Padding="20,0,20,10">
+            <controls:ImageButton x:Name="pre"
+                                  BackgroundColor="#3d91bf"
+                                  Text="上一题"
+                    FontSize="12"
+                    Command="{Binding PreCommand}"
+                    IsEnabled="{Binding IsPreEnable}"
+                                  TextColor="#ffffff"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Start">
+            </controls:ImageButton>
+            <controls:ImageButton x:Name="next"
+                                  BackgroundColor="#3d91bf"
+                    VerticalOptions="Center"
+                                  Text="下一题"
+                    FontSize="12"
+                      Command="{Binding NextCommand}"
+                                  TextColor="#ffffff"
+                    HorizontalOptions="Center"/>
+            <controls:ImageButton x:Name="jump"
+                                  BackgroundColor="#3d91bf"
+                                  VerticalOptions="Center"
+                                  Text="跳转到"
+                    FontSize="12"
+                      Command="{Binding JumpCommand}"
+                                  TextColor="#ffffff"
+                    HorizontalOptions="End"/>
+            <controls:ExtendedEntry
+                              HasBorder="true"
+                                XAlign="Center"
+                  FontSize="12"
+                  Keyboard="Numeric"
+                    Text="{Binding JumpPage}"
+                                HorizontalOptions="EndAndExpand"
+                                VerticalOptions="Center">
+              <controls:ExtendedEntry.HeightRequest>
+                <OnPlatform x:TypeArguments="x:Double" Android="38" iOS="30" />
+              </controls:ExtendedEntry.HeightRequest>
+              <controls:ExtendedEntry.WidthRequest>
+                <OnPlatform x:TypeArguments="x:Double" Android="50" iOS="50" />
+              </controls:ExtendedEntry.WidthRequest>
+            </controls:ExtendedEntry>
+          </StackLayout>
+        </Grid>
+      </StackLayout>
+      <ContentView AbsoluteLayout.LayoutFlags="All"
+					IsVisible="{Binding IsLoading}"
+					BackgroundColor="#80000000"
+					HorizontalOptions="FillAndExpand"
+					VerticalOptions="FillAndExpand"
+                   	AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                     IsRunning="{Binding IsLoading}"
+                     Color="#6281AB"
+                     VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand" />
+      </ContentView>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

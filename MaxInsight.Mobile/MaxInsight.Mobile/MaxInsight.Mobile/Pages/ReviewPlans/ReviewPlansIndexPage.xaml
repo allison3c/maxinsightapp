@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.ReviewPlans.ReviewPlansIndexPage"
+              xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms">
+
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ecf0f1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <StackLayout VerticalOptions="FillAndExpand">
+          <statics:MListView
+            ItemsSource="{Binding ReviewPlansList}"
+                  SelectedItem="{Binding SelectedPlansItem}"
+                  HasUnevenRows="True"
+                  VerticalOptions="FillAndExpand"
+                  HorizontalOptions="FillAndExpand" SeparatorVisibility="None">
+            <b:Interaction.Behaviors>
+              <b:BehaviorCollection>
+                <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+              </b:BehaviorCollection>
+            </b:Interaction.Behaviors>
+            <statics:MListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout Orientation="Vertical">
+                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10,5">
+                      <Label Text="{Binding Title}" HorizontalOptions="StartAndExpand" FontSize="20" FontAttributes="Bold" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                      <Grid>
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="25" />
+                          <RowDefinition Height="25" />
+                        <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="55*" />
+                          <ColumnDefinition Width="45*" />
+                        </Grid.ColumnDefinitions>
+                        <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="制作人:" FontSize="14" FontAttributes="Bold"  TextColor="{x:Static statics:StaticColor.ContentFontColor}" />
+                          <Label Text="{Binding UserName}" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="制作时间:" FontSize="14" FontAttributes="Bold"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                          <Label Text="{Binding InDateTime}" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="拜访类型:" FontSize="14" FontAttributes="Bold"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                          <Label Text="{Binding VisitTypeName}" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="拜访时间:" FontSize="14" FontAttributes="Bold"  TextColor="{x:Static statics:StaticColor.ContentFontColor}" />
+                          <Label Text="{Binding VisitDateTime}" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="2" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="经销商:" FontSize="14" FontAttributes="Bold"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                          <Label Text="{Binding Name}" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="2" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="区域:" FontSize="14" FontAttributes="Bold"  TextColor="{x:Static statics:StaticColor.ContentFontColor}" />
+                          <Label Text="{Binding DisName}" FontSize="14"  TextColor="{x:Static statics:StaticColor.ContentFontColor}"/>
+                        </StackLayout>
+                      </Grid>
+                    </StackLayout>
+                    <StackLayout BackgroundColor="#ECF0F1">
+                      <StackLayout.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double" Android="0" iOS="5" />
+                      </StackLayout.HeightRequest>
+                    </StackLayout>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </statics:MListView.ItemTemplate>
+          </statics:MListView>
+        </StackLayout>
+      </StackLayout>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

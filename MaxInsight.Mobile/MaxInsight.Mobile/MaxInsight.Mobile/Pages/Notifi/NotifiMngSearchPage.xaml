@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Notifi.NotifiMngSearchPage"
+			       xmlns:rcontrol="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+    	       xmlns:b="clr-namespace:Xamarin.Behaviors;assembly=Xamarin.Behaviors"
+             x:Name="NotifiMngSearchPage"
+             Title="通知查询">
+  <ContentPage.ToolbarItems>
+    <!--<ToolbarItem Icon="bell" />-->
+    <ToolbarItem Icon="search" Command="{Binding GoNotifiMngConditionPageCommand}"/>
+  </ContentPage.ToolbarItems>
+  <ContentPage.Content>
+    <AbsoluteLayout BackgroundColor="#ECF0F1">
+      <StackLayout AbsoluteLayout.LayoutFlags="All"
+                AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" BackgroundColor="#C0C0C0">
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,5,5,0">
+            <Label Text="查询条件" HorizontalOptions="StartAndExpand" FontAttributes="Bold" FontSize="20"/>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,0,5,0">
+            <Label Text="通知状态:" HorizontalOptions="Start"></Label>
+            <Label Text="{Binding StatusSelectName}" HorizontalOptions="StartAndExpand"></Label>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,0,5,0">
+            <Label Text="反馈与否:" HorizontalOptions="Start"></Label>
+            <Label Text="{Binding ReplySelectedName}" HorizontalOptions="FillAndExpand"></Label>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,0,5,0">
+            <Label Text="查询期间:" HorizontalOptions="Start"></Label>
+            <Label Text="{Binding StartDateAndEndDate}" HorizontalOptions="FillAndExpand"></Label>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,0,5,0">
+            <Label Text="通知对象:" HorizontalOptions="Start"></Label>
+            <Label Text="{Binding NoticeReaderDes}" HorizontalOptions="StartAndExpand"></Label>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,0,5,0">
+            <Label Text="通知编号:" HorizontalOptions="Start"></Label>
+            <Label Text="{Binding NoticeNo}" HorizontalOptions="StartAndExpand"></Label>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="5,0,5,5">
+            <Label Text="通知标题:" HorizontalOptions="Start"></Label>
+            <Label Text="{Binding NoticeTitle}" HorizontalOptions="StartAndExpand"></Label>
+          </StackLayout>
+        </StackLayout>
+        <StackLayout VerticalOptions="FillAndExpand">
+          <rcontrol:MListView
+            ItemsSource="{Binding NoticeList}"
+                  SelectedItem="{Binding SelectedNoticeItem}"
+                  HasUnevenRows="True"
+                  VerticalOptions="FillAndExpand"
+                  SeparatorVisibility="None"
+                  HorizontalOptions="FillAndExpand">
+            <b:Interaction.Behaviors>
+              <b:BehaviorCollection>
+                <b:EventToCommand EventName="ItemTapped" Command="{Binding ItemTappedCommand}" />
+              </b:BehaviorCollection>
+            </b:Interaction.Behaviors>
+            <rcontrol:MListView.ItemTemplate>
+              <DataTemplate>
+                <ViewCell>
+                  <StackLayout Orientation="Vertical">
+                    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10,5">
+                      <Label Text="{Binding Title}" HorizontalOptions="StartAndExpand" FontAttributes="Bold" FontSize="20"
+                             TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
+                      <StackLayout Orientation="Horizontal">
+                        <Label Text="通知编号：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14"/>
+                        <Label Text="{Binding NoticeNo}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                      </StackLayout>
+                      <Grid IsVisible="{Binding ShowFirstGrid}">
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="*" />
+                          <RowDefinition Height="*" />
+                          <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="50*" />
+                          <ColumnDefinition Width="50*" />
+                        </Grid.ColumnDefinitions>
+                        <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="通知状态：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding StatusName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="反馈与否：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding NeedReplyName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="制作人：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding MadeUserName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="制作时间：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14"/>
+                          <Label Text="{Binding MadeDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="2" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="审核时间：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding ReplyDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="2" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="反馈时间：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding FeedbackDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                      </Grid>
+                      <Grid IsVisible="{Binding ShowSecondGrid}">
+                        <Grid.RowDefinitions>
+                          <RowDefinition Height="*" />
+                          <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                          <ColumnDefinition Width="50*" />
+                          <ColumnDefinition Width="50*" />
+                        </Grid.ColumnDefinitions>
+                        <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="通知状态：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding StatusName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="0" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="反馈与否：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding NeedReplyName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" >
+                          <Label Text="制作人：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding MadeUserName}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                        <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal" >
+                          <Label Text="制作时间：" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontAttributes="Bold" FontSize="14" />
+                          <Label Text="{Binding MadeDate}" TextColor="{x:Static statics:StaticColor.ContentFontColor}" FontSize="14"/>
+                        </StackLayout>
+                      </Grid>
+                    </StackLayout>
+                    <StackLayout BackgroundColor="#ECF0F1">
+                      <StackLayout.HeightRequest>
+                        <OnPlatform x:TypeArguments="x:Double" Android="0" iOS="5" />
+                      </StackLayout.HeightRequest>
+                    </StackLayout>
+                  </StackLayout>
+                </ViewCell>
+              </DataTemplate>
+            </rcontrol:MListView.ItemTemplate>
+          </rcontrol:MListView>
+        </StackLayout>
+      </StackLayout>
+      <ContentView AbsoluteLayout.LayoutFlags="All"
+					IsVisible="{Binding IsLoading}"
+					BackgroundColor="#80000000"
+					HorizontalOptions="FillAndExpand"
+					VerticalOptions="FillAndExpand"
+                   	AbsoluteLayout.LayoutBounds="0,0,1,1">
+        <ActivityIndicator IsVisible="{Binding IsLoading}"
+                     IsRunning="{Binding IsLoading}"
+                     Color="#6281AB"
+                     VerticalOptions="CenterAndExpand"
+                     HorizontalOptions="CenterAndExpand" />
+      </ContentView>
+    </AbsoluteLayout>
+  </ContentPage.Content>
+</ContentPage>

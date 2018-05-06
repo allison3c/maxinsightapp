@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/launcher_screen"
+    android:gravity="center_horizontal">
+  <LinearLayout android:layout_height="100dp" 
+                android:layout_width="match_parent"></LinearLayout>
+  <android.widget.ImageView
+      android:layout_width="80dp"
+      android:layout_height="80dp"
+      android:background="@drawable/icon">
+  </android.widget.ImageView>
+  <LinearLayout android:layout_height="5dp" 
+                android:layout_width="match_parent"></LinearLayout>
+  <TextView
+          android:layout_width="match_parent"
+          android:layout_height="30dp"
+          android:gravity="center_horizontal"
+          android:textColor="#434343"
+          android:textSize="23sp"
+          android:textStyle="bold"
+          android:text="大众进口汽车区域管理工具包" />
+  <LinearLayout android:layout_height="5dp" 
+                android:layout_width="match_parent"></LinearLayout>
+    <TextView
+          android:layout_width="match_parent"
+          android:layout_height="30dp"
+          android:gravity="center_horizontal"
+          android:textColor="#A0A0A0"
+          android:textSize="20sp"
+          android:text="MANAGEMENT" />
+  <TextView
+          android:layout_width="match_parent"
+          android:layout_height="30dp"
+          android:gravity="center_horizontal"
+          android:textColor="#A0A0A0"
+          android:textSize="10sp"
+          android:text="REGIONAL DISTRIBUTOR" />
+
+</LinearLayout>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MaxInsight.Mobile.Pages.Improve.ImproveSearchConditionPage"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
+             Title="进度查看条件">
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ECF0F1">
+      <StackLayout>
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical" >
+          <!--<StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal"
+							Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="状态类型:" VerticalOptions="Center" HorizontalOptions="Start"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <control:EBindableRadioGroup x:Name="statusRdo"
+                               SelectedIndex="{Binding ItemSelected}"
+								               VerticalOptions="Center"
+                               HorizontalOptions="EndAndExpand"
+                               Orientation="Horizontal"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                               FontSize="13"/>
+          </StackLayout>-->
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" HeightRequest="40">
+            <Label Text="期间:" WidthRequest="100" HorizontalOptions="Start" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal" >
+              <DatePicker x:Name="startDateDP" HorizontalOptions="StartAndExpand"  Date="{Binding StartDate}"
+                      TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+              <Label Text="~" HorizontalOptions="CenterAndExpand" VerticalTextAlignment="Center"></Label>
+              <DatePicker x:Name="endDateDP" HorizontalOptions="CenterAndExpand"  Date="{Binding EndDate}"
+                     TextColor="{x:Static statics:StaticColor.ContentFontColor}">
+                <DatePicker.Format>yyyy-MM-dd</DatePicker.Format>
+              </DatePicker>
+            </StackLayout>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="状态:" WidthRequest="60" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ImageButton x:Name="statusBtn"
+						         Source="arrow"
+	                   BackgroundColor="#FFFFFF"
+	                   HeightRequest="35"
+	                   ImageHeightRequest="16"
+	                   ImageWidthRequest="14"
+	                   Orientation="ImageToRight"
+	                   Text="{Binding StatusSelect}"
+	               	   WidthRequest="160"
+	              	   HorizontalOptions="EndAndExpand"
+	                   Clicked="OnOpenStatusPopupPage"
+                     TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                     FontSize="13">
+            </controls:ImageButton>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="来源类型:" WidthRequest="80" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ImageButton x:Name="sourcetypeBtn"
+						         Source="arrow"
+	                   BackgroundColor="#FFFFFF"
+	                   HeightRequest="35"
+	                   ImageHeightRequest="16"
+	                   ImageWidthRequest="12"
+	                   Orientation="ImageToRight"
+	                   Text="{Binding SourceTypeName}"
+	               	   WidthRequest="240"
+	              	   HorizontalOptions="EndAndExpand"
+	                   Clicked="OnOpenSourceTypePopupPage"
+                     TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                     FontSize="13">
+            </controls:ImageButton>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="所属计划:" WidthRequest="80" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ImageButton x:Name="planBtn"
+						         Source="arrow"
+	                   BackgroundColor="#FFFFFF"
+	                   HeightRequest="35"
+	                   ImageHeightRequest="16"
+	                   ImageWidthRequest="12"
+	                   Orientation="ImageToRight"
+	                   Text="{Binding PlanSelectName}"
+	               	   WidthRequest="240"
+	              	   HorizontalOptions="EndAndExpand"
+	                   Clicked="OnOpenPlanPopupPage"
+                     TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                     FontSize="13">
+            </controls:ImageButton>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="经销商:" WidthRequest="100" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <Label x:Name="servicerLbl" HorizontalOptions="EndAndExpand"
+                   TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                   FontSize="14"></Label>
+            <controls:ImageButton x:Name="servicerBtn"
+								               Source="arrow"
+                               BackgroundColor="#FFFFFF"
+                               HeightRequest="35"
+                               ImageHeightRequest="16"
+                               ImageWidthRequest="12"
+                               Orientation="ImageToRight"
+                               Text="{Binding ServicerSelect}"
+                               WidthRequest="160"
+                               HorizontalOptions="EndAndExpand"
+                               Clicked="OnOpenServicerPopupPage"
+                               TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                              FontSize="13">
+            </controls:ImageButton>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="部门:" WidthRequest="100" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <Label x:Name="departmentLbl" HorizontalOptions="EndAndExpand"
+                   TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                   FontSize="14"></Label>
+            <controls:ImageButton x:Name="departmentBtn"
+							             Source="arrow"
+                           BackgroundColor="#FFFFFF"
+                           HeightRequest="35"
+                           ImageHeightRequest="16"
+                           ImageWidthRequest="12"
+                           Orientation="ImageToRight"
+                           Text="{Binding DepartmentSelect}"
+                           WidthRequest="160"
+                           HorizontalOptions="EndAndExpand"
+                           IsEnabled="{Binding IsClick}"
+                           Clicked="OnOpenDepartmentPopupPage"
+                           TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+                           FontSize="13">
+            </controls:ImageButton>
+          </StackLayout>
+          <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10, 5, 10, 5" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
+            <Label Text="指标名称:" HorizontalOptions="Start" VerticalOptions="Center"
+                    FontAttributes="Bold"
+                    FontSize = "16"
+                    TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+            <controls:ExtendedEntry
+							Text="{Binding ItemName}"
+							HorizontalOptions="FillAndExpand"
+							HasBorder="true"
+							x:Name="itemNameLbl"
+              TextColor="{x:Static statics:StaticColor.ContentFontColor}"
+              FontSize="14">
+            </controls:ExtendedEntry>
+          </StackLayout>
+          <StackLayout HorizontalOptions="FillAndExpand" Padding="20, 5, 20, 5">
+            <Button Text="查  询" HeightRequest="50" BorderRadius="20" BackgroundColor="#398FC0" TextColor="#FFFFFF" Command="{Binding PassImproveConditionCommand}" ></Button>
+          </StackLayout>
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</ContentPage>

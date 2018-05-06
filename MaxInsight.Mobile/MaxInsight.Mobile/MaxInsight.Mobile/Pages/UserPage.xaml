@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:statics="clr-namespace:MaxInsight.Mobile"
+             xmlns:controls="clr-namespace:XLabs.Forms.Controls;assembly=XLabs.Forms"
+             xmlns:pages="clr-namespace:MaxInsight.Mobile.Pages;assembly=MaxInsight.Mobile"
+             x:Class="MaxInsight.Mobile.Pages.UserPage"
+             Title="我的">
+  <ContentPage.Content>
+    <ScrollView BackgroundColor="#ECF0F1">
+      <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <StackLayout HeightRequest="3"></StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10">
+          <Label Text="我的公司" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+          <Label WidthRequest="10"></Label>
+          <Label Text="{Binding DisName}" FontSize="14" x:Name="lblDisName" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10">
+          <Label Text="我的角色" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+          <Label WidthRequest="10"></Label>
+          <Label Text="{Binding UserTypeName}" FontSize="14" x:Name="lblUserTypeName" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10">
+          <Label Text="联系电话" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+          <Label WidthRequest="10"></Label>
+          <Label Text="{Binding TelNo}" FontSize="14" x:Name="txtTelNo" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10" x:Name="layPassword">
+          <Label Text="我的密码" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+          <Label WidthRequest="10"></Label>
+          <Label Text="*********" FontSize="14" x:Name="lblPassword" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+          <Image Source="arrow" HeightRequest="16" WidthRequest="16" HorizontalOptions="EndAndExpand" x:Name="imgPassword"></Image>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}" Padding="10" x:Name="layCheckUpdate">
+          <Label Text="设置" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"></Label>
+          <Label WidthRequest="10"></Label>
+          <Label Text="检查更新" FontSize="14" x:Name="lblCheckUpdate" TextColor="{x:Static statics:StaticColor.ContentFontColor}"></Label>
+          <Image Source="arrow" HeightRequest="16" WidthRequest="16" HorizontalOptions="EndAndExpand" x:Name="imgCheckUpdate"></Image>
+        </StackLayout>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10,30,10,10" BackgroundColor="Transparent">
+          <controls:ImageButton x:Name="btnExistSystem"
+                                Clicked="ExistSystem"
+                                Text="退出系统"
+                                BackgroundColor="#398FC0"
+                                TextColor="#FFFFFF"
+                                HeightRequest = "40"
+                                HorizontalOptions="FillAndExpand"></controls:ImageButton>
+        </StackLayout>
+      </StackLayout>
+    </ScrollView>
+  </ContentPage.Content>
+</pages:BaseContentPage>
