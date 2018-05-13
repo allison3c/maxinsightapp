@@ -6,7 +6,7 @@ using Android.Content.PM;
 
 namespace MaxInsight.Mobile.Droid
 {
-    [Activity(Label = "PCM评估改善系统", Icon ="@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "PCM评估改善平台", Icon ="@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     public class LaunchActivity : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)

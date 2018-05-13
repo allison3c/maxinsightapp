@@ -5,7 +5,7 @@
              x:Class="MaxInsight.Mobile.Pages.MainPage"
 			       xmlns:control="clr-namespace:MaxInsight.Mobile;assembly=MaxInsight.Mobile"
              xmlns:pages="clr-namespace:MaxInsight.Mobile.Pages;assembly=MaxInsight.Mobile"
-             Title="区域管理系统">
+             Title="PCM评估改善平台">
   <ContentPage.Content>
     <ScrollView BackgroundColor="#ECF0F1">
       <StackLayout Orientation="Vertical">

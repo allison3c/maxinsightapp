@@ -40,7 +40,7 @@
         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10,30,10,10" BackgroundColor="Transparent">
           <controls:ImageButton x:Name="btnExistSystem"
                                 Clicked="ExistSystem"
-                                Text="退出系统"
+                                Text="退出平台"
                                 BackgroundColor="#398FC0"
                                 TextColor="#FFFFFF"
                                 HeightRequest = "40"

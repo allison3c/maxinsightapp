@@ -68,7 +68,7 @@
               <Label Text="{Binding ResultApproal}" HorizontalOptions="EndAndExpand"></Label>
             </StackLayout>
             <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="#FFFFFF">
-              <Label Text="服务经理指示" FontAttributes="Bold" FontSize="16"></Label>
+              <Label Text="总经理指示" FontAttributes="Bold" FontSize="16"></Label>
               <Editor x:Name="txtInstruction"
                       VerticalOptions="FillAndExpand"
                         HorizontalOptions="FillAndExpand" HeightRequest="120" FontSize="14" IsEnabled="{Binding IsEdit}"

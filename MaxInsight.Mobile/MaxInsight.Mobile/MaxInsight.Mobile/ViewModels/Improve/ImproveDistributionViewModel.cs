@@ -390,8 +390,8 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                             }
                             ExecDepartmentName = impAllocateData.ExecDepartmentName;
                             AllocateYN = impAllocateData.AllocateYN;
-                            PlanApproal = impAllocateData.PlanApproalYN == true ? "区域" : "服务经理";
-                            ResultApproal = impAllocateData.ResultApproalYN == true ? "区域" : "服务经理";
+                            PlanApproal = impAllocateData.PlanApproalYN == true ? "评估师" : "总经理";
+                            ResultApproal = impAllocateData.ResultApproalYN == true ? "评估师" : "总经理";
                             StandardList = impAllocateData.StandardList;
                             PicList = impAllocateData.PicList;
                             LossImageList = impAllocateData.PicList.Count * 40;
@@ -455,7 +455,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 }
                 if (string.IsNullOrEmpty(ImprovementCaption))
                 {
-                    _commonFun.AlertLongText("服务经理指示为必填");
+                    _commonFun.AlertLongText("总经理指示为必填");
                     return;
                 }
                 string tpId = improvementMng.TPId.ToString();

@@ -73,7 +73,7 @@
                 </controls:ImageButton>
               </StackLayout>
             </StackLayout>
-            <Label Text="注：不选择部门时默认通知到服务经理。"  HorizontalOptions="StartAndExpand"  VerticalOptions="Start" FontAttributes="Bold" FontSize="10" TextColor="#FF0000" Margin="10,0,0,0"/>
+            <Label Text="注：不选择部门时默认通知到总经理。"  HorizontalOptions="StartAndExpand"  VerticalOptions="Start" FontAttributes="Bold" FontSize="10" TextColor="#FF0000" Margin="10,0,0,0"/>
             <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand"  Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
               <Label Text="结果反馈" VerticalOptions="Center"  FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}"/>
               <Grid x:Name="gridReplySelecte">

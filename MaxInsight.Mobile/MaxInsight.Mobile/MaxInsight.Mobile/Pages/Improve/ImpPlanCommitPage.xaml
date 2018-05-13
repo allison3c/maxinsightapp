@@ -158,7 +158,7 @@
             <StackLayout x:Name="layApply">
               <StackLayout x:Name="layServeApply">
               <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
-                <Label Text="服务经理审核" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
+                <Label Text="总经理审核" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
                 <Grid x:Name="gridServerApplyYN">
                   <control:EBindableRadioGroup x:Name="ServerApplyYN"
                                                FontName="AmericanTypewriter"
@@ -193,7 +193,7 @@
               </StackLayout>
               <StackLayout x:Name="layAreaApply">
                 <StackLayout  Orientation="Horizontal" HorizontalOptions="FillAndExpand" Padding="10" BackgroundColor="{x:Static statics:StaticColor.ContentWhite}">
-                  <Label Text="区域经理审核" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
+                  <Label Text="评估师审核" FontAttributes="Bold" FontSize="16" TextColor="{x:Static statics:StaticColor.ContentTitleColor}" VerticalOptions="Center"></Label>
                   <Grid x:Name="gridAreaApplyYN">
                     <control:EBindableRadioGroup x:Name="AreaApplyYN"
                                                  FontName="AmericanTypewriter"
