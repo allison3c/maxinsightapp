@@ -125,7 +125,7 @@ namespace MaxInsight.Mobile
                     }
                     else
                     {
-                        var action = await _commonFun.ShowActionSheet("开始检查", "结束检查", "取消任务");
+                        var action = await _commonFun.ShowActionSheet("开始检查", "结束检查");//, "取消任务");
 
                         if (action == "开始检查")
                         {

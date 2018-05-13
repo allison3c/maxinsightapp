@@ -79,44 +79,44 @@ namespace MaxInsight.Mobile.Pages
             string[] menuName;
             if (CommonContext.Account.UserType == "D")// || CommonContext.Account.UserType == "S")
             {
-                images = new string[] { "icon_plan", "icon_update", "icon_notifi", "icon_share" };
-                menuName = new string[] { "日历管理", "监控互动", "通知公告", "案例分享" };
+                images = new string[] { "icon_plan", "icon_update", "icon_notifi" };//, "icon_share" };
+                menuName = new string[] { "日历管理", "监控互动", "通知公告" };//, "案例分享" };
                 action.Add(GoCalendar);
                 action.Add(GoUpgrid);
                 action.Add(GoNotifi);
-                action.Add(GoCaseShare);
+                //action.Add(GoCaseShare);
             }
             else if (CommonContext.Account.UserType == "S")
             {
-                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi", "icon_share" };
-                menuName = new string[] { "日历管理", "详情查看", "监控互动", "通知公告", "案例分享" };
+                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
+                menuName = new string[] { "日历管理", "详情查看", "监控互动", "通知公告" };//, "案例分享" };
                 action.Add(GoCalendar);
                 action.Add(GoCheck);
                 action.Add(GoUpgrid);
                 action.Add(GoNotifi);
-                action.Add(GoCaseShare);
+                //action.Add(GoCaseShare);
                 //action.Add(GoReport);
             }
             else if (CommonContext.Account.UserType == "Z")
             {
-                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi", "icon_share" };
-                menuName = new string[] { "日历管理", "巡视检核", "监控互动", "通知公告", "案例分享" };
+                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
+                menuName = new string[] { "日历管理", "巡视检核", "监控互动", "通知公告" };//, "案例分享" };
                 action.Add(GoCalendar);
                 action.Add(GoCheck);
                 action.Add(GoUpgrid);
                 action.Add(GoNotifi);
-                action.Add(GoCaseShare);
+                //action.Add(GoCaseShare);
                 //action.Add(GoReport);
             }
             else
             {
-                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi", "icon_share" };
-                menuName = new string[] { "日历管理", "计划任务", "监控互动", "通知公告", "案例分享" };
+                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
+                menuName = new string[] { "日历管理", "计划任务", "监控互动", "通知公告" };//, "案例分享" };
                 action.Add(GoCalendar);
                 action.Add(GoPlan);
                 action.Add(GoUpgrid);
                 action.Add(GoNotifi);
-                action.Add(GoCaseShare);
+                //action.Add(GoCaseShare);
                 //action.Add(GoReport);
             }
             int menuCnt = menuName.Length;

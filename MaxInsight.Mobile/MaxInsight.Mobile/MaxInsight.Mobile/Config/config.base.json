@@ -6,12 +6,12 @@
   "AppMode": "DEV",
   "SessionLifetimeMinute": 20,
   "Endpoints": {
-    "BaseUrl": "http://rmmtdevapi.elandcloud.com/rmmt/api/v1",
+    //"BaseUrl": "http://rmmtdevapi.elandcloud.com/rmmt/api/v1",
     //"BaseUrl": "http://rmmtqaapi.elandcloud.com/rmmt/api/v1",
-    //"BaseUrl": "http://api.vgic-ff.com/rmmt/api/v1/",
-    "UploadOSSBaseUrl": "http://10.202.101.28:8026/api/",
+    "BaseUrl": "http://59.110.13.89:6500/toyota/api/v1/",
+    //"UploadOSSBaseUrl": "http://10.202.101.28:8026/api/",
     //"UploadOSSBaseUrl": "http://midqaapi.elandcloud.com/api/",
-    //"UploadOSSBaseUrl": "http://midprdapi.elandcloud.com/api/",
+    "UploadOSSBaseUrl": "http://midprdapi.elandcloud.com/api/",
     "Paths": {
       "account": "/Users/Login",
       "ImproveGetResult": "/ImprovementMng/GeImprovementItemFromScoreList",
@@ -62,20 +62,20 @@
       "GetPushInfo": "/PlanTask/GetPushInfoForMobile"
     }
   },
-  "AliyunOss": {
-    "AccessKeyId": "3JkljJxvXgjLz80X",
-    "AccessKeySecret": "L2ERHORPk3WkjqfGUb27RlxvT8x5f3",
-    "Endpoint": "oss-cn-beijing.aliyuncs.com",
-    "Bucket": "vgic",
-    "Domain": "http://vgic.oss-cn-beijing.aliyuncs.com/",
-    "Dir": "AreaTool/"
-  }
   //"AliyunOss": {
-  //  "AccessKeyId": "LTAIfqFA9xw39K2m",
-  //  "AccessKeySecret": "ncsMx1Nvm5hbol9x2mnWlO0vWFEfDC",
-  //  "Endpoint": "oss-cn-shanghai.aliyuncs.com",
-  //  "Bucket": "rmmt",
-  //  "Domain": "http://rmmt.oss-cn-shanghai.aliyuncs.com/",
-  //  "Dir": ""
+  //  "AccessKeyId": "3JkljJxvXgjLz80X",
+  //  "AccessKeySecret": "L2ERHORPk3WkjqfGUb27RlxvT8x5f3",
+  //  "Endpoint": "oss-cn-beijing.aliyuncs.com",
+  //  "Bucket": "vgic",
+  //  "Domain": "http://vgic.oss-cn-beijing.aliyuncs.com/",
+  //  "Dir": "AreaTool/"
   //}
+  "AliyunOss": {
+    "AccessKeyId": "LTAIfqFA9xw39K2m",
+    "AccessKeySecret": "ncsMx1Nvm5hbol9x2mnWlO0vWFEfDC",
+    "Endpoint": "oss-cn-shanghai.aliyuncs.com",
+    "Bucket": "toyota-ftms",
+    "Domain": "http://toyota-ftms.oss-cn-shanghai.aliyuncs.com/",
+    "Dir": ""
+  }
 }

@@ -42,7 +42,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.0.0.1</string>
 	<key>CFBundleName</key>
-	<string>大众进口汽车区域管理工具包</string>
+	<string>PCM评估改善系统</string>
 	<key>NSUbiquitousContainerIsDocumentScopePublic</key>
 	<true/>
 	<key>UISupportedExternalAccessoryProtocols</key>

@@ -576,7 +576,7 @@ namespace MaxInsight.Mobile.Helpers
             var payload = new Dictionary<string, object>(){
                 { "jti", Guid.NewGuid().ToString() },
                 { "iat", ToUnixEpochDate(now).ToString()}};
-            var secretKey = "rmmtsupersecret_secretkey!123";
+            var secretKey = "toyotasupersecret_secretkey!123";
             string token = JWT.JsonWebToken.Encode(payload, secretKey, JWT.JwtHashAlgorithm.HS256);
             return token;
         }

@@ -30,11 +30,13 @@ namespace MaxInsight.Mobile.Droid
 {
     //[Application]
     [MetaData("JPUSH_CHANNEL", Value = "developer-default")]
-    [MetaData("JPUSH_APPKEY", Value = "7ea762fe7e192e824514c1c2")]
-    //[MetaData("JPUSH_APPKEY", Value = "5af3416249f70699720994dd")]
+    //DEV
+    //[MetaData("JPUSH_APPKEY", Value = "5055c3255b11e1bbe83be12b")]
+    //PRD
+    [MetaData("JPUSH_APPKEY", Value = "8872d28cb15c10e67add04e0")]
     public class Application : Android.App.Application
     {
-        public const string JPUSH_MESSAGE_PERMISSION = "com.maxinsight.mobile.droid.permission.JPUSH_MESSAGE";
+        public const string JPUSH_MESSAGE_PERMISSION = "com.maxinsight.toyota.droid.permission.JPUSH_MESSAGE";
 
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
             : base(javaReference, transfer)

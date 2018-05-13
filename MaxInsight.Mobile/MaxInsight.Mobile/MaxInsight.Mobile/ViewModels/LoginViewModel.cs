@@ -136,7 +136,7 @@ namespace MaxInsight.Mobile.ViewModels
 
                                 _bottomPage.CurrentPageChanged += (sender, e) =>
                                 {
-                                    _bottomPage.Title = "大众进口汽车区域管理工具";//_bottomPage.CurrentPage.Title;
+                                    _bottomPage.Title = "全景经营能力PCM评估改善平台";//_bottomPage.CurrentPage.Title;
                                     if (Device.OS == TargetPlatform.Android)
                                     {
                                         _bottomPage.BarTextColor = Color.FromHex("#6281AB"); //底端Menu，当前菜单的颜色

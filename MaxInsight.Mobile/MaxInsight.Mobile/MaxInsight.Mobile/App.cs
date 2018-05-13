@@ -215,12 +215,12 @@ namespace MaxInsight.Mobile
             string shortcutName = "";
             if (Device.OS == TargetPlatform.iOS)
             {
-                shortcutName = "kJBj";
+                shortcutName = "pcm_android";
                 //shortcutName = "maxinsight_droid";
             }
             else
             {
-                shortcutName = "maxinsight_rmmt";
+                shortcutName = "pcm_ios";
                 //shortcutName = "maxinsight_ios";
             }
 
@@ -234,8 +234,8 @@ namespace MaxInsight.Mobile
                 new RequestParameter()
                 {
                     Name = "_api_key",
-                    Value = "9e59ce985118440f3c0b753d2fa8f923"
-                    //Value = "b2b9d7af1d81a3a596be546390fc7d22"
+                    //Value = "9e59ce985118440f3c0b753d2fa8f923"
+                    Value = "b2b9d7af1d81a3a596be546390fc7d22"
                 }
             };
             PgyAppInfoShortcutInfo shortcutDto = null;
@@ -262,14 +262,14 @@ namespace MaxInsight.Mobile
                 new RequestParameter()
                 {
                     Name = "uKey",
-                    Value = "690728932ff4cabc4a3b2e0ec96f0e24"
-                    //Value = "dc9a543b1b03cb81e077ddaa07640898"
+                    //Value = "690728932ff4cabc4a3b2e0ec96f0e24"
+                    Value = "dc9a543b1b03cb81e077ddaa07640898"
                 },
                 new RequestParameter()
                 {
                     Name = "_api_key",
-                    Value = "9e59ce985118440f3c0b753d2fa8f923"
-                    //Value = "b2b9d7af1d81a3a596be546390fc7d22"
+                    //Value = "9e59ce985118440f3c0b753d2fa8f923"
+                    Value = "b2b9d7af1d81a3a596be546390fc7d22"
                 }
             };
 

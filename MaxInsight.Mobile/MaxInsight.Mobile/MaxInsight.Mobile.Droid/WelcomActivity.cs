@@ -13,7 +13,7 @@ using Android.Widget;
 
 namespace MaxInsight.Mobile.Droid
 {
-    [Activity(Label = "大众进口汽车区域管理工具包", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
+    [Activity(Label = "PCM评估改善系统", Icon = "@drawable/icon", Theme = "@android:style/Theme.NoTitleBar.Fullscreen", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation, ScreenOrientation = ScreenOrientation.Portrait)]
     public class WelcomActivity : Activity
     {
         private List<string> guidImage = new List<string>() { "guide_0.jpg", "guide_1.jpg", "guide_2.jpg" };

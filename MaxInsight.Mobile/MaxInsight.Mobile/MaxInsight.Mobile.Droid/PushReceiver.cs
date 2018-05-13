@@ -15,7 +15,7 @@ namespace MaxInsight.Mobile.Droid
         "cn.jpush.android.intent.NOTIFICATION_OPENED",
         "cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK",
         "cn.jpush.android.intent.CONNECTION"
-    }, Categories = new string[] { "com.maxinsight.mobile.droid" })]
+    }, Categories = new string[] { "com.maxinsight.toyota.droid" })]
     public class MaxInsightPushReceiver : BroadcastReceiver
     {
         Notification notification;

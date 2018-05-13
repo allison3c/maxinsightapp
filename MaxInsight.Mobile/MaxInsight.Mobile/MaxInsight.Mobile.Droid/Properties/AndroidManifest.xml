@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.maxinsight.mobile.droid" android:versionCode="1" android:versionName="1.0.0.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.maxinsight.toyota.droid" android:versionCode="1" android:versionName="1.0.0.1">
 	<uses-sdk android:minSdkVersion="15" />
 	<!-- Required -->
-	<permission android:name="com.maxinsight.mobile.droid.permission.JPUSH_MESSAGE" android:protectionLevel="signature" />
+	<permission android:name="com.maxinsight.toyota.droid.permission.JPUSH_MESSAGE" android:protectionLevel="signature" />
 	<!-- Required -->
-	<uses-permission android:name="com.maxinsight.mobile.droid.permission.JPUSH_MESSAGE" />
+	<uses-permission android:name="com.maxinsight.toyota.droid.permission.JPUSH_MESSAGE" />
 	<uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.VIBRATE" />
@@ -35,7 +35,7 @@
 	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.GET_TASKS" />
-	<application android:label="大众进口汽车区域管理工具包" android:icon="@drawable/icon">
+	<application android:label="PCM评估改善系统" android:icon="@drawable/icon">
 		<meta-data android:name="PGYER_APPID" android:value="1d52fef3c27d8f22947c519c8b267eaa"></meta-data>
 		<service android:name="cn.jpush.android.service.PushService" android:enabled="true" android:exported="false" android:process=":rmmtnotify">
 			<intent-filter>
@@ -49,7 +49,7 @@
 		<receiver android:name="cn.jpush.android.service.PushReceiver" android:enabled="true">
 			<intent-filter android:priority="1000">
 				<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-				<category android:name="com.maxinsight.mobile.droid" />
+				<category android:name="com.maxinsight.toyota.droid" />
 			</intent-filter>
 			<intent-filter>
 				<action android:name="android.intent.action.USER_PRESENT" />
@@ -66,7 +66,7 @@
 			<intent-filter>
 				<action android:name="cn.jpush.android.ui.PushActivity" />
 				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="com.maxinsight.mobile.droid" />
+				<category android:name="com.maxinsight.toyota.droid" />
 			</intent-filter>
 		</activity>
 		<!-- Required SDK核心功能-->
@@ -75,7 +75,9 @@
 		<receiver android:name="cn.jpush.android.service.AlarmReceiver" />
 		<meta-data android:name="JPUSH_CHANNEL" android:value="developer-default" />
 		<!-- Required. AppKey copied from Portal -->
-		<meta-data android:name="JPUSH_APPKEY" android:value="7ea762fe7e192e824514c1c2" />
-    <!--<meta-data android:name="JPUSH_APPKEY" android:value="5af3416249f70699720994dd" />-->
+    <!--DEV-->
+		<!--<meta-data android:name="JPUSH_APPKEY" android:value="5055c3255b11e1bbe83be12b" />-->
+    <!--PRD-->
+		<meta-data android:name="JPUSH_APPKEY" android:value="8872d28cb15c10e67add04e0" />
 	</application>
 </manifest>
