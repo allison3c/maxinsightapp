@@ -23,7 +23,7 @@
 	<key>MinimumOSVersion</key>
 	<string>8.0</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.eland.maxinsight.rmmt</string>
+	<string>com.maxinsight.toyota.ios</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>XSLaunchImageAssets</key>
