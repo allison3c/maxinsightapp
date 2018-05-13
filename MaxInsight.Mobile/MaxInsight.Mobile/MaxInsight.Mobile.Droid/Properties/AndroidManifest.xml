@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.maxinsight.toyota.droid" android:versionCode="1" android:versionName="1.0.0.1">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.maxinsight.toyota.droid" android:versionCode="4" android:versionName="1.0.0.1">
 	<uses-sdk android:minSdkVersion="15" />
 	<!-- Required -->
 	<permission android:name="com.maxinsight.toyota.droid.permission.JPUSH_MESSAGE" android:protectionLevel="signature" />
@@ -36,7 +36,7 @@
 	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.GET_TASKS" />
 	<application android:label="PCM评估改善平台" android:icon="@drawable/icon">
-		<meta-data android:name="PGYER_APPID" android:value="1d52fef3c27d8f22947c519c8b267eaa"></meta-data>
+		<meta-data android:name="PGYER_APPID" android:value="42307cc263195bbae7b264ba9cecbf16"></meta-data>
 		<service android:name="cn.jpush.android.service.PushService" android:enabled="true" android:exported="false" android:process=":rmmtnotify">
 			<intent-filter>
 				<action android:name="cn.jpush.android.intent.REGISTER" />

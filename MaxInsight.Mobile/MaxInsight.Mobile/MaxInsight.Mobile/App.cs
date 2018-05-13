@@ -215,13 +215,13 @@ namespace MaxInsight.Mobile
             string shortcutName = "";
             if (Device.OS == TargetPlatform.iOS)
             {
-                shortcutName = "pcm_android";
-                //shortcutName = "maxinsight_droid";
+                shortcutName = "pcm_ios";
+                //shortcutName = "maxinsight_ios";
             }
             else
             {
-                shortcutName = "pcm_ios";
-                //shortcutName = "maxinsight_ios";
+                shortcutName = "pcm_android";
+                //shortcutName = "maxinsight_droid";
             }
 
             List<RequestParameter> shortcutList = new List<RequestParameter>()
