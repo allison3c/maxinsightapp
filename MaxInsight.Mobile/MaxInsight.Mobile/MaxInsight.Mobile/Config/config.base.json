@@ -11,7 +11,7 @@
     "BaseUrl": "http://59.110.13.89:6500/toyota/api/v1/",
     //"UploadOSSBaseUrl": "http://10.202.101.28:8026/api/",
     //"UploadOSSBaseUrl": "http://midqaapi.elandcloud.com/api/",
-    "UploadOSSBaseUrl": "http://midprdapi.elandcloud.com/api/",
+    "UploadOSSBaseUrl": "http://59.110.13.89:6502/api/",
     "Paths": {
       "account": "/Users/Login",
       "ImproveGetResult": "/ImprovementMng/GeImprovementItemFromScoreList",
