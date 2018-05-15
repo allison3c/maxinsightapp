@@ -8,7 +8,7 @@ namespace MaxInsight.Mobile
     public partial class TaskListPage : ContentPage
     {
         ToolbarItem tbUploadData;
-        ToolbarItem tbCustImprove;
+        //ToolbarItem tbCustImprove;
         string fromSeachYN = string.Empty; //标记是从查询条件页面跳转过来的，还是从经销商列表中跳转过来的。
         public TaskListPage()
         {
@@ -29,16 +29,16 @@ namespace MaxInsight.Mobile
                     {
                         this.ToolbarItems.Add(tbUploadData);
                     }
-                    if (tbCustImprove == null)
-                    {
-                        tbCustImprove = new ToolbarItem();
-                        tbCustImprove.Text = "改善登记";
-                        tbCustImprove.Command = (this.BindingContext as TaskListViewModel).AddCustImproveCommand;
-                    }
-                    if (!this.ToolbarItems.Contains(tbCustImprove))
-                    {
-                        this.ToolbarItems.Add(tbCustImprove);
-                    }
+                    //if (tbCustImprove == null)
+                    //{
+                    //    tbCustImprove = new ToolbarItem();
+                    //    tbCustImprove.Text = "改善登记";
+                    //    tbCustImprove.Command = (this.BindingContext as TaskListViewModel).AddCustImproveCommand;
+                    //}
+                    //if (!this.ToolbarItems.Contains(tbCustImprove))
+                    //{
+                    //    this.ToolbarItems.Add(tbCustImprove);
+                    //}
                 }
                 else
                 {
@@ -46,10 +46,10 @@ namespace MaxInsight.Mobile
                     {
                         this.ToolbarItems.Remove(tbUploadData);
                     }
-                    if (this.ToolbarItems.Contains(tbCustImprove))
-                    {
-                        this.ToolbarItems.Remove(tbCustImprove);
-                    }
+                    //if (this.ToolbarItems.Contains(tbCustImprove))
+                    //{
+                    //    this.ToolbarItems.Remove(tbCustImprove);
+                    //}
                 }
             });
         }
