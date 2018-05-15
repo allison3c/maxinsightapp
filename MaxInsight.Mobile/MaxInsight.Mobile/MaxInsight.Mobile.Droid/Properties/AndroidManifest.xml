@@ -75,9 +75,9 @@
 		<receiver android:name="cn.jpush.android.service.AlarmReceiver" />
 		<meta-data android:name="JPUSH_CHANNEL" android:value="developer-default" />
 		<!-- Required. AppKey copied from Portal -->
-    <!--DEV-->
+		<!--DEV-->
 		<!--<meta-data android:name="JPUSH_APPKEY" android:value="5055c3255b11e1bbe83be12b" />-->
-    <!--PRD-->
+		<!--PRD-->
 		<meta-data android:name="JPUSH_APPKEY" android:value="8872d28cb15c10e67add04e0" />
 	</application>
 </manifest>

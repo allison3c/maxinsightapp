@@ -455,7 +455,7 @@ namespace MaxInsight.Mobile.Droid.Helper
                 int version = info.VersionCode;
                 return version;
             }
-            catch (Java.Lang.Exception e)
+            catch (Java.Lang.Exception)
             {
                 return 0;
             }
