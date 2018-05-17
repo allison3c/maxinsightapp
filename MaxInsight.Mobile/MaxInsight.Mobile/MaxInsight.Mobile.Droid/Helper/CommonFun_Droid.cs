@@ -621,10 +621,30 @@ namespace MaxInsight.Mobile.Droid.Helper
 
         public string GetTempPathForApiToOss(string localpath, string temppath, string localfilename)
         {
-            return "";
+            string documentsPath = GetImagePath(temppath); //"RMMTIMAGEVIEW"
+            string newPath = System.IO.Path.Combine(documentsPath, localfilename);
+
+            if (File.Exists(localpath))
+            {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.InJustDecodeBounds = false;
+                options.InPreferredConfig = Bitmap.Config.Rgb565;
+                options.InDither = true;
+
+                Bitmap bmp = BitmapFactory.DecodeFile(localpath, options);
+
+                using (var fs = new FileStream(newPath, FileMode.OpenOrCreate,
+                                           FileAccess.ReadWrite,
+                                           FileShare.None))
+                {
+                    bmp.Compress(Bitmap.CompressFormat.Jpeg, 50, fs);
+                }
+            }
+            return newPath;
         }
         public void DeleteFileForApiToOss(string tempPath)
         {
+            File.Delete(tempPath);
         }
         #endregion
 

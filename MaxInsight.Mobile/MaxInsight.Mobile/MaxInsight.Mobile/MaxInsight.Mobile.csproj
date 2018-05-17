@@ -361,9 +361,8 @@
     <Compile Include="Renderer\BottomBarPageExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Aliyun.OSS, Version=2.3.0.0, Culture=neutral, PublicKeyToken=0ad4175f0dac0b9b, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Aliyun.OSS.SDK.2.3.0\lib\Aliyun.OSS.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Aliyun.OSS">
+      <HintPath>..\..\packages\Aliyun.OSS.SDK.2.8.0\lib\Aliyun.OSS.dll</HintPath>
     </Reference>
     <Reference Include="Autofac, Version=4.1.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Autofac.4.1.0\lib\netstandard1.1\Autofac.dll</HintPath>

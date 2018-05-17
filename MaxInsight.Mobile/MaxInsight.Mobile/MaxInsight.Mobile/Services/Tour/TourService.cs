@@ -111,17 +111,17 @@ namespace MaxInsight.Mobile.Services.Tour
 
             if (regImg.IsMatch(filename))
             {
-                if (App.SysOS == "Android")
-                {
-                    info = await _commonHelper.UploadFileToOSS(_commonFun.ResizeImage(stream), filename, "");
-                }
-                else
-                {
-                    string newPath = _commonFun.GetTempPathForApiToOss(localpath, "RMMTIMAGEVIEW", filename);
-                    Stream newStream = _commonFun.GetAttachLocal(newPath);
-                    info = await _commonHelper.UploadFileToOSS(newStream, filename, "");
-                    _commonFun.DeleteFileForApiToOss(newPath);
-                }
+                //if (App.SysOS == "Android")
+                //{
+                //    info = await _commonHelper.UploadFileToOSS(_commonFun.ResizeImage(stream), filename, "");
+                //}
+                //else
+                //{
+                string newPath = _commonFun.GetTempPathForApiToOss(localpath, "RMMTIMAGEVIEW", filename);
+                Stream newStream = _commonFun.GetAttachLocal(newPath);
+                info = await _commonHelper.UploadFileToOSS(newStream, filename, "");
+                _commonFun.DeleteFileForApiToOss(newPath);
+                //}
             }
             else
             {

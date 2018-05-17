@@ -144,10 +144,10 @@ namespace MaxInsight.Mobile.Helpers
             var response = await client.GetAsync(endpoint, CreateCancelTokenSource().Token).ConfigureAwait(false);
             if (response.IsSuccessStatusCode)
             {
-                   var  content = await response.Content.ReadAsStringAsync();
-                    //JsonSerializerSettings jsetting = new JsonSerializerSettings();
-                    //jsetting.NullValueHandling = NullValueHandling.Ignore;
-                    return JsonConvert.DeserializeObject<T>(content);//此处进行一定操作后会报空引用异常。
+                var content = await response.Content.ReadAsStringAsync();
+                //JsonSerializerSettings jsetting = new JsonSerializerSettings();
+                //jsetting.NullValueHandling = NullValueHandling.Ignore;
+                return JsonConvert.DeserializeObject<T>(content);//此处进行一定操作后会报空引用异常。
             }
             return new T();
         }
@@ -454,18 +454,18 @@ namespace MaxInsight.Mobile.Helpers
                 string accessKeyId = _config.Get<string>(Config.Config.AliyunOss_AccessKeyId);
                 string accessKeySecret = _config.Get<string>(Config.Config.AliyunOss_AccessKeySecret);
                 string endpoint = _config.Get<string>(Config.Config.AliyunOss_Endpoint);
-				//var conf = new ClientConfiguration();
-				////conf.IsCname = true;/// 配置使用Cname
-				////conf.ConnectionLimit = 512;  //HttpWebRequest最大的并发连接数目
-				//conf.MaxErrorRetry = 3;     //设置请求发生错误时最大的重试次数
-				//conf.ConnectionTimeout = 300;  //设置连接超时时间
-				////conf.SetCustomEpochTicks(customEpochTicks);        //设置自定义基准时间, CreateCancelTokenSource().Token.ToString()
+                //var conf = new ClientConfiguration();
+                ////conf.IsCname = true;/// 配置使用Cname
+                ////conf.ConnectionLimit = 512;  //HttpWebRequest最大的并发连接数目
+                //conf.MaxErrorRetry = 3;     //设置请求发生错误时最大的重试次数
+                //conf.ConnectionTimeout = 300;  //设置连接超时时间
+                ////conf.SetCustomEpochTicks(customEpochTicks);        //设置自定义基准时间, CreateCancelTokenSource().Token.ToString()
 
-				_ossClient = new OssClient(endpoint, accessKeyId, accessKeySecret);
+                _ossClient = new OssClient(endpoint, accessKeyId, accessKeySecret);
             }
             return _ossClient;
         }
-       
+
         public async Task<APIResult> UploadFileToOSS(Stream stream, string filename, string extraParam)
         {
             if (null == stream)
@@ -474,65 +474,73 @@ namespace MaxInsight.Mobile.Helpers
             }
             try
             {
-                if (App.SysOS == "Android")
-                {
+                //Android上传文件突然报Aliyun.OSS 空引用的错误，所以修改了Android文件上传方法。
+                //if (App.SysOS == "Android")
+                //{
 
-                    if (_ossClient == null)
-                          CreateOssClient();
-                    string key = string.Empty;
-                    if (extraParam.ToUpper() == "L")
-                    {
-                        key = _dir + filename;
-                    }
-                    else
-                    {
-                        key = _dir + DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + filename.Substring(filename.LastIndexOf("."));
-                    }
-                    //_ossClient.PutObject("vgic", key, path);
-                    stream.Position = 0;
-                    var result = await Task<PutObjectResult>.Factory.FromAsync(
-                                _ossClient.BeginPutObject,
-                                _ossClient.EndPutObject,
-                                _bucket, key, stream,
-                                null);
+                //    if (_ossClient == null)
+                //          CreateOssClient();
+                //    string key = string.Empty;
+                //    if (extraParam.ToUpper() == "L")
+                //    {
+                //        key = _dir + filename;
+                //    }
+                //    else
+                //    {
+                //        key = _dir + DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + filename.Substring(filename.LastIndexOf("."));
+                //    }
+                //    //_ossClient.PutObject("vgic", key, path);
+                //    stream.Position = 0;
+                //    var result = await Task<PutObjectResult>.Factory.FromAsync(
+                //                _ossClient.BeginPutObject,
+                //                _ossClient.EndPutObject,
+                //                _bucket, key, stream,
+                //                null);
+
+                //    //var tcs = new TaskCompletionSource<bool>();
+                //    //// 创建上传Object的Metadata
+                //    //ObjectMetadata meta = new ObjectMetadata();
+                //    //// 上传Object.
+                //    //PutObjectResult result = _ossClient.PutObject(_bucket, key, stream, meta);
+
+                //    AttachDto attachDto = new AttachDto();
+                //    attachDto.AttachName = filename;
+                //    attachDto.Url = _domain +key;
+                //    return new APIResult { Body = CommonHelper.EncodeDto<AttachDto>(attachDto), ResultCode = ResultType.Success, Msg = "" };
+                //}
+                //else
+                //{
+                HttpClient client = new HttpClient();
+                byte[] bytes = new byte[(int)stream.Length];
+                stream.Read(bytes, 0, bytes.Length);
+
+                client.BaseAddress = new Uri(_config.Get<string>(Config.Config.Endpoints_UploadOSSBaseUrl));
+
+                StringContent sc = new StringContent(JsonConvert.SerializeObject(new
+                {
+                    Bytes = bytes,
+                    Filename = filename,
+                    ExtraParam = extraParam
+                }), Encoding.UTF8, "application/json");
+
+                HttpResponseMessage response = await client.PostAsync("Excel/UploadToOss", sc);
+
+                if (response.IsSuccessStatusCode)
+                {
                     AttachDto attachDto = new AttachDto();
                     attachDto.AttachName = filename;
-                    attachDto.Url = _domain +key;
+                    attachDto.Url = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result.ToString()).ToString();
                     return new APIResult { Body = CommonHelper.EncodeDto<AttachDto>(attachDto), ResultCode = ResultType.Success, Msg = "" };
                 }
                 else
                 {
-                    HttpClient client = new HttpClient();
-                    byte[] bytes = new byte[(int)stream.Length];
-                    stream.Read(bytes, 0, bytes.Length);
-
-                    client.BaseAddress = new Uri(_config.Get<string>(Config.Config.Endpoints_UploadOSSBaseUrl));
-
-                    StringContent sc = new StringContent(JsonConvert.SerializeObject(new
-                    {
-                        Bytes = bytes,
-                        Filename = filename,
-                        ExtraParam = extraParam
-                    }), Encoding.UTF8, "application/json");
-
-                    HttpResponseMessage response =await client.PostAsync("Excel/UploadToOss", sc);
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        AttachDto attachDto = new AttachDto();
-                        attachDto.AttachName = filename;
-                        attachDto.Url = JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result.ToString()).ToString();
-                        return new APIResult { Body = CommonHelper.EncodeDto<AttachDto>(attachDto), ResultCode = ResultType.Success, Msg = "" };
-                    }
-                    else
-                    {
-                        return new APIResult { Body = "", ResultCode = ResultType.Failure, Msg =""};
-                    }
+                    return new APIResult { Body = "", ResultCode = ResultType.Failure, Msg = "" };
                 }
+                //}
             }
             catch (Exception e)
             {
-                return new APIResult { Body = "", ResultCode = ResultType.Failure, Msg = e.Message };
+                return new APIResult { Body = "", ResultCode = ResultType.Failure, Msg = e.StackTrace + "====" + e.ToString() };
             }
         }
         public string GetOssFileUrl(string fileName)
