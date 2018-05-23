@@ -744,6 +744,7 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
             }
             else
             {
+                UpdateBtnState();
                 _commonFun.AlertLongText("已经是最后一条");
             }
 

@@ -115,7 +115,7 @@ namespace MaxInsight.Mobile.Services.RemoteService
                             AND IFNULL(TP.[Status],'S') <> 'C'
                             AND IFNULL(TC.SourceType,'D') ='D'
 							AND P.InUserId  in (SELECT userid FROM Employee)
-                            ORDER BY TP.GRUD DESC,P.ModiDateTime DESC,TC.SourceType";
+                            ORDER BY P.Id DESC, TP.TPDescription ASC, P.ModiDateTime DESC,TC.SourceType";
             return _taskOfPlanDtoRepository.QueryListForTaskAsync(sql, parameters.ToArray());
         }
         public bool CheckLocalModiYN()
@@ -199,7 +199,7 @@ namespace MaxInsight.Mobile.Services.RemoteService
                            IFNULL(S.Scoreval,1) AS Score,
                            CH.Name AS ExeMode,TI.ScoreStandard,S.Remarks,
                            CASE WHEN ?='A' THEN S.PlanFinishDate ELSE IFNULL(S.PlanFinishDate,datetime('now','start of day','+7 day')) END AS PlanFinishDate,
-                           CASE WHEN ?='A' THEN S.ResultFinishDate ELSE IFNULL(S.ResultFinishDate,datetime('now','start of day','+7 day')) END AS ResultFinishDate,
+                           CASE WHEN ?='A' THEN S.ResultFinishDate ELSE IFNULL(S.ResultFinishDate,datetime('now','start of day','+1 months')) END AS ResultFinishDate,
                            TP.Id AS TPId,
                            S.Id AS StrScoreId
                            FROM TaskItem  TI
