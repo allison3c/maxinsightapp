@@ -15,13 +15,19 @@ namespace MaxInsight.Mobile
         }
         private void SetControls()
         {
-            if (CommonContext.Account.UserType == "D" || CommonContext.Account.UserType == "S")
+            try
             {
-                stackDis.IsVisible = false;
+                if (CommonContext.Account.UserType == "D" || CommonContext.Account.UserType == "S")
+                {
+                    stackDis.IsVisible = false;
+                }
+                else
+                {
+                    stackDis.IsVisible = true;
+                }
             }
-            else
+            catch (Exception)
             {
-                stackDis.IsVisible = true;
             }
         }
     }

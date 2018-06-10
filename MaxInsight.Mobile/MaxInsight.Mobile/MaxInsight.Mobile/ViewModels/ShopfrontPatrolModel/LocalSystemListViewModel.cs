@@ -38,37 +38,45 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
         }
         public LocalSystemListViewModel()
         {
-            _localScoreService = Resolver.Resolve<ILocalScoreService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-
-
-            MessagingCenter.Subscribe<CommonMessage>(this, "LocalResetTaskID", (obj) =>
+            try
             {
-                if (obj.TaskID =="-1")
-                {
-                    _refresh = false;
-                }
-                else
-                {
-                    _refresh = true;
-                }
-            });
+                _localScoreService = Resolver.Resolve<ILocalScoreService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
 
-            MessagingCenter.Subscribe<List<LoaclItemOfTaskDto>>(this, "LocalSendSystemList", (obj) =>
+
+                MessagingCenter.Subscribe<CommonMessage>(this, "LocalResetTaskID", (obj) =>
+                {
+                    if (obj.TaskID == "-1")
+                    {
+                        _refresh = false;
+                    }
+                    else
+                    {
+                        _refresh = true;
+                    }
+                });
+
+                MessagingCenter.Subscribe<List<LoaclItemOfTaskDto>>(this, "LocalSendSystemList", (obj) =>
+                {
+                    _taskId = obj.FirstOrDefault().TPId.ToString();
+                    Init(obj);
+                });
+
+                MessagingCenter.Subscribe<LocalSystemListPage>(this, "LocalRefreshSystem", (obj) =>
+                {
+                    if (_refresh)
+                    {
+                        RefreshPage(TaskId.ToString());
+                    }
+                });
+
+                ItemTappedCommand = new RelayCommand<LoaclItemOfTaskDto>(TappedCommand);
+            }
+            catch (Exception)
             {
-                _taskId = obj.FirstOrDefault().TPId.ToString();
-                Init(obj);
-            });
-
-            MessagingCenter.Subscribe<LocalSystemListPage>(this, "LocalRefreshSystem", (obj) =>
-            {
-                if (_refresh)
-                {
-                    RefreshPage(TaskId.ToString());
-                }
-            });
-
-            ItemTappedCommand = new RelayCommand<LoaclItemOfTaskDto>(TappedCommand);
+                _commonFun.AlertLongText("操作异常,请重试。-->CustomizedTaskViewModel");
+                return;
+            }
         }
         public void Init(List<LoaclItemOfTaskDto> list)
         {

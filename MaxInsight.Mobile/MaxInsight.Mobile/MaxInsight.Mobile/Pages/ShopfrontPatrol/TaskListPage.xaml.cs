@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 using Xamarin.Forms;
 
@@ -13,64 +12,75 @@ namespace MaxInsight.Mobile
         public TaskListPage()
         {
             InitializeComponent();
-            Title = "任务列表";
-            MessagingCenter.Subscribe<string>(this, "ComeFromSeachYN", (param) =>
+            try
             {
-                fromSeachYN = param;
-                if (CommonContext.Account.UserType == "Z" && string.IsNullOrWhiteSpace(fromSeachYN))
+                Title = "任务列表";
+                MessagingCenter.Subscribe<string>(this, "ComeFromSeachYN", (param) =>
                 {
-                    if (tbUploadData == null)
+                    fromSeachYN = param;
+                    if (CommonContext.Account.UserType == "Z" && string.IsNullOrWhiteSpace(fromSeachYN))
                     {
-                        tbUploadData = new ToolbarItem();
-                        tbUploadData.Text = "数据上传";
-                        tbUploadData.Command = (this.BindingContext as TaskListViewModel).UploadScoreImageCommand;
+                        if (tbUploadData == null)
+                        {
+                            tbUploadData = new ToolbarItem();
+                            tbUploadData.Text = "数据上传";
+                            tbUploadData.Command = (this.BindingContext as TaskListViewModel).UploadScoreImageCommand;
+                        }
+                        if (!this.ToolbarItems.Contains(tbUploadData))
+                        {
+                            this.ToolbarItems.Add(tbUploadData);
+                        }
+                        //if (tbCustImprove == null)
+                        //{
+                        //    tbCustImprove = new ToolbarItem();
+                        //    tbCustImprove.Text = "改善登记";
+                        //    tbCustImprove.Command = (this.BindingContext as TaskListViewModel).AddCustImproveCommand;
+                        //}
+                        //if (!this.ToolbarItems.Contains(tbCustImprove))
+                        //{
+                        //    this.ToolbarItems.Add(tbCustImprove);
+                        //}
                     }
-                    if (!this.ToolbarItems.Contains(tbUploadData))
+                    else
                     {
-                        this.ToolbarItems.Add(tbUploadData);
+                        if (this.ToolbarItems.Contains(tbUploadData))
+                        {
+                            this.ToolbarItems.Remove(tbUploadData);
+                        }
+                        //if (this.ToolbarItems.Contains(tbCustImprove))
+                        //{
+                        //    this.ToolbarItems.Remove(tbCustImprove);
+                        //}
                     }
-                    //if (tbCustImprove == null)
-                    //{
-                    //    tbCustImprove = new ToolbarItem();
-                    //    tbCustImprove.Text = "改善登记";
-                    //    tbCustImprove.Command = (this.BindingContext as TaskListViewModel).AddCustImproveCommand;
-                    //}
-                    //if (!this.ToolbarItems.Contains(tbCustImprove))
-                    //{
-                    //    this.ToolbarItems.Add(tbCustImprove);
-                    //}
-                }
-                else
-                {
-                    if (this.ToolbarItems.Contains(tbUploadData))
-                    {
-                        this.ToolbarItems.Remove(tbUploadData);
-                    }
-                    //if (this.ToolbarItems.Contains(tbCustImprove))
-                    //{
-                    //    this.ToolbarItems.Remove(tbCustImprove);
-                    //}
-                }
-            });
+                });
+            }
+            catch (Exception)
+            {
+            }
         }
 
         void Handle_ItemTapped(object sender, Xamarin.Forms.ItemTappedEventArgs e)
         {
-            if (e == null) return; // has been set to null, do not 'process' tapped event
-                                   //Debug.WriteLine("Tapped: " + e.Item);
-                                   //((ListView)sender).SelectedItem = null; // de-select the row
-            var item = e.Item as TaskOfPlanDto;
-
-            MessagingCenter.Send<TaskOfPlanDto>(item, "CheckTask");
-            if (fromSeachYN == "")
+            try
             {
-                MessagingCenter.Send<string>("", "TaskSearchParam");
-            }
-            else
-            {
-                MessagingCenter.Send<string>("search", "TaskSearchParam");
-            }
+                if (e == null) return; // has been set to null, do not 'process' tapped event
+                                       //Debug.WriteLine("Tapped: " + e.Item);
+                                       //((ListView)sender).SelectedItem = null; // de-select the row
+                var item = e.Item as TaskOfPlanDto;
 
+                MessagingCenter.Send<TaskOfPlanDto>(item, "CheckTask");
+                if (fromSeachYN == "")
+                {
+                    MessagingCenter.Send<string>("", "TaskSearchParam");
+                }
+                else
+                {
+                    MessagingCenter.Send<string>("search", "TaskSearchParam");
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override void OnAppearing()

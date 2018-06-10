@@ -19,18 +19,25 @@ namespace MaxInsight.Mobile.ViewModels.Common
         CommonHelper _commonHelper;
         public ComSinglePopViewModel()
         {
-            _caseService = Resolver.Resolve<ICaseService>();
-            _improveService = Resolver.Resolve<IImproveService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            MessagingCenter.Unsubscribe<string>(this, MessageConst.COMMON_SOURCE_GET);
-            MessagingCenter.Subscribe<string>(
-         this,
-         MessageConst.COMMON_SOURCE_GET,
-         (dataType) =>
-         {
-             SetListViewSource(dataType);
-         });
+            try
+            {
+                _caseService = Resolver.Resolve<ICaseService>();
+                _improveService = Resolver.Resolve<IImproveService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                MessagingCenter.Unsubscribe<string>(this, MessageConst.COMMON_SOURCE_GET);
+                MessagingCenter.Subscribe<string>(
+             this,
+             MessageConst.COMMON_SOURCE_GET,
+             (dataType) =>
+             {
+                 SetListViewSource(dataType);
+             });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ComSinglePopViewModel");
+            }
         }
 
         #region Property(s)
@@ -61,7 +68,7 @@ namespace MaxInsight.Mobile.ViewModels.Common
             switch (dataType)
             {
                 case "NoticeStatus":
-                    if(CommonContext.Account.UserType == "A" ||
+                    if (CommonContext.Account.UserType == "A" ||
                             CommonContext.Account.UserType == "R" ||
                               CommonContext.Account.UserType == "Z")
                     {
@@ -86,7 +93,7 @@ namespace MaxInsight.Mobile.ViewModels.Common
                     GetImpAllSourceType();
                     CloseBtnColor = "#398FC0";
                     break;
-                default:break;
+                default: break;
             }
         }
         #endregion
@@ -194,7 +201,7 @@ namespace MaxInsight.Mobile.ViewModels.Common
                 _commonFun.ShowLoading("查询中...");
                 //TO-DO
                 var result = await _caseService.GetTypeFromHiddenCode("15");
-                if (result!=null && result.ResultCode == Module.ResultType.Success)
+                if (result != null && result.ResultCode == Module.ResultType.Success)
                 {
                     var stList = JsonConvert.DeserializeObject<List<NameValueObject>>(result.Body);
                     if (stList != null && stList.Count > 0)

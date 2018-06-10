@@ -18,26 +18,34 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         CommonHelper _commonHelper;
         public ImproveIndexViewModel()
         {
-            improveService = Resolver.Resolve<IImproveService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            //MessagingCenter.Unsubscribe<ImproveIndexPage>(this, MessageConst.IMPROVE_RESULT_GET);
-            //MessagingCenter.Subscribe<ImproveIndexPage>(this, MessageConst.IMPROVE_RESULT_GET, (c) =>
-            // {
-            //     GetImproveResultOrResultApproval();
-            // });
-            MessagingCenter.Unsubscribe<string>(this, MessageConst.IMPROVE_PLANLSTDATA_GET);
-            MessagingCenter.Subscribe<string>(this, MessageConst.IMPROVE_PLANLSTDATA_GET, (c) =>
+            try
             {
-                if (c=="A")
+                improveService = Resolver.Resolve<IImproveService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                //MessagingCenter.Unsubscribe<ImproveIndexPage>(this, MessageConst.IMPROVE_RESULT_GET);
+                //MessagingCenter.Subscribe<ImproveIndexPage>(this, MessageConst.IMPROVE_RESULT_GET, (c) =>
+                // {
+                //     GetImproveResultOrResultApproval();
+                // });
+                MessagingCenter.Unsubscribe<string>(this, MessageConst.IMPROVE_PLANLSTDATA_GET);
+                MessagingCenter.Subscribe<string>(this, MessageConst.IMPROVE_PLANLSTDATA_GET, (c) =>
                 {
-                    GetImprovePlanOrPlanApproval();
-                }
-                else
-                {
-                    GetImproveResultOrResultApproval();
-                }
-            });
+                    if (c == "A")
+                    {
+                        GetImprovePlanOrPlanApproval();
+                    }
+                    else
+                    {
+                        GetImproveResultOrResultApproval();
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveIndexViewModel");
+                return;
+            }
         }
         #region Property
         List<ImprovementMngDto> improvePlans;
@@ -206,7 +214,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 {
                     GoImproveDistributionPage(SelectedImprovePlanOrResult);
                 }
-                else if(SelectedImprovePlanOrResult.PlanStatus == "G")
+                else if (SelectedImprovePlanOrResult.PlanStatus == "G")
                 {
                     GoImpResultCommitPage(SelectedImprovePlanOrResult);
                 }
@@ -232,7 +240,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 list.Add(new RequestParameter { Name = "planApproalYN", Value = improvementMng.PlanApproalYN.ToString() });
                 list.Add(new RequestParameter { Name = "PlanStatus", Value = improvementMng.PlanStatus });
                 list.Add(new RequestParameter { Name = "AllocateYN", Value = improvementMng.AllocateYN.ToString() });
-                await Navigation.PushAsync<ImpPlanCommitViewModel>((vm, v) => vm.Init(improvementMng,list), true);
+                await Navigation.PushAsync<ImpPlanCommitViewModel>((vm, v) => vm.Init(improvementMng, list), true);
             }
             catch (Exception ex)
             {
@@ -250,7 +258,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 list.Add(new RequestParameter { Name = "ResultApproalYN", Value = improvementMng.ResultApproalYN.ToString() });
                 list.Add(new RequestParameter { Name = "ResultStatus", Value = improvementMng.ResultStatus });
                 list.Add(new RequestParameter { Name = "AllocateYN", Value = improvementMng.AllocateYN.ToString() });
-                await Navigation.PushAsync<ImpResultCommitViewModel>((vm, v) => vm.Init(improvementMng,list), true);
+                await Navigation.PushAsync<ImpResultCommitViewModel>((vm, v) => vm.Init(improvementMng, list), true);
             }
             catch (Exception)
             {
@@ -263,7 +271,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 CommonContext.ImpPlanStatus = improvementMng.PlanStatus;
                 if (CommonContext.Account.UserType == "S")
                 {
-                    await Navigation.PushAsync<ImproveDistributionViewModel>((vm,v)=>vm.Init(improvementMng),true);
+                    await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(improvementMng), true);
                 }
                 else
                 {
@@ -273,7 +281,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                     }
                     else
                     {
-                        await Navigation.PushAsync<ImproveDistributionViewModel>((vm,v)=>vm.Init(improvementMng),true);
+                        await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(improvementMng), true);
                     }
                 }
             }
@@ -292,23 +300,23 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 _commonFun.ShowLoading("查询中...");
                 //TO-DO
                 APIResult result = new APIResult();
-                if (CommonContext.Account.UserType=="D")
+                if (CommonContext.Account.UserType == "D")
                 {
-                     result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "R", "A,D", 0, 0,0);
+                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "R", "A,D", 0, 0, 0);
                 }
-                else if(CommonContext.Account.UserType == "S")
+                else if (CommonContext.Account.UserType == "S")
                 {
-                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "R", "C,F", 0, 0,0);
+                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "R", "C,F", 0, 0, 0);
                 }
                 else if (CommonContext.Account.UserType == "Z")
                 {
-                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "R", "E", 0, 0,0);
+                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "R", "E", 0, 0, 0);
                 }
                 if (result.ResultCode == Module.ResultType.Success)
                 {
 
                     List<ImprovementMngDto> improveResultInfo = CommonHelper.DecodeString<List<ImprovementMngDto>>(result.Body);
-                    if (improveResultInfo!=null&& improveResultInfo.Count > 0)
+                    if (improveResultInfo != null && improveResultInfo.Count > 0)
                     {
                         _commonFun.HideLoading();
                         //ImproveResults = improveResultInfo;
@@ -359,21 +367,21 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 APIResult result = new APIResult();
                 if (CommonContext.Account.UserType == "D")
                 {
-                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "A", "B,D", 0, 0,0);
+                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "A", "B,D", 0, 0, 0);
                 }
                 else if (CommonContext.Account.UserType == "S")
                 {
-                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "A", "C,F", 0, 0,0);
+                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "A", "C,F", 0, 0, 0);
                 }
                 else if (CommonContext.Account.UserType == "Z")
                 {
-                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "A", "E", 0, 0,0);
+                    result = await improveService.GetResult("", "19000101", "99991231", Convert.ToInt32(CommonContext.Account.UserId), "A", "E", 0, 0, 0);
                 }
                 if (result.ResultCode == Module.ResultType.Success)
                 {
 
                     List<ImprovementMngDto> improvePlanInfo = CommonHelper.DecodeString<List<ImprovementMngDto>>(result.Body);
-                    if (improvePlanInfo!=null && improvePlanInfo.Count > 0)
+                    if (improvePlanInfo != null && improvePlanInfo.Count > 0)
                     {
                         _commonFun.HideLoading();
                         //ImprovePlans = improvePlanInfo;

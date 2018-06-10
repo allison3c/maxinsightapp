@@ -23,11 +23,17 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region Constructor
         public NoticeApproalViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _notifiMngService = Resolver.Resolve<INotifiMngService>();
-
-
+            try
+            {
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _notifiMngService = Resolver.Resolve<INotifiMngService>();
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NoticeApproalViewModel");
+                return;
+            }
             //Device.BeginInvokeOnMainThread(() =>
             //{
             //    GetNoticeApproalDetail(NotifiContentItem.NoticeReaderId);
@@ -396,16 +402,24 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         }
         public void Init(int noticeReaderId, string status)
         {
-            NoticeReaderId = noticeReaderId;
-            GetNoticeApproalDetail(noticeReaderId);
-            //"W"待审核，"N" 待重新提交
-            if (status == "W")
+            try
             {
-                IsEditable = true;
+                NoticeReaderId = noticeReaderId;
+                GetNoticeApproalDetail(noticeReaderId);
+                //"W"待审核，"N" 待重新提交
+                if (status == "W")
+                {
+                    IsEditable = true;
+                }
+                else
+                {
+                    IsEditable = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                IsEditable = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->NoticeApproalViewModel");
+                return;
             }
         }
 
@@ -467,9 +481,15 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
 
         private async void GotoNoticeDetailPage()
         {
-            await Navigation.PushAsync<NotifiMngViewModel>((vm, v) => vm.Init(NoticeId.ToString(), 0, 0, Status), true);
-
-
+            try
+            {
+                await Navigation.PushAsync<NotifiMngViewModel>((vm, v) => vm.Init(NoticeId.ToString(), 0, 0, Status), true);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NoticeApproalViewModel");
+                return;
+            }
         }
 
         #endregion

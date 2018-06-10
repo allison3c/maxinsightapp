@@ -35,195 +35,213 @@ namespace MaxInsight.Mobile.Pages
         public MainPage()
         {
             InitializeComponent();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _noticeMngService = Resolver.Resolve<INotifiMngService>();
-            imageGallery.ItemsSource = new ObservableCollection<string>() { "banner1", "banner2", "banner3", "banner4" };
-
-            InitMenuGrid();
-            DisplayMessage();
-
-            MessagingCenter.Subscribe<string>(this, "GoPreviewImageGesturePage", (param) =>
+            try
             {
-                Regex regImg = new Regex(".+(.JPEG|.jpeg|.JPG|.jpg|.GIF|.gif|.BMP|.bmp|.PNG|.png)$");
-                if (regImg.IsMatch(param))
-                {
-                    Device.BeginInvokeOnMainThread(async () =>
-                    {
-                        await PopupNavigation.PushAsync(new PreviewImageGesturePage(param), true);
-                    });
-                }
-                else
-                {
-                    _commonFun.AlertLongText("请在电脑端阅览");
-                    return;
-                }
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _noticeMngService = Resolver.Resolve<INotifiMngService>();
+                imageGallery.ItemsSource = new ObservableCollection<string>() { "banner1", "banner2", "banner3", "banner4" };
 
-            });
+                InitMenuGrid();
+                DisplayMessage();
+
+                MessagingCenter.Subscribe<string>(this, "GoPreviewImageGesturePage", (param) =>
+                {
+                    Regex regImg = new Regex(".+(.JPEG|.jpeg|.JPG|.jpg|.GIF|.gif|.BMP|.bmp|.PNG|.png)$");
+                    if (regImg.IsMatch(param))
+                    {
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            await PopupNavigation.PushAsync(new PreviewImageGesturePage(param), true);
+                        });
+                    }
+                    else
+                    {
+                        _commonFun.AlertLongText("请在电脑端阅览");
+                        return;
+                    }
+
+                });
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected async override void OnAppearing()
         {
             base.OnAppearing();
-            if (!FirstYN)
+            try
             {
-                await ResetData();
+                if (!FirstYN)
+                {
+                    await ResetData();
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         #region InitMenu
         private void InitMenuGrid()
         {
-            List<Action> action = new List<Action>(); //commit something
-            string[] images;
-            string[] menuName;
-            if (CommonContext.Account.UserType == "D")// || CommonContext.Account.UserType == "S")
+            try
             {
-                images = new string[] { "icon_plan", "icon_update", "icon_notifi" };//, "icon_share" };
-                menuName = new string[] { "日历管理", "监控互动", "通知公告" };//, "案例分享" };
-                action.Add(GoCalendar);
-                action.Add(GoUpgrid);
-                action.Add(GoNotifi);
-                //action.Add(GoCaseShare);
-            }
-            else if (CommonContext.Account.UserType == "S")
-            {
-                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
-                menuName = new string[] { "日历管理", "详情查看", "监控互动", "通知公告" };//, "案例分享" };
-                action.Add(GoCalendar);
-                action.Add(GoCheck);
-                action.Add(GoUpgrid);
-                action.Add(GoNotifi);
-                //action.Add(GoCaseShare);
-                //action.Add(GoReport);
-            }
-            else if (CommonContext.Account.UserType == "Z")
-            {
-                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
-                menuName = new string[] { "日历管理", "巡视检核", "监控互动", "通知公告" };//, "案例分享" };
-                action.Add(GoCalendar);
-                action.Add(GoCheck);
-                action.Add(GoUpgrid);
-                action.Add(GoNotifi);
-                //action.Add(GoCaseShare);
-                //action.Add(GoReport);
-            }
-            else
-            {
-                images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
-                menuName = new string[] { "日历管理", "计划任务", "监控互动", "通知公告" };//, "案例分享" };
-                action.Add(GoCalendar);
-                action.Add(GoPlan);
-                action.Add(GoUpgrid);
-                action.Add(GoNotifi);
-                //action.Add(GoCaseShare);
-                //action.Add(GoReport);
-            }
-            int menuCnt = menuName.Length;
-
-            if (menuCnt % 2 == 0)
-            {
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-
-                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
-                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
-            }
-            else
-            {
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
-
-                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
-                grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) }); 
-            }
-
-
-
-            if (Device.OS == TargetPlatform.iOS)
-            {
-                for (int i = 0; i < menuCnt; i++)
+                List<Action> action = new List<Action>(); //commit something
+                string[] images;
+                string[] menuName;
+                if (CommonContext.Account.UserType == "D")// || CommonContext.Account.UserType == "S")
                 {
-                    var stack = new StackLayout()
+                    images = new string[] { "icon_plan", "icon_update", "icon_notifi" };//, "icon_share" };
+                    menuName = new string[] { "日历管理", "监控互动", "通知公告" };//, "案例分享" };
+                    action.Add(GoCalendar);
+                    action.Add(GoUpgrid);
+                    action.Add(GoNotifi);
+                    //action.Add(GoCaseShare);
+                }
+                else if (CommonContext.Account.UserType == "S")
+                {
+                    images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
+                    menuName = new string[] { "日历管理", "详情查看", "监控互动", "通知公告" };//, "案例分享" };
+                    action.Add(GoCalendar);
+                    action.Add(GoCheck);
+                    action.Add(GoUpgrid);
+                    action.Add(GoNotifi);
+                    //action.Add(GoCaseShare);
+                    //action.Add(GoReport);
+                }
+                else if (CommonContext.Account.UserType == "Z")
+                {
+                    images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
+                    menuName = new string[] { "日历管理", "巡视检核", "监控互动", "通知公告" };//, "案例分享" };
+                    action.Add(GoCalendar);
+                    action.Add(GoCheck);
+                    action.Add(GoUpgrid);
+                    action.Add(GoNotifi);
+                    //action.Add(GoCaseShare);
+                    //action.Add(GoReport);
+                }
+                else
+                {
+                    images = new string[] { "icon_plan", "icon_check", "icon_update", "icon_notifi" };//, "icon_share" };
+                    menuName = new string[] { "日历管理", "计划任务", "监控互动", "通知公告" };//, "案例分享" };
+                    action.Add(GoCalendar);
+                    action.Add(GoPlan);
+                    action.Add(GoUpgrid);
+                    action.Add(GoNotifi);
+                    //action.Add(GoCaseShare);
+                    //action.Add(GoReport);
+                }
+                int menuCnt = menuName.Length;
+
+                if (menuCnt % 2 == 0)
+                {
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
+                }
+                else
+                {
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+                    grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
+
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(120) });
+                }
+
+
+
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    for (int i = 0; i < menuCnt; i++)
                     {
-                        HorizontalOptions = LayoutOptions.FillAndExpand,
-                        VerticalOptions = LayoutOptions.FillAndExpand,
-                        Orientation = StackOrientation.Vertical,
-                        BackgroundColor = Color.White,
-                        Padding = new Thickness(0, 20, 0, 0)
-                    };
+                        var stack = new StackLayout()
+                        {
+                            HorizontalOptions = LayoutOptions.FillAndExpand,
+                            VerticalOptions = LayoutOptions.FillAndExpand,
+                            Orientation = StackOrientation.Vertical,
+                            BackgroundColor = Color.White,
+                            Padding = new Thickness(0, 20, 0, 0)
+                        };
 
-                    var image = new ImageButton()
-                    {
-                        ImageHeightRequest = 50,
-                        ImageWidthRequest = 50,
-                        Source = ImageSource.FromFile(images[i]),
-                        //Text = menuName[i],
-                        Orientation = ImageOrientation.ImageCentered,
-                        Command = new Command(action[i]),
-                        TextColor = Color.Black,
-                        BorderRadius = 0,
-                        Margin = 2,
-                        HorizontalOptions = LayoutOptions.Center,
-                        VerticalOptions = LayoutOptions.Center
-                    };
+                        var image = new ImageButton()
+                        {
+                            ImageHeightRequest = 50,
+                            ImageWidthRequest = 50,
+                            Source = ImageSource.FromFile(images[i]),
+                            //Text = menuName[i],
+                            Orientation = ImageOrientation.ImageCentered,
+                            Command = new Command(action[i]),
+                            TextColor = Color.Black,
+                            BorderRadius = 0,
+                            Margin = 2,
+                            HorizontalOptions = LayoutOptions.Center,
+                            VerticalOptions = LayoutOptions.Center
+                        };
 
-                    stack.Children.Add(image);
+                        stack.Children.Add(image);
 
-                    var lable = new Label()
-                    {
-                        HorizontalOptions = LayoutOptions.Center,
-                        VerticalOptions = LayoutOptions.Center,
-                        Text = menuName[i]
-                    };
+                        var lable = new Label()
+                        {
+                            HorizontalOptions = LayoutOptions.Center,
+                            VerticalOptions = LayoutOptions.Center,
+                            Text = menuName[i]
+                        };
 
-                    stack.Children.Add(lable);
+                        stack.Children.Add(lable);
 
-                    stack.GestureRecognizers.Add(new TapGestureRecognizer()
-                    {
-                        Command = new Command(action[i]),
-                        NumberOfTapsRequired = 1
-                    });
+                        stack.GestureRecognizers.Add(new TapGestureRecognizer()
+                        {
+                            Command = new Command(action[i]),
+                            NumberOfTapsRequired = 1
+                        });
 
-                    //ChangeImageButtonColor(i, stack);
-                    if (menuCnt % 2 == 0)
-                    {
-                        grid.Children.Add(stack, i % 2, i / 2);
+                        //ChangeImageButtonColor(i, stack);
+                        if (menuCnt % 2 == 0)
+                        {
+                            grid.Children.Add(stack, i % 2, i / 2);
+                        }
+                        else
+                        {
+                            grid.Children.Add(stack, i % 3, i / 3);
+                        }
                     }
-                    else
+                }
+                else
+                {
+                    for (int i = 0; i < menuCnt; i++)
                     {
-                        grid.Children.Add(stack, i % 3, i / 3); 
+                        var stack = new ImageButton()
+                        {
+                            ImageHeightRequest = 50,
+                            ImageWidthRequest = 50,
+                            Source = ImageSource.FromFile(images[i]),
+                            Text = menuName[i],
+                            Orientation = ImageOrientation.ImageCentered,
+                            BackgroundColor = Color.White,
+                            Command = new Command(action[i]),
+                            TextColor = Color.Black,
+                            BorderRadius = 0,
+                        };
+
+                        //ChangeImageButtonColor(i, stack);
+                        if (menuCnt % 2 == 0)
+                        {
+                            grid.Children.Add(stack, i % 2, i / 2);
+                        }
+                        else
+                        {
+                            grid.Children.Add(stack, i % 3, i / 3);
+                        }
                     }
                 }
             }
-            else
+            catch (Exception)
             {
-                for (int i = 0; i < menuCnt; i++)
-                {
-                    var stack = new ImageButton()
-                    {
-                        ImageHeightRequest = 50,
-                        ImageWidthRequest = 50,
-                        Source = ImageSource.FromFile(images[i]),
-                        Text = menuName[i],
-                        Orientation = ImageOrientation.ImageCentered,
-                        BackgroundColor = Color.White,
-                        Command = new Command(action[i]),
-                        TextColor = Color.Black,
-                        BorderRadius = 0,
-                    };
-
-                    //ChangeImageButtonColor(i, stack);
-                    if (menuCnt % 2 == 0)
-                    {
-                        grid.Children.Add(stack, i % 2, i / 2);
-                    }
-                    else
-                    {
-                        grid.Children.Add(stack, i % 3, i / 3); 
-                    }
-                }
             }
         }
 
@@ -376,65 +394,71 @@ namespace MaxInsight.Mobile.Pages
 
         private static void ChangeImageButtonColor(int i, ImageButton stack)
         {
-            if (i < 3)
+            try
             {
-                if (i % 3 == 0)
+                if (i < 3)
                 {
-                    stack.BackgroundColor = Color.FromRgb(201, 199, 157);
+                    if (i % 3 == 0)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(201, 199, 157);
+                    }
+                    else if (i % 3 == 1)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(78, 140, 168);
+                    }
+                    else if (i % 3 == 2)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(118, 175, 175);
+                    }
                 }
-                else if (i % 3 == 1)
+                else if (i > 3 && i <= 5)
                 {
-                    stack.BackgroundColor = Color.FromRgb(78, 140, 168);
+                    if (i % 3 == 0)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(78, 140, 168);
+                    }
+                    else if (i % 3 == 1)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(222, 206, 189);
+                    }
+                    else if (i % 3 == 2)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(189, 148, 142);
+                    }
                 }
-                else if (i % 3 == 2)
+                else if (i > 5 && i <= 8)
                 {
-                    stack.BackgroundColor = Color.FromRgb(118, 175, 175);
+                    if (i % 3 == 0)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(162, 115, 73);
+                    }
+                    else if (i % 3 == 1)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(236, 199, 110);
+                    }
+                    else if (i % 3 == 2)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(185, 121, 177);
+                    }
+                }
+                else if (i > 8 && i <= 11)
+                {
+                    if (i % 3 == 0)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(206, 186, 196);
+                    }
+                    else if (i % 3 == 1)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(78, 140, 168);
+                    }
+                    else if (i % 3 == 2)
+                    {
+                        stack.BackgroundColor = Color.FromRgb(239, 236, 205);
+                    }
                 }
             }
-            else if (i > 3 && i <= 5)
+            catch (Exception)
             {
-                if (i % 3 == 0)
-                {
-                    stack.BackgroundColor = Color.FromRgb(78, 140, 168);
-                }
-                else if (i % 3 == 1)
-                {
-                    stack.BackgroundColor = Color.FromRgb(222, 206, 189);
-                }
-                else if (i % 3 == 2)
-                {
-                    stack.BackgroundColor = Color.FromRgb(189, 148, 142);
-                }
-            }
-            else if (i > 5 && i <= 8)
-            {
-                if (i % 3 == 0)
-                {
-                    stack.BackgroundColor = Color.FromRgb(162, 115, 73);
-                }
-                else if (i % 3 == 1)
-                {
-                    stack.BackgroundColor = Color.FromRgb(236, 199, 110);
-                }
-                else if (i % 3 == 2)
-                {
-                    stack.BackgroundColor = Color.FromRgb(185, 121, 177);
-                }
-            }
-            else if (i > 8 && i <= 11)
-            {
-                if (i % 3 == 0)
-                {
-                    stack.BackgroundColor = Color.FromRgb(206, 186, 196);
-                }
-                else if (i % 3 == 1)
-                {
-                    stack.BackgroundColor = Color.FromRgb(78, 140, 168);
-                }
-                else if (i % 3 == 2)
-                {
-                    stack.BackgroundColor = Color.FromRgb(239, 236, 205);
-                }
             }
         }
         #endregion
@@ -443,40 +467,52 @@ namespace MaxInsight.Mobile.Pages
 
         private async void DisplayMessage()
         {
-            await ResetData();
-            FirstYN = false;
-
-            //set timer
-            Device.StartTimer(TimeSpan.FromSeconds(3), () =>
+            try
             {
-                if (lstMessage == null || lstMessage.Count <= 0)
-                {
-                    lblMessage.Text = "没有最新通知！";
-                    return true;
-                }
-                else
-                {
-                    string msg = lstMessage[index].Title;
+                await ResetData();
+                FirstYN = false;
 
-                    if (msg.Length > 15 && !Char.IsPunctuation(msg.PadRight(1).ToCharArray()[0]))
+                //set timer
+                Device.StartTimer(TimeSpan.FromSeconds(3), () =>
+                {
+                    if (lstMessage == null || lstMessage.Count <= 0)
                     {
-                        msg = msg.Substring(0, 15) + "...";
+                        lblMessage.Text = "没有最新通知！";
+                        return true;
                     }
-                    lblMessage.Text = msg;
-                    index++;
-                    if (lstMessage.Count <= index)
+                    else
                     {
-                        index = 0;
+                        string msg = lstMessage[index].Title;
+
+                        if (msg.Length > 15 && !Char.IsPunctuation(msg.PadRight(1).ToCharArray()[0]))
+                        {
+                            msg = msg.Substring(0, 15) + "...";
+                        }
+                        lblMessage.Text = msg;
+                        index++;
+                        if (lstMessage.Count <= index)
+                        {
+                            index = 0;
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            });
+                });
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private async Task ResetData()
         {
-            index = 0;
-            lstMessage = await GetMessageData();
+            try
+            {
+                index = 0;
+                lstMessage = await GetMessageData();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private async Task<List<NoticeListInfoDto>> GetMessageData()

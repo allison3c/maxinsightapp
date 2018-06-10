@@ -46,17 +46,30 @@ namespace MaxInsight.Mobile
             //{
             //    SetIoc(this);
             //}
-
-            var _commonFun = Resolver.Resolve<ICommonFun>();
-            SetViewFactory();
-            InitPlatform();
-            if (Device.OS == TargetPlatform.iOS)
+            try
             {
-                var firstInstall = _commonFun.GetCach(CommonContext.FIRSTINSTALLYN);
-                if (string.IsNullOrEmpty(firstInstall))
+                var _commonFun = Resolver.Resolve<ICommonFun>();
+                SetViewFactory();
+                InitPlatform();
+                if (Device.OS == TargetPlatform.iOS)
                 {
-                    MainPage = ViewFactory.CreatePage<IOSWelcomViewModel, IOSWelcomView>() as Page;
-                    _commonFun.SetCach(CommonContext.FIRSTINSTALLYN, "1");
+                    var firstInstall = _commonFun.GetCach(CommonContext.FIRSTINSTALLYN);
+                    if (string.IsNullOrEmpty(firstInstall))
+                    {
+                        MainPage = ViewFactory.CreatePage<IOSWelcomViewModel, IOSWelcomView>() as Page;
+                        _commonFun.SetCach(CommonContext.FIRSTINSTALLYN, "1");
+                    }
+                    else
+                    {
+                        if (!CommonContext.IsUserLoggedIn)
+                        {
+                            MainPage = ViewFactory.CreatePage<LoginViewModel, LoginPage>() as Page;
+                        }
+                        else
+                        {
+                            MainPage = new NavigationPage(ViewFactory.CreatePage<MainViewModel, MainPage>() as Page);
+                        }
+                    }
                 }
                 else
                 {
@@ -69,20 +82,12 @@ namespace MaxInsight.Mobile
                         MainPage = new NavigationPage(ViewFactory.CreatePage<MainViewModel, MainPage>() as Page);
                     }
                 }
-            }
-            else
-            {
-                if (!CommonContext.IsUserLoggedIn)
-                {
-                    MainPage = ViewFactory.CreatePage<LoginViewModel, LoginPage>() as Page;
-                }
-                else
-                {
-                    MainPage = new NavigationPage(ViewFactory.CreatePage<MainViewModel, MainPage>() as Page);
-                }
-            }
 
-            MainPage.BackgroundColor = Color.FromHex("#ECF0F1");
+                MainPage.BackgroundColor = Color.FromHex("#ECF0F1");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void SetViewFactory()
@@ -142,18 +147,24 @@ namespace MaxInsight.Mobile
 
         private void SetIoc(App instance)
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterType<AccountService>().As<IAccountService>();
-            //builder.RegisterType<CommonFun_Droid>().As<ICommonFun>();
-            builder.RegisterInstance(new Config.Config());
-            builder.Register(ctx =>
+            try
             {
-                return new AccountInfo();
-            });
+                var builder = new ContainerBuilder();
+                builder.RegisterType<AccountService>().As<IAccountService>();
+                //builder.RegisterType<CommonFun_Droid>().As<ICommonFun>();
+                builder.RegisterInstance(new Config.Config());
+                builder.Register(ctx =>
+                {
+                    return new AccountInfo();
+                });
 
-            var container = builder.Build();
-            var resolverContainer = new AutofacContainer(container);
-            Resolver.SetResolver(resolverContainer.GetResolver());
+                var container = builder.Build();
+                var resolverContainer = new AutofacContainer(container);
+                Resolver.SetResolver(resolverContainer.GetResolver());
+            }
+            catch (Exception)
+            {
+            }
         }
 
 
@@ -164,31 +175,37 @@ namespace MaxInsight.Mobile
         /// <param name = "isCancel">If set to <c>true</c> user can cancel the loading event (just uses PopModalAync here)</param>
         public static void ShowLoading(bool isRunning, bool isCancel = false)
         {
-            if (isRunning == true)
+            try
             {
-                if (isCancel == true)
+                if (isRunning == true)
                 {
-                    UserDialogs.Instance.Loading("Loading", new Action(async () =>
+                    if (isCancel == true)
                     {
-                        if (Application.Current.MainPage.Navigation.ModalStack.Count > 1)
+                        UserDialogs.Instance.Loading("Loading", new Action(async () =>
                         {
-                            await Application.Current.MainPage.Navigation.PopModalAsync();
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("Navigation: Can't pop modal without any modals pushed");
-                        }
-                        UserDialogs.Instance.Loading().Hide();
-                    }));
+                            if (Application.Current.MainPage.Navigation.ModalStack.Count > 1)
+                            {
+                                await Application.Current.MainPage.Navigation.PopModalAsync();
+                            }
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine("Navigation: Can't pop modal without any modals pushed");
+                            }
+                            UserDialogs.Instance.Loading().Hide();
+                        }));
+                    }
+                    else
+                    {
+                        UserDialogs.Instance.Loading("Loading");
+                    }
                 }
                 else
                 {
-                    UserDialogs.Instance.Loading("Loading");
+                    UserDialogs.Instance.Loading().Hide();
                 }
             }
-            else
+            catch (Exception)
             {
-                UserDialogs.Instance.Loading().Hide();
             }
         }
 
@@ -209,22 +226,24 @@ namespace MaxInsight.Mobile
 
         public async static Task<IOSVersionInfoDto> CheckUpdate()
         {
-            IOSVersionInfoDto info = new IOSVersionInfoDto();
-            var commonHelper = Resolver.Resolve<CommonHelper>();
-            var commonFun = Resolver.Resolve<ICommonFun>();
-            string shortcutName = "";
-            if (Device.OS == TargetPlatform.iOS)
+            try
             {
-                shortcutName = "pcm_ios";
-                //shortcutName = "maxinsight_ios";
-            }
-            else
-            {
-                shortcutName = "pcm_android";
-                //shortcutName = "maxinsight_droid";
-            }
+                IOSVersionInfoDto info = new IOSVersionInfoDto();
+                var commonHelper = Resolver.Resolve<CommonHelper>();
+                var commonFun = Resolver.Resolve<ICommonFun>();
+                string shortcutName = "";
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    shortcutName = "pcm_ios";
+                    //shortcutName = "maxinsight_ios";
+                }
+                else
+                {
+                    shortcutName = "pcm_android";
+                    //shortcutName = "maxinsight_droid";
+                }
 
-            List<RequestParameter> shortcutList = new List<RequestParameter>()
+                List<RequestParameter> shortcutList = new List<RequestParameter>()
             {
                 new RequestParameter()
                 {
@@ -238,21 +257,21 @@ namespace MaxInsight.Mobile
                     Value = "b2b9d7af1d81a3a596be546390fc7d22"
                 }
             };
-            PgyAppInfoShortcutInfo shortcutDto = null;
-            try
-            {
-                shortcutDto = await commonHelper.HttpGetPOST<PgyAppInfoShortcutInfo>("https://www.pgyer.com", "/apiv1/app/getAppKeyByShortcut", shortcutList);
-            }
-            catch (Exception)
-            {
-                return info;
-            }
+                PgyAppInfoShortcutInfo shortcutDto = null;
+                try
+                {
+                    shortcutDto = await commonHelper.HttpGetPOST<PgyAppInfoShortcutInfo>("https://www.pgyer.com", "/apiv1/app/getAppKeyByShortcut", shortcutList);
+                }
+                catch (Exception)
+                {
+                    return info;
+                }
 
-            if (shortcutDto == null || shortcutDto.data == null)
-            {
-                return info;
-            }
-            List<RequestParameter> appInfoList = new List<RequestParameter>()
+                if (shortcutDto == null || shortcutDto.data == null)
+                {
+                    return info;
+                }
+                List<RequestParameter> appInfoList = new List<RequestParameter>()
             {
                 new RequestParameter()
                 {
@@ -273,31 +292,36 @@ namespace MaxInsight.Mobile
                 }
             };
 
-            PgyAppInfoDetail appInfoDto = null;
-            try
-            {
-                appInfoDto = await commonHelper.HttpGetPOST<PgyAppInfoDetail>("https://www.pgyer.com", "/apiv1/app/view", appInfoList);
+                PgyAppInfoDetail appInfoDto = null;
+                try
+                {
+                    appInfoDto = await commonHelper.HttpGetPOST<PgyAppInfoDetail>("https://www.pgyer.com", "/apiv1/app/view", appInfoList);
+                }
+                catch (Exception)
+                {
+                    return info;
+                }
+
+                if (appInfoDto == null || appInfoDto.data == null)
+                {
+                    return info;
+                }
+                int version = commonFun.GetVersionNo();
+
+                if (Convert.ToInt32(appInfoDto.data.appBuildVersion) > version)
+                {
+                    //return appInfoDto.data.appUpdateDescription;
+                    info.updateMsg = appInfoDto.data.appUpdateDescription;
+                    info.appKey = appInfoDto.data.appKey;
+                    info.newVersion = Convert.ToInt32(appInfoDto.data.appVersionNo);
+                    info.nowVersion = version;
+                }
+                return info;
             }
             catch (Exception)
             {
-                return info;
+                return null;
             }
-
-            if (appInfoDto == null || appInfoDto.data == null)
-            {
-                return info;
-            }
-            int version = commonFun.GetVersionNo();
-
-            if (Convert.ToInt32(appInfoDto.data.appBuildVersion) > version)
-            {
-                //return appInfoDto.data.appUpdateDescription;
-                info.updateMsg = appInfoDto.data.appUpdateDescription;
-                info.appKey = appInfoDto.data.appKey;
-                info.newVersion = Convert.ToInt32(appInfoDto.data.appVersionNo);
-                info.nowVersion = version;
-            }
-            return info;
         }
 
         void InitPlatform()
@@ -315,8 +339,15 @@ namespace MaxInsight.Mobile
                 SysOS = "";
             }
         }
-		public static void GoPreviewImageGesturePage(string url) {
-			MessagingCenter.Send(url, "GoPreviewImageGesturePage");
-		}
+        public static void GoPreviewImageGesturePage(string url)
+        {
+            try
+            {
+                MessagingCenter.Send(url, "GoPreviewImageGesturePage");
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

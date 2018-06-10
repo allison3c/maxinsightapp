@@ -21,17 +21,17 @@ namespace Plugin.FilePicker
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
-            this.context = Android.App.Application.Context;
-
-            Bundle b = (savedInstanceState ?? Intent.Extras);
-
-            Intent intent = new Intent(Intent.ActionGetContent);
-            intent.SetType("*/*");
-
-            intent.AddCategory(Intent.CategoryOpenable);
             try
             {
+                this.context = Android.App.Application.Context;
+
+                Bundle b = (savedInstanceState ?? Intent.Extras);
+
+                Intent intent = new Intent(Intent.ActionGetContent);
+                intent.SetType("*/*");
+
+                intent.AddCategory(Intent.CategoryOpenable);
+
                 StartActivityForResult(Intent.CreateChooser(intent, "Selecione o arquivo a ser enviado"),
                       0);
             }
@@ -45,68 +45,80 @@ namespace Plugin.FilePicker
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            if (resultCode == Result.Canceled)
+            try
             {
-                // Notify user file picking was cancelled.
-                OnFilePickCancelled();
-                Finish();
-            }
-            else
-            {
-                System.Diagnostics.Debug.Write(data.Data);
-                try
+                if (resultCode == Result.Canceled)
                 {
-                    var _uri = data.Data;
-
-                    string filePath = IOUtil.getPath(this.context, _uri);
-
-                    if (string.IsNullOrEmpty(filePath))
-                        filePath = _uri.Path;
-
-                    var file = IOUtil.readFile(filePath);
-
-                    var fileName = GetFileName(this.context, _uri);
-                    if (string.IsNullOrEmpty(fileName))
-                        fileName = filePath.Substring(filePath.LastIndexOf("/") + 1);
-
-                    OnFilePicked(new FilePickerEventArgs(file, filePath));
-                }
-                catch (System.Exception readEx)
-                {
-                    // Notify user file picking failed.
+                    // Notify user file picking was cancelled.
                     OnFilePickCancelled();
-                    System.Diagnostics.Debug.Write(readEx);
-                }
-                finally
-                {
                     Finish();
                 }
+                else
+                {
+                    System.Diagnostics.Debug.Write(data.Data);
+                    try
+                    {
+                        var _uri = data.Data;
+
+                        string filePath = IOUtil.getPath(this.context, _uri);
+
+                        if (string.IsNullOrEmpty(filePath))
+                            filePath = _uri.Path;
+
+                        var file = IOUtil.readFile(filePath);
+
+                        var fileName = GetFileName(this.context, _uri);
+                        if (string.IsNullOrEmpty(fileName))
+                            fileName = filePath.Substring(filePath.LastIndexOf("/") + 1);
+
+                        OnFilePicked(new FilePickerEventArgs(file, filePath));
+                    }
+                    catch (System.Exception readEx)
+                    {
+                        // Notify user file picking failed.
+                        OnFilePickCancelled();
+                        System.Diagnostics.Debug.Write(readEx);
+                    }
+                    finally
+                    {
+                        Finish();
+                    }
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         string GetFileName(Context context, Android.Net.Uri uri)
         {
-
-            String[] projection = { MediaStore.MediaColumns.DisplayName };
-
-            ContentResolver cr = context.ContentResolver;
-            string name = "";
-            ICursor metaCursor = cr.Query(uri, projection, null, null, null);
-            if (metaCursor != null)
+            try
             {
-                try
+                String[] projection = { MediaStore.MediaColumns.DisplayName };
+
+                ContentResolver cr = context.ContentResolver;
+                string name = "";
+                ICursor metaCursor = cr.Query(uri, projection, null, null, null);
+                if (metaCursor != null)
                 {
-                    if (metaCursor.MoveToFirst())
+                    try
                     {
-                        name = metaCursor.GetString(0);
+                        if (metaCursor.MoveToFirst())
+                        {
+                            name = metaCursor.GetString(0);
+                        }
+                    }
+                    finally
+                    {
+                        metaCursor.Close();
                     }
                 }
-                finally
-                {
-                    metaCursor.Close();
-                }
+                return name;
             }
-            return name;
+            catch (Exception)
+            {
+                return "";
+            }
         }
 
         internal static event EventHandler<FilePickerEventArgs> FilePicked;
@@ -114,14 +126,26 @@ namespace Plugin.FilePicker
 
         private static void OnFilePickCancelled()
         {
-	        FilePickCancelled?.Invoke(null, null);
+            try
+            {
+                FilePickCancelled?.Invoke(null, null);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private static void OnFilePicked(FilePickerEventArgs e)
         {
-            var picked = FilePicked;
-            if (picked != null)
-                picked(null, e);
+            try
+            {
+                var picked = FilePicked;
+                if (picked != null)
+                    picked(null, e);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

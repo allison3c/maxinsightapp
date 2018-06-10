@@ -11,7 +11,7 @@ using XLabs.Ioc;
 
 namespace MaxInsight.Mobile.ViewModels.Notifi
 {
-    public class NotifiMngReaderListViewModel:ViewModel
+    public class NotifiMngReaderListViewModel : ViewModel
     {
 
         ICommonFun _commonFun;
@@ -21,23 +21,31 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         public string _paramNotice = "";
         public NotifiMngReaderListViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _notifiMngService = Resolver.Resolve<INotifiMngService>();
-            ItemTappedCommand = new RelayCommand(TappedCommand);
-
-            //MessagingCenter.Unsubscribe<string>(this, MessageConst.NOTICE_READERLIST_SEARCH);
-            //MessagingCenter.Subscribe<string>(this, MessageConst.NOTICE_READERLIST_SEARCH, (c) =>
-            //{
-            //    _paramNotice = c;
-            //    SearchNoticeReadersList(c);
-            //});
-            MessagingCenter.Unsubscribe<string>(this, MessageConst.NOTICE_READERLIST_REFRESH);
-            MessagingCenter.Subscribe<string>(this, MessageConst.NOTICE_READERLIST_REFRESH, (c) =>
+            try
             {
-                if(!string.IsNullOrWhiteSpace(_paramNotice) && _paramNotice != "0")
-                SearchNoticeReadersList(_paramNotice);
-            });
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _notifiMngService = Resolver.Resolve<INotifiMngService>();
+                ItemTappedCommand = new RelayCommand(TappedCommand);
+
+                //MessagingCenter.Unsubscribe<string>(this, MessageConst.NOTICE_READERLIST_SEARCH);
+                //MessagingCenter.Subscribe<string>(this, MessageConst.NOTICE_READERLIST_SEARCH, (c) =>
+                //{
+                //    _paramNotice = c;
+                //    SearchNoticeReadersList(c);
+                //});
+                MessagingCenter.Unsubscribe<string>(this, MessageConst.NOTICE_READERLIST_REFRESH);
+                MessagingCenter.Subscribe<string>(this, MessageConst.NOTICE_READERLIST_REFRESH, (c) =>
+                {
+                    if (!string.IsNullOrWhiteSpace(_paramNotice) && _paramNotice != "0")
+                        SearchNoticeReadersList(_paramNotice);
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngReaderListViewModel");
+                return;
+            }
         }
         #region Property
         public List<NotifiReadersDto> _noticeReaderList;
@@ -85,7 +93,8 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                         await Navigation.PushAsync<NotifiFeedbackViewModel>((vm, v) => vm.Init(SelectedReaderItem.NoticeId, SelectedReaderItem.DisId, SelectedReaderItem.DepartId, SelectedReaderItem.Status, CommonContext.Account.UserId), true);
                     }
                 }
-                else {
+                else
+                {
                     await Navigation.PushAsync<NotifiMngViewModel>((vm, v) => vm.Init(SelectedReaderItem.NoticeId.ToString(), SelectedReaderItem.DisId, SelectedReaderItem.DepartId, SelectedReaderItem.Status), true);
                 }
             }
@@ -135,9 +144,17 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #endregion
 
         #region Init
-        public void Init(string noticeId="0")
+        public void Init(string noticeId = "0")
         {
-            SearchNoticeReadersList(noticeId);
+            try
+            {
+                SearchNoticeReadersList(noticeId);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngReaderListViewModel");
+                return;
+            }
         }
         #endregion
     }

@@ -23,89 +23,96 @@ namespace MaxInsight.Mobile
 
         public ViewRecordViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _tourService = Resolver.Resolve<ITourService>();
-            _caseService = Resolver.Resolve<ICaseService>();
-
-            DistributorName = "请选择";
-            SourceTypeName = "全部";
-            // 页面初始化，清空
-            MessagingCenter.Subscribe<string>(this, "InitParameter", (obj) =>
+            try
             {
-                DateTime now = DateTime.Now;
-                DateTime d1 = new DateTime(now.Year, now.Month, 1);
-                StartDate = d1;
-                EndDate = now;
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _tourService = Resolver.Resolve<ITourService>();
+                _caseService = Resolver.Resolve<ICaseService>();
+
                 DistributorName = "请选择";
-                DisId = 0;
                 SourceTypeName = "全部";
-                SourceTypeCode = "0";
-            });
-
-            #region useless
-            //Device.BeginInvokeOnMainThread(async () =>
-            //{
-            //    try
-            //    {
-            //        if (!(CommonContext.Account.UserType == "D" || CommonContext.Account.UserType == "S"))
-            //        {
-            //            var result = await _tourService.GetShops(Convert.ToInt32(CommonContext.Account.UserId));
-            //            if (null != result && result.ResultCode == Module.ResultType.Success)
-            //            {
-            //                List<TourDistributorDto> disList = JsonConvert.DeserializeObject<List<TourDistributorDto>>(result.Body);
-            //                if (disList != null && disList.Count > 0)
-            //                {
-            //                    foreach (var item in disList)
-            //                    {
-            //                        _dIcDistributor.Add(item.DisId, item.DisName);
-            //                    }
-            //                }
-            //                else
-            //                {
-
-            //                }
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-
-            //    }
-            //});
-            #endregion
-
-            var zionId = CommonContext.Account.OrgZionId;
-            var areaId = CommonContext.Account.OrgAreaId;
-            var serverLst = CommonContext.Account.ZionList.Find(z => z.QId == zionId).AreaList.Find(a => a.AId == areaId).ServerList;
-
-            foreach (var item in serverLst)
-            {
-                _dIcDistributor.Add(Int32.Parse(item.SId), item.SName);
-            }
-
-            _dIcSourceType.Add("0", "全部");
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                var result = await _caseService.GetTypeFromHiddenCode("15");
-                if (null != result && result.ResultCode == Module.ResultType.Success)
+                // 页面初始化，清空
+                MessagingCenter.Subscribe<string>(this, "InitParameter", (obj) =>
                 {
-                    var caseTypeList = JsonConvert.DeserializeObject<List<NameValueObject>>(result.Body);
+                    DateTime now = DateTime.Now;
+                    DateTime d1 = new DateTime(now.Year, now.Month, 1);
+                    StartDate = d1;
+                    EndDate = now;
+                    DistributorName = "请选择";
+                    DisId = 0;
+                    SourceTypeName = "全部";
+                    SourceTypeCode = "0";
+                });
 
-                    if (caseTypeList != null && caseTypeList.Count > 0)
-                    {
-                        foreach (var item in caseTypeList)
-                        {
-                            _dIcSourceType.Add(item.Value, item.Name);
-                        }
-                    }
-                    else
-                    {
+                #region useless
+                //Device.BeginInvokeOnMainThread(async () =>
+                //{
+                //    try
+                //    {
+                //        if (!(CommonContext.Account.UserType == "D" || CommonContext.Account.UserType == "S"))
+                //        {
+                //            var result = await _tourService.GetShops(Convert.ToInt32(CommonContext.Account.UserId));
+                //            if (null != result && result.ResultCode == Module.ResultType.Success)
+                //            {
+                //                List<TourDistributorDto> disList = JsonConvert.DeserializeObject<List<TourDistributorDto>>(result.Body);
+                //                if (disList != null && disList.Count > 0)
+                //                {
+                //                    foreach (var item in disList)
+                //                    {
+                //                        _dIcDistributor.Add(item.DisId, item.DisName);
+                //                    }
+                //                }
+                //                else
+                //                {
 
-                    }
+                //                }
+                //            }
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
+
+                //    }
+                //});
+                #endregion
+
+                var zionId = CommonContext.Account.OrgZionId;
+                var areaId = CommonContext.Account.OrgAreaId;
+                var serverLst = CommonContext.Account.ZionList.Find(z => z.QId == zionId).AreaList.Find(a => a.AId == areaId).ServerList;
+
+                foreach (var item in serverLst)
+                {
+                    _dIcDistributor.Add(Int32.Parse(item.SId), item.SName);
                 }
 
-            });
+                _dIcSourceType.Add("0", "全部");
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    var result = await _caseService.GetTypeFromHiddenCode("15");
+                    if (null != result && result.ResultCode == Module.ResultType.Success)
+                    {
+                        var caseTypeList = JsonConvert.DeserializeObject<List<NameValueObject>>(result.Body);
 
+                        if (caseTypeList != null && caseTypeList.Count > 0)
+                        {
+                            foreach (var item in caseTypeList)
+                            {
+                                _dIcSourceType.Add(item.Value, item.Name);
+                            }
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ViewRecordViewModel");
+                return;
+            }
         }
 
         private DateTime _startDate;
@@ -206,32 +213,40 @@ namespace MaxInsight.Mobile
 
         private void SearchTask()
         {
-            int disId = 0;
-            if (CommonContext.Account.UserType == "D" || CommonContext.Account.UserType == "S")
+            try
             {
-                int.TryParse(CommonContext.Account.OrgServerId, out disId);
+                int disId = 0;
+                if (CommonContext.Account.UserType == "D" || CommonContext.Account.UserType == "S")
+                {
+                    int.TryParse(CommonContext.Account.OrgServerId, out disId);
+                }
+                else
+                {
+                    disId = DisId;
+                }
+                if (disId == 0)
+                {
+                    _commonFun.AlertLongText("请选择经销商");
+                    return;
+                }
+                else if (StartDate > EndDate)
+                {
+                    _commonFun.AlertLongText("开始日期不能大于结束日期");
+                    return;
+                }
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+
+                    await Navigation.PushAsync<TaskListViewModel>(
+                        (vm, v) => vm.Init(disId, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"), false, SourceTypeCode), true);
+
+                });
             }
-            else
+            catch (Exception)
             {
-                disId = DisId;
-            }
-            if (disId == 0)
-            {
-                _commonFun.AlertLongText("请选择经销商");
+                _commonFun.AlertLongText("操作异常,请重试。-->ViewRecordViewModel");
                 return;
             }
-            else if (StartDate > EndDate)
-            {
-                _commonFun.AlertLongText("开始日期不能大于结束日期");
-                return;
-            }
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-
-                await Navigation.PushAsync<TaskListViewModel>(
-                    (vm, v) => vm.Init(disId, StartDate.ToString("yyyy-MM-dd"), EndDate.ToString("yyyy-MM-dd"), false, SourceTypeCode), true);
-
-            });
         }
     }
 }

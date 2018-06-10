@@ -44,29 +44,36 @@ namespace MaxInsight.Mobile.ViewModels.Calendar
         }
         public CalendarIndexViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _calendarService = Resolver.Resolve<ICalendarService>();
-            EventDates = new List<DateTime>();
-
-            CalendarBydateList = new ObservableCollection<CalenderListAllDto>();
-
-            MessagingCenter.Subscribe<string>(
-            this,
-            "SearchCalendarData",
-            (date) =>
+            try
             {
-                SearchCalendarData(date);
-            });
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _calendarService = Resolver.Resolve<ICalendarService>();
+                EventDates = new List<DateTime>();
 
-            MessagingCenter.Subscribe<string>(
-            this,
-            "SearchDataByDate",
-            (date) =>
+                CalendarBydateList = new ObservableCollection<CalenderListAllDto>();
+
+                MessagingCenter.Subscribe<string>(
+                this,
+                "SearchCalendarData",
+                (date) =>
+                {
+                    SearchCalendarData(date);
+                });
+
+                MessagingCenter.Subscribe<string>(
+                this,
+                "SearchDataByDate",
+                (date) =>
+                {
+                    SearchDataByDate(date);
+                });
+            }
+            catch (Exception)
             {
-                SearchDataByDate(date);
-            });
-
+                _commonFun.AlertLongText("操作异常,请重试。-->CalendarIndexViewModel");
+                return;
+            }
         }
         #region Property
 
@@ -248,12 +255,20 @@ namespace MaxInsight.Mobile.ViewModels.Calendar
         }
         public void Init()
         {
-            DateTime now = DateTime.Now;
-            DisplayedMonth = now;
-            SelectedDate = now.ToString("yyyy-MM-dd");
-            if (Device.OS == TargetPlatform.iOS)
+            try
             {
-                SearchCalendarData(now.ToString("yyyy-MM-dd"));
+                DateTime now = DateTime.Now;
+                DisplayedMonth = now;
+                SelectedDate = now.ToString("yyyy-MM-dd");
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    SearchCalendarData(now.ToString("yyyy-MM-dd"));
+                }
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->CalendarIndexViewModel");
+                return;
             }
         }
         #endregion

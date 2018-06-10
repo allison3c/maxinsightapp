@@ -16,46 +16,64 @@ namespace MaxInsight.Mobile.Pages.Calendar
         public CalendarIndexPage()
         {
             InitializeComponent();
-            Title = "日历管理";
-            //calendar.DisplayedMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            calendar.MinDate = new DateTime(2015, 11, 1, 0, 0, 0);
-            calendar.MaxDate = DateTime.Now.AddYears(10);
-            calendar.TodayBackgroundStyle = ECalendarView.BackgroundStyle.CircleOutline;
-            calendar.SelectionBackgroundStyle = ECalendarView.BackgroundStyle.Fill;
-            calendar.ShouldHighlightDaysOfWeekLabels = false;
-            //calendar.ShowNavigationArrows = true;
-            //calendar.NavigationArrowsColor = Color.FromRgb(2,160,208);
-
-            calendar.HighlightedDateBackgroundColor = Color.FromRgb(0, 183, 238);
-            calendar.TodayDateForegroundColor = Color.FromRgb(255, 255, 255);
-            calendar.TodayDateBackgroundColor = Color.FromRgb(253, 97, 0);
-            calendar.DateBackgroundColor = Color.FromRgb(255, 255, 255);
-            calendar.DateSeparatorColor = Color.FromRgb(204, 204, 204);
-            calendar.SelectedDateBackgroundColor = Color.FromRgb(109, 178, 234);
-            //日历字体
-            calendar.DateLabelFont = Font.SystemFontOfSize(10, FontAttributes.None);
-
-            calendar.DateSelected += Calendar_DateSelected;
-            calendar.MonthChanged += Calendar_MonthChanged;
-
-            relativeLayout.HeightRequest = App.ScreenHeight * 0.5;
-
-            listViewRelativeLayout.HeightRequest = App.ScreenHeight * 0.4;
-
-            if (Device.OS == TargetPlatform.iOS)
+            try
             {
-                Calendar_MonthChanged(null, DateTime.Now);
+                Title = "日历管理";
+                //calendar.DisplayedMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                calendar.MinDate = new DateTime(2015, 11, 1, 0, 0, 0);
+                calendar.MaxDate = DateTime.Now.AddYears(10);
+                calendar.TodayBackgroundStyle = ECalendarView.BackgroundStyle.CircleOutline;
+                calendar.SelectionBackgroundStyle = ECalendarView.BackgroundStyle.Fill;
+                calendar.ShouldHighlightDaysOfWeekLabels = false;
+                //calendar.ShowNavigationArrows = true;
+                //calendar.NavigationArrowsColor = Color.FromRgb(2,160,208);
+
+                calendar.HighlightedDateBackgroundColor = Color.FromRgb(0, 183, 238);
+                calendar.TodayDateForegroundColor = Color.FromRgb(255, 255, 255);
+                calendar.TodayDateBackgroundColor = Color.FromRgb(253, 97, 0);
+                calendar.DateBackgroundColor = Color.FromRgb(255, 255, 255);
+                calendar.DateSeparatorColor = Color.FromRgb(204, 204, 204);
+                calendar.SelectedDateBackgroundColor = Color.FromRgb(109, 178, 234);
+                //日历字体
+                calendar.DateLabelFont = Font.SystemFontOfSize(10, FontAttributes.None);
+
+                calendar.DateSelected += Calendar_DateSelected;
+                calendar.MonthChanged += Calendar_MonthChanged;
+
+                relativeLayout.HeightRequest = App.ScreenHeight * 0.5;
+
+                listViewRelativeLayout.HeightRequest = App.ScreenHeight * 0.4;
+
+                if (Device.OS == TargetPlatform.iOS)
+                {
+                    Calendar_MonthChanged(null, DateTime.Now);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         private void Calendar_DateSelected(object sender, DateTime e)
         {
-            MessagingCenter.Send<string>(e.ToString("yyyy-MM-dd"), "SearchDataByDate");
+            try
+            {
+                MessagingCenter.Send<string>(e.ToString("yyyy-MM-dd"), "SearchDataByDate");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void Calendar_MonthChanged(object sender, DateTime e)
         {
-            MessagingCenter.Send<string>(e.ToString("yyyy-MM-dd"), "SearchCalendarData");
+            try
+            {
+                MessagingCenter.Send<string>(e.ToString("yyyy-MM-dd"), "SearchCalendarData");
+            }
+            catch (Exception)
+            {
+            }
         }
         protected override void OnAppearing()
         {
@@ -64,8 +82,14 @@ namespace MaxInsight.Mobile.Pages.Calendar
         }
         private void OnSetToday(object sender, EventArgs e)
         {
-            calendar.DisplayedMonth = DateTime.Now;
-            MessagingCenter.Send<string>(DateTime.Now.ToString("yyyy-MM-dd"), "SearchCalendarData");
+            try
+            {
+                calendar.DisplayedMonth = DateTime.Now;
+                MessagingCenter.Send<string>(DateTime.Now.ToString("yyyy-MM-dd"), "SearchCalendarData");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         //public CalendarIndexPage()

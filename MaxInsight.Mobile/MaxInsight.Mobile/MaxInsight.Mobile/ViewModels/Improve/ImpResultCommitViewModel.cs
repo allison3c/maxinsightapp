@@ -29,34 +29,42 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         private ImprovementMngDto _improvementMng;
         public ImpResultCommitViewModel()
         {
-            _improveService = Resolver.Resolve<IImproveService>();
-            _tourService = Resolver.Resolve<ITourService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
+            try
+            {
+                _improveService = Resolver.Resolve<IImproveService>();
+                _tourService = Resolver.Resolve<ITourService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
 
-            //MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.IMPROVE_PLANORRESULTDETAIL_GETR);
-            MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.IMPROVE_RESULTATTACH_DELETE);
-            //MessagingCenter.Subscribe<List<RequestParameter>>(
-            //    this,
-            //    MessageConst.IMPROVE_PLANORRESULTDETAIL_GETR,
-            //    (param) =>
-            //    {
-            //        GetImpResultOrResultDetail(param);
-            //    });
-            MessagingCenter.Subscribe<string>(
-            this,
-            MessageConst.IMPROVE_RESULTATTACH_DELETE,
-            (SeqNo) =>
+                //MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.IMPROVE_PLANORRESULTDETAIL_GETR);
+                MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.IMPROVE_RESULTATTACH_DELETE);
+                //MessagingCenter.Subscribe<List<RequestParameter>>(
+                //    this,
+                //    MessageConst.IMPROVE_PLANORRESULTDETAIL_GETR,
+                //    (param) =>
+                //    {
+                //        GetImpResultOrResultDetail(param);
+                //    });
+                MessagingCenter.Subscribe<string>(
+                this,
+                MessageConst.IMPROVE_RESULTATTACH_DELETE,
+                (SeqNo) =>
+                {
+                    DeleteResultAttach(SeqNo);
+                });
+                MessagingCenter.Subscribe<List<RequestParameter>>(
+                this,
+                MessageConst.IMPROVE_RESULTAPPLYYN_CHANGE,
+                (ApplyYN) =>
+                {
+                    SetApplyYN(ApplyYN);
+                });
+            }
+            catch (Exception)
             {
-                DeleteResultAttach(SeqNo);
-            });
-            MessagingCenter.Subscribe<List<RequestParameter>>(
-            this,
-            MessageConst.IMPROVE_RESULTAPPLYYN_CHANGE,
-            (ApplyYN) =>
-            {
-                SetApplyYN(ApplyYN);
-            });
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
+                return;
+            }
         }
 
         #region properties
@@ -190,23 +198,30 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         #region GoTargetPage
         private async void GotoImproveDistributionPage()
         {
-            CommonContext.ImpPlanStatus = _improvementMng.PlanStatus;
-            if (CommonContext.Account.UserType == "S")
+            try
             {
-                await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(_improvementMng), true);
-            }
-            else
-            {
-                if (_improvementMng.PlanStatus == "A")
-                {
-                    _commonFun.AlertLongText("未分配，没有分配详细");
-                }
-                else
+                CommonContext.ImpPlanStatus = _improvementMng.PlanStatus;
+                if (CommonContext.Account.UserType == "S")
                 {
                     await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(_improvementMng), true);
                 }
+                else
+                {
+                    if (_improvementMng.PlanStatus == "A")
+                    {
+                        _commonFun.AlertLongText("未分配，没有分配详细");
+                    }
+                    else
+                    {
+                        await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(_improvementMng), true);
+                    }
+                }
             }
-
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
+                return;
+            }
         }
         private async void GoImpPlanCommitPage()
         {
@@ -231,100 +246,108 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         #region searchData
         private async void GetImpResultOrResultDetail(List<RequestParameter> param)
         {
-            if (param != null)
+            try
             {
-                foreach (var item in param)
+                if (param != null)
                 {
-                    if (item.Name.ToUpper() == "IMPROVEMENTID") improvementId = item.Value;
-                    if (item.Name.ToUpper() == "IMPRESULTID") impResultId = item.Value;
-                    if (item.Name.ToUpper() == "TPID") tPId = item.Value;
-                    if (item.Name.ToUpper() == "ITEMID") itemId = item.Value;
-                    if (item.Name.ToUpper() == "RESULTAPPROALYN") resultApproalYN = item.Value;
-                    if (item.Name.ToUpper() == "RESULTSTATUS") resultStatus = item.Value;
-                    if (item.Name.ToUpper() == "ALLOCATEYN") allocateYN = item.Value;
-                }
-                MessagingCenter.Send<string>(resultStatus + "§" + resultApproalYN + "§" + allocateYN, MessageConst.IMPROVE_RESULTCOMMIT_SETCONTROLROLE);
-                if ((allocateYN.ToUpper() == "FALSE" && CommonContext.Account.UserType == "S")|| CommonContext.Account.UserType == "D")
-                    ImpResultCommitPageTitle = "改善结果提交";
-                else
-                    ImpResultCommitPageTitle = "改善结果审批";
-                if (_commonHelper.IsNetWorkConnected() == true)
-                {
-                    try
+                    foreach (var item in param)
                     {
-                        _commonFun.ShowLoading("查询中...");
-                        var result = await _improveService.GetImpPlanOrResultDetail(improvementId, "R", impResultId, tPId, itemId);// ("14", "A", "3", "21", "7");
-                        if (result.ResultCode == Module.ResultType.Success)
+                        if (item.Name.ToUpper() == "IMPROVEMENTID") improvementId = item.Value;
+                        if (item.Name.ToUpper() == "IMPRESULTID") impResultId = item.Value;
+                        if (item.Name.ToUpper() == "TPID") tPId = item.Value;
+                        if (item.Name.ToUpper() == "ITEMID") itemId = item.Value;
+                        if (item.Name.ToUpper() == "RESULTAPPROALYN") resultApproalYN = item.Value;
+                        if (item.Name.ToUpper() == "RESULTSTATUS") resultStatus = item.Value;
+                        if (item.Name.ToUpper() == "ALLOCATEYN") allocateYN = item.Value;
+                    }
+                    MessagingCenter.Send<string>(resultStatus + "§" + resultApproalYN + "§" + allocateYN, MessageConst.IMPROVE_RESULTCOMMIT_SETCONTROLROLE);
+                    if ((allocateYN.ToUpper() == "FALSE" && CommonContext.Account.UserType == "S") || CommonContext.Account.UserType == "D")
+                        ImpResultCommitPageTitle = "改善结果提交";
+                    else
+                        ImpResultCommitPageTitle = "改善结果审批";
+                    if (_commonHelper.IsNetWorkConnected() == true)
+                    {
+                        try
                         {
-                            _commonFun.HideLoading();
-                            var impResultDetailData = CommonHelper.DecodeString<ImpResultDetailDto>(result.Body);
-                            if (impResultDetailData == null)
+                            _commonFun.ShowLoading("查询中...");
+                            var result = await _improveService.GetImpPlanOrResultDetail(improvementId, "R", impResultId, tPId, itemId);// ("14", "A", "3", "21", "7");
+                            if (result.ResultCode == Module.ResultType.Success)
                             {
-                                _commonFun.AlertLongText("查询失败，请重试。");
+                                _commonFun.HideLoading();
+                                var impResultDetailData = CommonHelper.DecodeString<ImpResultDetailDto>(result.Body);
+                                if (impResultDetailData == null)
+                                {
+                                    _commonFun.AlertLongText("查询失败，请重试。");
+                                    return;
+                                }
+
+                                ImpResultContent = impResultDetailData.ReplyContent;
+
+                                if (CommonContext.Account.UserType == "S")
+                                {
+                                    if (impResultDetailData.SResultStatus == "D" || impResultDetailData.SResultStatus == "E")
+                                    {
+                                        ServerApplyYN = impResultDetailData.SResultStatus == "D" ? 1 : 0;
+                                    }
+                                }
+                                ServerApplyYNName = impResultDetailData.SResultStatusName;
+                                ServerApplyMemo = impResultDetailData.ApprovalSContent;
+                                if (CommonContext.Account.UserType == "Z")
+                                {
+                                    if (impResultDetailData.ZResultStatus == "G" || impResultDetailData.ZResultStatus == "F")
+                                    {
+                                        AreaApplyYN = impResultDetailData.ZResultStatus == "G" ? 0 : 1;
+                                    }
+                                }
+                                AreaApplyYNName = impResultDetailData.ZResultStatusName;
+                                AreaApplyMemo = impResultDetailData.ApprovalZContent;
+                                ImpResultAttachList = impResultDetailData.AttachList;
+                                ResultStatus = impResultDetailData.ResultStatus;
+                                SApprovalDate = impResultDetailData.SApprovalDate;
+                                ZApprovalDate = impResultDetailData.ZApprovalDate;
+                                oldImpResultAttachList = new List<AttachDto>();
+                                oldImpResultAttachList.AddRange(ImpResultAttachList);
+                                LstHeight = ImpResultAttachList.Count * _lstRowHeight;
+                            }
+                            else
+                            {
+                                _commonFun.HideLoading();
+                                _commonFun.AlertLongText("查询失败，请重试。 " + result.Msg);
                                 return;
                             }
-
-                            ImpResultContent = impResultDetailData.ReplyContent;
-
-                            if (CommonContext.Account.UserType == "S")
-                            {
-                                if (impResultDetailData.SResultStatus == "D" || impResultDetailData.SResultStatus == "E")
-                                {
-                                    ServerApplyYN = impResultDetailData.SResultStatus == "D" ? 1 : 0;
-                                }
-                            }
-                            ServerApplyYNName = impResultDetailData.SResultStatusName;
-                            ServerApplyMemo = impResultDetailData.ApprovalSContent;
-                            if (CommonContext.Account.UserType == "Z")
-                            {
-                                if (impResultDetailData.ZResultStatus == "G" || impResultDetailData.ZResultStatus == "F")
-                                {
-                                    AreaApplyYN = impResultDetailData.ZResultStatus == "G" ? 0 : 1;
-                                }
-                            }
-                            AreaApplyYNName = impResultDetailData.ZResultStatusName;
-                            AreaApplyMemo = impResultDetailData.ApprovalZContent;
-                            ImpResultAttachList = impResultDetailData.AttachList;
-                            ResultStatus = impResultDetailData.ResultStatus;
-                            SApprovalDate = impResultDetailData.SApprovalDate;
-                            ZApprovalDate = impResultDetailData.ZApprovalDate;
-                            oldImpResultAttachList = new List<AttachDto>();
-                            oldImpResultAttachList.AddRange(ImpResultAttachList);
-                            LstHeight = ImpResultAttachList.Count * _lstRowHeight;
                         }
-                        else
+                        catch (OperationCanceledException)
                         {
                             _commonFun.HideLoading();
-                            _commonFun.AlertLongText("查询失败，请重试。 " + result.Msg);
+                            _commonFun.AlertLongText("请求超时。");
                             return;
                         }
+                        catch (Exception)
+                        {
+                            _commonFun.HideLoading();
+                            _commonFun.AlertLongText("查询异常，请重试");
+                            return;
+                        }
+                        finally
+                        {
+                            _commonFun.HideLoading();
+                        }
                     }
-                    catch (OperationCanceledException)
+                    else
                     {
-                        _commonFun.HideLoading();
-                        _commonFun.AlertLongText("请求超时。");
+                        _commonFun.AlertLongText("网络连接异常。");
                         return;
-                    }
-                    catch (Exception)
-                    {
-                        _commonFun.HideLoading();
-                        _commonFun.AlertLongText("查询异常，请重试");
-                        return;
-                    }
-                    finally
-                    {
-                        _commonFun.HideLoading();
                     }
                 }
                 else
                 {
-                    _commonFun.AlertLongText("网络连接异常。");
+                    _commonFun.AlertLongText("查询失败，请重试。");
                     return;
                 }
             }
-            else
+            catch (Exception)
             {
-                _commonFun.AlertLongText("查询失败，请重试。");
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
                 return;
             }
         }
@@ -369,328 +392,360 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         #region method
         public void DeleteResultAttach(string SeqNo)
         {
-            oldImpResultAttachList.Remove(oldImpResultAttachList.Find(item => item.SeqNo == int.Parse(SeqNo)));
-            List<AttachDto> newList = new List<AttachDto>();
-            newList.AddRange(oldImpResultAttachList);
-            int i = 1;
-            newList.Select(c => { c.SeqNo = i++; return c; }).ToList();
-            ImpResultAttachList = newList;
-            LstHeight = ImpResultAttachList.Count * _lstRowHeight;
+            try
+            {
+                oldImpResultAttachList.Remove(oldImpResultAttachList.Find(item => item.SeqNo == int.Parse(SeqNo)));
+                List<AttachDto> newList = new List<AttachDto>();
+                newList.AddRange(oldImpResultAttachList);
+                int i = 1;
+                newList.Select(c => { c.SeqNo = i++; return c; }).ToList();
+                ImpResultAttachList = newList;
+                LstHeight = ImpResultAttachList.Count * _lstRowHeight;
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
+                return;
+            }
         }
         public async void SaveImprovementResult()
         {
-            if (ResultStatus == "A" || ResultStatus == "D"||(allocateYN.ToUpper() == "FALSE"&& resultApproalYN.ToUpper() == "TRUE" && ResultStatus=="F"))
+            try
             {
-                //改善结果内容
-                if (string.IsNullOrWhiteSpace(ImpResultContent))
+                if (ResultStatus == "A" || ResultStatus == "D" || (allocateYN.ToUpper() == "FALSE" && resultApproalYN.ToUpper() == "TRUE" && ResultStatus == "F"))
                 {
-                    _commonFun.AlertLongText("请输入改善结果内容");
-                    return;
-                }
-            }
-            else if ((ResultStatus == "C" || ResultStatus == "F")&&allocateYN.ToUpper()=="TRUE")
-            {
-                if (ServerApplyYN.ToString() != impServerApplyYNStr)
-                {
-                    _commonFun.AlertLongText("请选择审核类型");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(ServerApplyMemo))
-                {
-                    _commonFun.AlertLongText("请输入审核意见内容");
-                    return;
-                }
-            }
-            else if (ResultStatus == "E"&&resultApproalYN.ToUpper()=="TRUE")
-            {
-                if (AreaApplyYN.ToString() != impAreaApplyYNStr)
-                {
-                    _commonFun.AlertLongText("请选择审核类型");
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(AreaApplyMemo))
-                {
-                    _commonFun.AlertLongText("请输入审核意见内容");
-                    return;
-                }
-            }
-
-            if (_commonHelper.IsNetWorkConnected() == true)
-            {
-                try
-                {
-                    _commonFun.ShowLoading("提交中...");
-
-                    string saveStatus = "";
-                    if(allocateYN.ToUpper() == "TRUE")
+                    //改善结果内容
+                    if (string.IsNullOrWhiteSpace(ImpResultContent))
                     {
-                        if (impServerApplyYNStr == "1")
+                        _commonFun.AlertLongText("请输入改善结果内容");
+                        return;
+                    }
+                }
+                else if ((ResultStatus == "C" || ResultStatus == "F") && allocateYN.ToUpper() == "TRUE")
+                {
+                    if (ServerApplyYN.ToString() != impServerApplyYNStr)
+                    {
+                        _commonFun.AlertLongText("请选择审核类型");
+                        return;
+                    }
+                    if (string.IsNullOrWhiteSpace(ServerApplyMemo))
+                    {
+                        _commonFun.AlertLongText("请输入审核意见内容");
+                        return;
+                    }
+                }
+                else if (ResultStatus == "E" && resultApproalYN.ToUpper() == "TRUE")
+                {
+                    if (AreaApplyYN.ToString() != impAreaApplyYNStr)
+                    {
+                        _commonFun.AlertLongText("请选择审核类型");
+                        return;
+                    }
+                    if (string.IsNullOrWhiteSpace(AreaApplyMemo))
+                    {
+                        _commonFun.AlertLongText("请输入审核意见内容");
+                        return;
+                    }
+                }
+
+                if (_commonHelper.IsNetWorkConnected() == true)
+                {
+                    try
+                    {
+                        _commonFun.ShowLoading("提交中...");
+
+                        string saveStatus = "";
+                        if (allocateYN.ToUpper() == "TRUE")
                         {
-                            if (ResultStatus == "D")
+                            if (impServerApplyYNStr == "1")
+                            {
+                                if (ResultStatus == "D")
+                                {
+                                    saveStatus = "C";
+                                    resultContent = ImpResultContent;
+                                }
+                                else
+                                {
+                                    saveStatus = "D";
+                                    resultContent = ServerApplyMemo;
+                                }
+                            }
+                            else if (impAreaApplyYNStr == "1")
+                            {
+                                if (ResultStatus == "F")
+                                {
+                                    saveStatus = "E";
+                                    resultContent = ServerApplyMemo;
+                                }
+                                else
+                                {
+                                    saveStatus = "F";
+                                    resultContent = AreaApplyMemo;
+                                }
+                            }
+                            else if (impAreaApplyYNStr == "0")
+                            {
+                                saveStatus = "G";
+                                resultContent = AreaApplyMemo;
+                            }
+                            else if (impServerApplyYNStr == "0")
+                            {
+                                saveStatus = "E";
+                                resultContent = ServerApplyMemo;
+                            }
+                            else
                             {
                                 saveStatus = "C";
                                 resultContent = ImpResultContent;
                             }
-                            else
-                            {
-                                saveStatus = "D";
-                                resultContent = ServerApplyMemo;
-                            }
-                        }
-                        else if (impAreaApplyYNStr == "1")
-                        {
-                            if (ResultStatus == "F")
-                            {
-                                saveStatus = "E";
-                                resultContent = ServerApplyMemo;
-                            }
-                            else
-                            {
-                                saveStatus = "F";
-                                resultContent = AreaApplyMemo;
-                            }
-                        }
-                        else if (impAreaApplyYNStr == "0")
-                        {
-                            saveStatus = "G";
-                            resultContent = AreaApplyMemo;
-                        }
-                        else if (impServerApplyYNStr == "0")
-                        {
-                            saveStatus = "E";
-                            resultContent = ServerApplyMemo;
                         }
                         else
                         {
-                            saveStatus = "C";
-                            resultContent = ImpResultContent;
-                        }
-                    }
-                    else
-                    {
-                        if (impAreaApplyYNStr == "1")
-                        {
-                            if (ResultStatus == "F")
+                            if (impAreaApplyYNStr == "1")
                             {
-                                saveStatus = "E";
+                                if (ResultStatus == "F")
+                                {
+                                    saveStatus = "E";
+                                    resultContent = ImpResultContent;
+                                }
+                                else
+                                {
+                                    saveStatus = "F";
+                                    resultContent = AreaApplyMemo;
+                                }
+                            }
+                            else if (impAreaApplyYNStr == "0")
+                            {
+                                saveStatus = "G";
+                                resultContent = AreaApplyMemo;
+                            }
+                            else
+                            {
+                                if (resultApproalYN.ToUpper() == "TRUE")
+                                    saveStatus = "E";
+                                else
+                                    saveStatus = "G";
                                 resultContent = ImpResultContent;
                             }
-                            else
-                            {
-                                saveStatus = "F";
-                                resultContent = AreaApplyMemo;
-                            }
                         }
-                        else if (impAreaApplyYNStr == "0")
+
+                        var result = await _improveService.SaveImprovementResult(improvementId, impResultId, saveStatus, resultContent, ImpResultAttachList);
+                        if (result.ResultCode == Module.ResultType.Success)
                         {
-                            saveStatus = "G";
-                            resultContent = AreaApplyMemo;
+                            //_commonFun.HideLoading();
+                            //_commonFun.AlertLongText("提交完毕。 ");
+                            MessagingCenter.Send<string>("R", MessageConst.IMPROVE_PLANLSTDATA_GET);
+                            MessagingCenter.Send<String>("", MessageConst.IMPROVE_IMPPLANORRESULTDATA_GET);
+                            MessagingCenter.Send<string>("", "MessagePageReSearch");// 给消息页发消息
+                            await Navigation.PopAsync();
+                            //MessagingCenter.Send(this, "PlanCommitPopBack");
                         }
                         else
                         {
-                            if (resultApproalYN.ToUpper() == "TRUE")
-                                saveStatus = "E";
-                            else
-                                saveStatus = "G";
-                            resultContent = ImpResultContent;
+                            _commonFun.HideLoading();
+                            _commonFun.AlertLongText("提交失败，请重试。 " + result.Msg);
+                            return;
                         }
                     }
-                    
-                    var result = await _improveService.SaveImprovementResult(improvementId, impResultId, saveStatus, resultContent, ImpResultAttachList);
-                    if (result.ResultCode == Module.ResultType.Success)
-                    {
-                        //_commonFun.HideLoading();
-                        //_commonFun.AlertLongText("提交完毕。 ");
-                        MessagingCenter.Send<string>("R", MessageConst.IMPROVE_PLANLSTDATA_GET);
-                        MessagingCenter.Send<String>("", MessageConst.IMPROVE_IMPPLANORRESULTDATA_GET);
-                        MessagingCenter.Send<string>("", "MessagePageReSearch");// 给消息页发消息
-                        await Navigation.PopAsync();
-                        //MessagingCenter.Send(this, "PlanCommitPopBack");
-                    }
-                    else
+                    catch (OperationCanceledException)
                     {
                         _commonFun.HideLoading();
-                        _commonFun.AlertLongText("提交失败，请重试。 " + result.Msg);
+                        _commonFun.AlertLongText("请求超时。");
+                    }
+                    catch (Exception)
+                    {
+                        _commonFun.HideLoading();
                         return;
                     }
+                    finally
+                    {
+                        _commonFun.HideLoading();
+                    }
                 }
-                catch (OperationCanceledException)
+                else
                 {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("请求超时。");
-                }
-                catch (Exception)
-                {
-                    _commonFun.HideLoading();
+                    _commonFun.AlertLongText("网络连接异常。");
                     return;
                 }
-                finally
-                {
-                    _commonFun.HideLoading();
-                }
             }
-            else
+            catch (Exception)
             {
-                _commonFun.AlertLongText("网络连接异常。");
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
                 return;
             }
         }
         public void SetApplyYN(List<RequestParameter> applyYN)
         {
-            foreach (var item in applyYN)
+            try
             {
-                if (item.Name == "Server")
+                foreach (var item in applyYN)
                 {
-                    impServerApplyYNStr = item.Value;
-                }
-                else if (item.Name == "Area")
-                {
-                    if (item.Value != "1")
+                    if (item.Name == "Server")
                     {
-                        impServerApplyYNStr = ServerApplyYN.ToString();
+                        impServerApplyYNStr = item.Value;
                     }
-                    impAreaApplyYNStr = item.Value;
+                    else if (item.Name == "Area")
+                    {
+                        if (item.Value != "1")
+                        {
+                            impServerApplyYNStr = ServerApplyYN.ToString();
+                        }
+                        impAreaApplyYNStr = item.Value;
+                    }
                 }
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
+                return;
             }
         }
         public async void UploadFile(string fileType)
         {
-            await CrossMedia.Current.Initialize();
-            _mediaFile = null;
-            string _path = "";
-            Stream _stream = null;
-
-            if (fileType == "V")
+            try
             {
-                if (!CrossMedia.Current.IsPickVideoSupported)
-                {
-                    _commonFun.AlertLongText("此设备不支持视频上传");
-                    return;
-                }
-                var action = await _commonFun.ShowActionSheet("从相册", "录制");
+                await CrossMedia.Current.Initialize();
+                _mediaFile = null;
+                string _path = "";
+                Stream _stream = null;
 
-                IsLoading = true;
-                if (action == "从相册")
+                if (fileType == "V")
                 {
-                   _mediaFile = await CrossMedia.Current.PickVideoAsync();
-                }
-                else if (action == "录制")
-                {
-                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
+                    if (!CrossMedia.Current.IsPickVideoSupported)
                     {
+                        _commonFun.AlertLongText("此设备不支持视频上传");
                         return;
                     }
-                    _mediaFile = await CrossMedia.Current.TakeVideoAsync(new Plugin.Media.Abstractions.StoreVideoOptions
-                    {
-                        Directory = "RMMT",
-                        Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
-                                       + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
-                    });
-                }
-            }
-            else if (fileType == "P")
-            {
-                if (!CrossMedia.Current.IsPickPhotoSupported)
-                {
-                    _commonFun.AlertLongText("此设备不支持图片上传");
-                    return;
-                }
-                var action = await _commonFun.ShowActionSheet("从相册", "拍照");
-                IsLoading = true;
+                    var action = await _commonFun.ShowActionSheet("从相册", "录制");
 
-                if (action == "从相册")
-                {
-                   _mediaFile = await CrossMedia.Current.PickPhotoAsync();
-                }
-                else if (action == "拍照")
-                {
-                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-                    {
-                        return;
-                    }
-                    _mediaFile = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-                    {
-                        Directory = "RMMT",
-                        Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
-                                       + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
-                    });
-                }
-            }
-            else
-            {
-                try
-                {
                     IsLoading = true;
-                    FileData filedata = new FileData();
-                    filedata = await CrossFilePicker.Current.PickFile();
-                    if (filedata == null)
+                    if (action == "从相册")
+                    {
+                        _mediaFile = await CrossMedia.Current.PickVideoAsync();
+                    }
+                    else if (action == "录制")
+                    {
+                        if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
+                        {
+                            return;
+                        }
+                        _mediaFile = await CrossMedia.Current.TakeVideoAsync(new Plugin.Media.Abstractions.StoreVideoOptions
+                        {
+                            Directory = "RMMT",
+                            Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
+                                           + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
+                        });
+                    }
+                }
+                else if (fileType == "P")
+                {
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
+                    {
+                        _commonFun.AlertLongText("此设备不支持图片上传");
+                        return;
+                    }
+                    var action = await _commonFun.ShowActionSheet("从相册", "拍照");
+                    IsLoading = true;
+
+                    if (action == "从相册")
+                    {
+                        _mediaFile = await CrossMedia.Current.PickPhotoAsync();
+                    }
+                    else if (action == "拍照")
+                    {
+                        if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                        {
+                            return;
+                        }
+                        _mediaFile = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                        {
+                            Directory = "RMMT",
+                            Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
+                                           + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
+                        });
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        IsLoading = true;
+                        FileData filedata = new FileData();
+                        filedata = await CrossFilePicker.Current.PickFile();
+                        if (filedata == null)
+                        {
+                            IsLoading = false;
+                            return;
+                        }
+                        string filename = filedata.FileName;
+                        byte[] file = filedata.DataArray;
+                        _stream = new MemoryStream(file);
+                        _path = filename;
+                    }
+                    catch (Exception)
                     {
                         IsLoading = false;
-                        return;
                     }
-                    string filename = filedata.FileName;
-                    byte[] file = filedata.DataArray;
-                    _stream = new MemoryStream(file);
-                    _path = filename;
                 }
-                catch (Exception)
+
+                if (_mediaFile != null)
                 {
+                    _stream = _mediaFile.GetStream();
+                    _path = _mediaFile.Path;
+                }
+                if (_stream == null)
+                {
+                    IsLoading = false;
+                    return;
+                }
+
+                if (_commonHelper.IsNetWorkConnected() == true)
+                {
+                    try
+                    {
+                        string filename = _path.Substring(_path.LastIndexOf("/") + 1);
+                        var result = await _tourService.UploadFiletoOss(_stream, filename, _path);
+
+                        if (result != null)
+                        {
+                            oldImpResultAttachList.Add((JsonConvert.DeserializeObject<AttachDto>(result.Body)));
+                            List<AttachDto> resultList = new List<AttachDto>();
+                            resultList.AddRange(oldImpResultAttachList);
+                            int i = 1;
+                            resultList.Select(c => { c.SeqNo = i++; return c; }).ToList();
+                            ImpResultAttachList = resultList;
+                            LstHeight = ImpResultAttachList.Count * _lstRowHeight;
+                        }
+                        else
+                        {
+                            _commonFun.AlertLongText("上传失败，请重试。 " + result.Msg);
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _commonFun.AlertLongText("请求超时。");
+                    }
+                    catch (Exception)
+                    {
+                        _commonFun.AlertLongText("上传异常，请重试。");
+                    }
+                    finally
+                    {
+                        //_mediaFile.Dispose();
+                        IsLoading = false;
+                    }
+                }
+                else
+                {
+                    _mediaFile.Dispose();
+                    _commonFun.AlertLongText("网络连接异常。");
                     IsLoading = false;
                 }
             }
-
-            if (_mediaFile != null)
+            catch (Exception)
             {
-                _stream = _mediaFile.GetStream();
-                _path = _mediaFile.Path;
-            }
-            if (_stream == null)
-            {
-                IsLoading = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
                 return;
-            }
-
-            if (_commonHelper.IsNetWorkConnected() == true)
-            {
-                try
-                {
-                    string filename = _path.Substring(_path.LastIndexOf("/") + 1);
-                    var result =await _tourService.UploadFiletoOss(_stream, filename,_path);
-
-                    if (result != null)
-                    {
-                        oldImpResultAttachList.Add((JsonConvert.DeserializeObject<AttachDto>(result.Body)));
-                        List<AttachDto> resultList = new List<AttachDto>();
-                        resultList.AddRange(oldImpResultAttachList);
-                        int i = 1;
-                        resultList.Select(c => { c.SeqNo = i++; return c; }).ToList();
-                        ImpResultAttachList = resultList;
-                        LstHeight = ImpResultAttachList.Count * _lstRowHeight;
-                    }
-                    else
-                    {
-                        _commonFun.AlertLongText("上传失败，请重试。 " + result.Msg);
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    _commonFun.AlertLongText("请求超时。");
-                }
-                catch (Exception)
-                {
-                    _commonFun.AlertLongText("上传异常，请重试。");
-                }
-                finally
-                {
-                    //_mediaFile.Dispose();
-                    IsLoading = false;
-                }
-            }
-            else
-            {
-                _mediaFile.Dispose();
-                _commonFun.AlertLongText("网络连接异常。");
-                IsLoading = false;
             }
         }
         private void PreviewImage()
@@ -734,13 +789,21 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         #endregion
 
         #region page init
-        public void Init(ImprovementMngDto improvementMng,List<RequestParameter> param)
+        public void Init(ImprovementMngDto improvementMng, List<RequestParameter> param)
         {
-            IsLoading = false;
-            oldImpResultAttachList = new List<AttachDto>();
-            LstHeight = 0;
-            _improvementMng = improvementMng;
-            GetImpResultOrResultDetail(param);
+            try
+            {
+                IsLoading = false;
+                oldImpResultAttachList = new List<AttachDto>();
+                LstHeight = 0;
+                _improvementMng = improvementMng;
+                GetImpResultOrResultDetail(param);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImpResultCommitViewModel");
+                return;
+            }
         }
         #endregion
     }

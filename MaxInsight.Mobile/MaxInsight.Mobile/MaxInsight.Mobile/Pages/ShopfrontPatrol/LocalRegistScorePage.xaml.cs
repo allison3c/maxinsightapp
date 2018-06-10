@@ -17,60 +17,66 @@ namespace MaxInsight.Mobile
 
             Title = "得分登记";
 
-            picImage.GestureRecognizers.Add(new TapGestureRecognizer()
+            try
             {
-                Command = new Command(ShowOrHidePartTwo),
-                NumberOfTapsRequired = 1
-            });
+                picImage.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    Command = new Command(ShowOrHidePartTwo),
+                    NumberOfTapsRequired = 1
+                });
 
-            checkImage.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                Command = new Command(ShowOrHidePartThree),
-                NumberOfTapsRequired = 1
-            });
+                checkImage.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    Command = new Command(ShowOrHidePartThree),
+                    NumberOfTapsRequired = 1
+                });
 
-            //previewImage.GestureRecognizers.Add(new TapGestureRecognizer()
-            //{
-            //	Command = new Command(PreviewImage),
-            //	NumberOfTapsRequired = 1
-            //});
+                //previewImage.GestureRecognizers.Add(new TapGestureRecognizer()
+                //{
+                //	Command = new Command(PreviewImage),
+                //	NumberOfTapsRequired = 1
+                //});
 
-            //deleteImage.GestureRecognizers.Add(new TapGestureRecognizer()
-            //{
-            //	Command = new Command(DeleteImage),
-            //	NumberOfTapsRequired = 1
-            //});
-            stackPic.IsVisible = false;
-            stackCheck.IsVisible = false;
+                //deleteImage.GestureRecognizers.Add(new TapGestureRecognizer()
+                //{
+                //	Command = new Command(DeleteImage),
+                //	NumberOfTapsRequired = 1
+                //});
+                stackPic.IsVisible = false;
+                stackCheck.IsVisible = false;
 
-            //var device = Resolver.Resolve<IDevice>();
+                //var device = Resolver.Resolve<IDevice>();
 
-            //var width = device.Display.Width / device.Display.Scale;
-            //var height = device.Display.Height / device.Display.Scale;
+                //var width = device.Display.Width / device.Display.Scale;
+                //var height = device.Display.Height / device.Display.Scale;
 
-            if (Device.OS == TargetPlatform.Android)
-            {
-                pre.WidthRequest = 70;
-                next.WidthRequest = 70;
-                ingnor.WidthRequest = 70;
-                jump.WidthRequest = 70;
+                if (Device.OS == TargetPlatform.Android)
+                {
+                    pre.WidthRequest = 70;
+                    next.WidthRequest = 70;
+                    ingnor.WidthRequest = 70;
+                    jump.WidthRequest = 70;
 
-                pre.HeightRequest = 38;
-                next.HeightRequest = 38;
-                ingnor.HeightRequest = 38;
-                jump.HeightRequest = 38;
+                    pre.HeightRequest = 38;
+                    next.HeightRequest = 38;
+                    ingnor.HeightRequest = 38;
+                    jump.HeightRequest = 38;
+                }
+                else
+                {
+                    pre.WidthRequest = 50;
+                    next.WidthRequest = 50;
+                    ingnor.WidthRequest = 50;
+                    jump.WidthRequest = 50;
+
+                    pre.HeightRequest = 30;
+                    next.HeightRequest = 30;
+                    ingnor.HeightRequest = 30;
+                    jump.HeightRequest = 30;
+                }
             }
-            else
+            catch (Exception)
             {
-                pre.WidthRequest = 50;
-                next.WidthRequest = 50;
-                ingnor.WidthRequest = 50;
-                jump.WidthRequest = 50;
-
-                pre.HeightRequest = 30;
-                next.HeightRequest = 30;
-                ingnor.HeightRequest = 30;
-                jump.HeightRequest = 30;
             }
         }
 
@@ -85,36 +91,54 @@ namespace MaxInsight.Mobile
 
         void ShowOrHidePartTwo()
         {
-            if (stackPic.IsVisible)
+            try
             {
-                stackPic.IsVisible = false;
-                oneImage.Source = ImageSource.FromFile("icon_hide");
+                if (stackPic.IsVisible)
+                {
+                    stackPic.IsVisible = false;
+                    oneImage.Source = ImageSource.FromFile("icon_hide");
+                }
+                else
+                {
+                    stackPic.IsVisible = true;
+                    oneImage.Source = ImageSource.FromFile("icon_show");
+                }
             }
-            else
+            catch (Exception)
             {
-                stackPic.IsVisible = true;
-                oneImage.Source = ImageSource.FromFile("icon_show");
             }
         }
 
         void ShowOrHidePartThree()
         {
-            if (stackCheck.IsVisible)
+            try
             {
-                stackCheck.IsVisible = false;
-                twoImage.Source = ImageSource.FromFile("icon_hide");
+                if (stackCheck.IsVisible)
+                {
+                    stackCheck.IsVisible = false;
+                    twoImage.Source = ImageSource.FromFile("icon_hide");
+                }
+                else
+                {
+                    stackCheck.IsVisible = true;
+                    twoImage.Source = ImageSource.FromFile("icon_show");
+                }
             }
-            else
+            catch (Exception)
             {
-                stackCheck.IsVisible = true;
-                twoImage.Source = ImageSource.FromFile("icon_show");
             }
         }
 
         void Handle_CheckedChanged(object sender, XLabs.EventArgs<bool> e)
         {
-            //告知viewmodel checkbox发生了改变
-            MessagingCenter.Send<LocalRegistScorePage>(this, "CheckBoxChanged");
+            try
+            {
+                //告知viewmodel checkbox发生了改变
+                MessagingCenter.Send<LocalRegistScorePage>(this, "CheckBoxChanged");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override void OnAppearing()
@@ -130,14 +154,26 @@ namespace MaxInsight.Mobile
 
         protected override void OnDisappearing()
         {
-            MessagingCenter.Send<LocalSystemListPage>(new LocalSystemListPage(), "LocalRefreshSystem");
+            try
+            {
+                MessagingCenter.Send<LocalSystemListPage>(new LocalSystemListPage(), "LocalRefreshSystem");
+            }
+            catch (Exception)
+            {
+            }
             base.OnDisappearing();
         }
 
         void Handle_ItemTapped(object sender, Xamarin.Forms.ItemTappedEventArgs e)
         {
-            if (e == null) return;
-            MessagingCenter.Send<PictureStandard>(e.Item as PictureStandard, "RegistScoreItemTapped");
+            try
+            {
+                if (e == null) return;
+                MessagingCenter.Send<PictureStandard>(e.Item as PictureStandard, "RegistScoreItemTapped");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override bool OnBackButtonPressed()
@@ -147,26 +183,50 @@ namespace MaxInsight.Mobile
 
         public void OnPreviewPlanAttechment(object sender, EventArgs e)
         {
-            ImageButton img = sender as ImageButton;
-            MessagingCenter.Send<PictureStandard>(img.CommandParameter as PictureStandard, "PreviewPlanAttechment");
+            try
+            {
+                ImageButton img = sender as ImageButton;
+                MessagingCenter.Send<PictureStandard>(img.CommandParameter as PictureStandard, "PreviewPlanAttechment");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void OnDeletePlanAttechment(object sender, EventArgs e)
         {
-            ImageButton img = sender as ImageButton;
-            MessagingCenter.Send<PictureStandard>(img.CommandParameter as PictureStandard, "DeletePlanAttechment");
+            try
+            {
+                ImageButton img = sender as ImageButton;
+                MessagingCenter.Send<PictureStandard>(img.CommandParameter as PictureStandard, "DeletePlanAttechment");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void OnPreviewLossImage(object sender, EventArgs e)
         {
-            ImageButton img = sender as ImageButton;
-            MessagingCenter.Send<StandardPic>(img.CommandParameter as StandardPic, "PreviewLossImage");
+            try
+            {
+                ImageButton img = sender as ImageButton;
+                MessagingCenter.Send<StandardPic>(img.CommandParameter as StandardPic, "PreviewLossImage");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void OnDeleteLossImage(object sender, EventArgs e)
         {
-            ImageButton img = sender as ImageButton;
-            MessagingCenter.Send<StandardPic>(img.CommandParameter as StandardPic, "DeleteLossImage");
+            try
+            {
+                ImageButton img = sender as ImageButton;
+                MessagingCenter.Send<StandardPic>(img.CommandParameter as StandardPic, "DeleteLossImage");
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

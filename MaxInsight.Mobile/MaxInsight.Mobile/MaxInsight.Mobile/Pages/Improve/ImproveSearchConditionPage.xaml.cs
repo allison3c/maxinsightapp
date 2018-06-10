@@ -18,7 +18,13 @@ namespace MaxInsight.Mobile.Pages.Improve
         public ImproveSearchConditionPage()
         {
             InitializeComponent();
-            SetControl();
+            try
+            {
+                SetControl();
+            }
+            catch (Exception)
+            {
+            }
             //statusRdo.ItemsSource = new List<string> { "计划","结果"};
             //statusRdo.Items[0].Checked = true;
             //itemNameLbl.WidthRequest = App.ScreenWidth - 80;
@@ -26,29 +32,35 @@ namespace MaxInsight.Mobile.Pages.Improve
 
         private void SetControl()
         {
-            if (CommonContext.Account.UserType=="D")
+            try
             {
-                departmentLbl.IsVisible = true;
-                servicerLbl.IsVisible = true;
-                departmentLbl.Text = CommonContext.Account.OrgDepartmentName;
-                servicerLbl.Text = CommonContext.Account.OrgServerName;
-                servicerBtn.IsVisible = false;
-                departmentBtn.IsVisible = false;
+                if (CommonContext.Account.UserType == "D")
+                {
+                    departmentLbl.IsVisible = true;
+                    servicerLbl.IsVisible = true;
+                    departmentLbl.Text = CommonContext.Account.OrgDepartmentName;
+                    servicerLbl.Text = CommonContext.Account.OrgServerName;
+                    servicerBtn.IsVisible = false;
+                    departmentBtn.IsVisible = false;
+                }
+                else if (CommonContext.Account.UserType == "S")
+                {
+                    departmentLbl.IsVisible = false;
+                    servicerLbl.IsVisible = true;
+                    servicerLbl.Text = CommonContext.Account.OrgServerName;
+                    servicerBtn.IsVisible = false;
+                    departmentBtn.IsVisible = true;
+                }
+                else
+                {
+                    departmentLbl.IsVisible = false;
+                    servicerLbl.IsVisible = false;
+                    servicerBtn.IsVisible = true;
+                    departmentBtn.IsVisible = true;
+                }
             }
-            else if (CommonContext.Account.UserType=="S")
+            catch (Exception)
             {
-                departmentLbl.IsVisible = false;
-                servicerLbl.IsVisible = true;
-                servicerLbl.Text = CommonContext.Account.OrgServerName;
-                servicerBtn.IsVisible = false;
-                departmentBtn.IsVisible = true;
-            }
-            else
-            {
-                departmentLbl.IsVisible = false;
-                servicerLbl.IsVisible = false;
-                servicerBtn.IsVisible = true;
-                departmentBtn.IsVisible = true;
             }
         }
         private ComSinglePopPage comSinglePopPage;

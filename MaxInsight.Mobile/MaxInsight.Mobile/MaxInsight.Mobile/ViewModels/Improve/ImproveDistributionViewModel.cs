@@ -23,60 +23,68 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         List<RequestParameter> paramList = new List<RequestParameter>();
         public ImproveDistributionViewModel()
         {
-            improveService = Resolver.Resolve<IImproveService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            //MessagingCenter.Unsubscribe<ImprovementMngDto>(this, MessageConst.IMPROVEDISTRIBUTION_SEND);
-            //MessagingCenter.Subscribe<ImprovementMngDto>(this, MessageConst.IMPROVEDISTRIBUTION_SEND, m =>
-            //  {
-            //      DepartmentSelect = "选择";
-            //      Department = null;
-            //      if (m != null)
-            //      {
-            //          if (CommonContext.Account.UserType == "S")
-            //          {
-            //              if (m.PlanStatus == "A")
-            //              {
-            //                  IsEdit = true;
-            //                  IsShow = false;
-            //              }
-            //              else
-            //              {
-            //                  IsEdit = false;
-            //                  IsShow = true;
-            //              }
-            //          }
-            //          else
-            //          {
-            //              IsEdit = false;
-            //              IsShow = true;
-            //          }
-            //          improvementMng = m;
-            //          ExecDepartmentName = m.ExecDepartmentName;
-            //          PlanApproal = m.PlanApproalYN == true ? "区域" : "服务经理";
-            //          ResultApproal = m.ResultApproalYN == true ? "区域" : "服务经理";
-            //          GetImproveDistributionDetail(m);
-            //      }
-            //  });
-            MessagingCenter.Unsubscribe<DepartmentDto>(this, MessageConst.RESPONSIBLEDEPARTMENT_SEND);
-            MessagingCenter.Subscribe<DepartmentDto>(this, MessageConst.RESPONSIBLEDEPARTMENT_SEND, l =>
+            try
             {
-                DepartmentSelect = l.DName;
-                Department = l;
-            });
-            //MessagingCenter.Subscribe<List<RequestParameter>>(this, MessageConst.SEARCHCONDITION_PASS, (param) =>
-            //{
-            //    if (param != null && param.Count > 0)
-            //    {
-            //        paramList = param;
-            //    }
+                improveService = Resolver.Resolve<IImproveService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                //MessagingCenter.Unsubscribe<ImprovementMngDto>(this, MessageConst.IMPROVEDISTRIBUTION_SEND);
+                //MessagingCenter.Subscribe<ImprovementMngDto>(this, MessageConst.IMPROVEDISTRIBUTION_SEND, m =>
+                //  {
+                //      DepartmentSelect = "选择";
+                //      Department = null;
+                //      if (m != null)
+                //      {
+                //          if (CommonContext.Account.UserType == "S")
+                //          {
+                //              if (m.PlanStatus == "A")
+                //              {
+                //                  IsEdit = true;
+                //                  IsShow = false;
+                //              }
+                //              else
+                //              {
+                //                  IsEdit = false;
+                //                  IsShow = true;
+                //              }
+                //          }
+                //          else
+                //          {
+                //              IsEdit = false;
+                //              IsShow = true;
+                //          }
+                //          improvementMng = m;
+                //          ExecDepartmentName = m.ExecDepartmentName;
+                //          PlanApproal = m.PlanApproalYN == true ? "区域" : "服务经理";
+                //          ResultApproal = m.ResultApproalYN == true ? "区域" : "服务经理";
+                //          GetImproveDistributionDetail(m);
+                //      }
+                //  });
+                MessagingCenter.Unsubscribe<DepartmentDto>(this, MessageConst.RESPONSIBLEDEPARTMENT_SEND);
+                MessagingCenter.Subscribe<DepartmentDto>(this, MessageConst.RESPONSIBLEDEPARTMENT_SEND, l =>
+                {
+                    DepartmentSelect = l.DName;
+                    Department = l;
+                });
+                //MessagingCenter.Subscribe<List<RequestParameter>>(this, MessageConst.SEARCHCONDITION_PASS, (param) =>
+                //{
+                //    if (param != null && param.Count > 0)
+                //    {
+                //        paramList = param;
+                //    }
 
-            //});
-            MessagingCenter.Unsubscribe<ImproveDistributionPage>(this, "PreviewImage");
-            MessagingCenter.Subscribe<ImproveDistributionPage>(this, "PreviewImage", n =>
+                //});
+                MessagingCenter.Unsubscribe<ImproveDistributionPage>(this, "PreviewImage");
+                MessagingCenter.Subscribe<ImproveDistributionPage>(this, "PreviewImage", n =>
+                {
+                    Preview();
+                });
+            }
+            catch (Exception)
             {
-                Preview();
-            });
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveDistributionViewModel");
+                return;
+            }
         }
         #region Property
         private string execDepartmentName;
@@ -214,8 +222,8 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         private bool _allocateYN;
         public bool AllocateYN
         {
-            get{ return _allocateYN;}
-            set{SetProperty(ref _allocateYN, value);}
+            get { return _allocateYN; }
+            set { SetProperty(ref _allocateYN, value); }
         }
         #endregion
         #region Command
@@ -269,33 +277,41 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         #region Event
         private void Preview()
         {
-            if (PicList != null && PicList.Count > 0)
+            try
             {
-                //List<ImagePreviewDto> list = new List<ImagePreviewDto>();
-                //ImagePreviewDto dto;
-                foreach (var item in PicList)
+                if (PicList != null && PicList.Count > 0)
                 {
-                    string filename = item.Url.LastIndexOf("/") > 0 ? item.Url.Substring(item.Url.LastIndexOf("/") + 1) : "";
-                    if (String.IsNullOrEmpty(filename)) return;
-                    if (CrossFilePicker.Current.IsExistFile(filename, "RMMTIMAGEVIEW"))
+                    //List<ImagePreviewDto> list = new List<ImagePreviewDto>();
+                    //ImagePreviewDto dto;
+                    foreach (var item in PicList)
                     {
-                        //已从服务器上缓存的图片。
-                        CrossFilePicker.Current.OpenFile(filename, "RMMTIMAGEVIEW");
+                        string filename = item.Url.LastIndexOf("/") > 0 ? item.Url.Substring(item.Url.LastIndexOf("/") + 1) : "";
+                        if (String.IsNullOrEmpty(filename)) return;
+                        if (CrossFilePicker.Current.IsExistFile(filename, "RMMTIMAGEVIEW"))
+                        {
+                            //已从服务器上缓存的图片。
+                            CrossFilePicker.Current.OpenFile(filename, "RMMTIMAGEVIEW");
+                        }
+                        else
+                        {
+                            _commonFun.DownLoadFileFromOss(item.Url, filename, "RMMTIMAGEVIEW");
+                        }
                     }
-                    else
-                    {
-                        _commonFun.DownLoadFileFromOss(item.Url, filename, "RMMTIMAGEVIEW");
-                    }
-                }
 
-                //Device.BeginInvokeOnMainThread(async () =>
-                //{
-                //    await PopupNavigation.PushAsync(new PreviewImagePage(list, CurrentPos), true);
-                //});
+                    //Device.BeginInvokeOnMainThread(async () =>
+                    //{
+                    //    await PopupNavigation.PushAsync(new PreviewImagePage(list, CurrentPos), true);
+                    //});
+                }
+                else
+                {
+                    _commonFun.AlertLongText("没有可预览的照片");
+                }
             }
-            else
+            catch (Exception)
             {
-                _commonFun.AlertLongText("没有可预览的照片");
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveDistributionViewModel");
+                return;
             }
         }
         private void Preview(PicDto picDto)
@@ -328,127 +344,143 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         }
         private void PreviewImage()
         {
-            if (SelectedPicDesc.IsPreview == false)
+            try
             {
-                _commonFun.AlertLongText("没有可预览的照片");
+                if (SelectedPicDesc.IsPreview == false)
+                {
+                    _commonFun.AlertLongText("没有可预览的照片");
+                    return;
+                }
+                //List<ImagePreviewDto> list = new List<ImagePreviewDto>();
+                //list.Add(new ImagePreviewDto { Url = SelectedPicDesc.Url });
+                //Device.BeginInvokeOnMainThread(async () =>
+                //{
+                //    await PopupNavigation.PushAsync(new PreviewImagePage(list, 0), true);
+                //});
+                string filename = SelectedPicDesc.Url.LastIndexOf("/") > 0 ? SelectedPicDesc.Url.Substring(SelectedPicDesc.Url.LastIndexOf("/") + 1) : "";
+                if (String.IsNullOrEmpty(filename)) return;
+                if (CrossFilePicker.Current.IsExistFile(filename, "RMMTIMAGEVIEW"))
+                {
+                    //已从服务器上缓存的图片。
+                    CrossFilePicker.Current.OpenFile(filename, "RMMTIMAGEVIEW");
+                }
+                else
+                {
+                    _commonFun.DownLoadFileFromOss(SelectedPicDesc.Url, filename, "RMMTIMAGEVIEW");
+                }
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveDistributionViewModel");
                 return;
-            }
-            //List<ImagePreviewDto> list = new List<ImagePreviewDto>();
-            //list.Add(new ImagePreviewDto { Url = SelectedPicDesc.Url });
-            //Device.BeginInvokeOnMainThread(async () =>
-            //{
-            //    await PopupNavigation.PushAsync(new PreviewImagePage(list, 0), true);
-            //});
-            string filename = SelectedPicDesc.Url.LastIndexOf("/") > 0 ? SelectedPicDesc.Url.Substring(SelectedPicDesc.Url.LastIndexOf("/") + 1) : "";
-            if (String.IsNullOrEmpty(filename)) return;
-            if (CrossFilePicker.Current.IsExistFile(filename, "RMMTIMAGEVIEW"))
-            {
-                //已从服务器上缓存的图片。
-                CrossFilePicker.Current.OpenFile(filename, "RMMTIMAGEVIEW");
-            }
-            else
-            {
-                _commonFun.DownLoadFileFromOss(SelectedPicDesc.Url, filename, "RMMTIMAGEVIEW");
             }
         }
         private async void GetImproveDistributionDetail(ImprovementMngDto improvementMng)
         {
-            string improvementId = improvementMng.ImprovementId.ToString();
-            string impResultId = improvementMng.ImpResultId.ToString();
-            string tPId = improvementMng.TPId.ToString();
-            string itemId = improvementMng.ItemId.ToString();
-            if (_commonHelper.IsNetWorkConnected() == true)
+            try
             {
-                try
+                string improvementId = improvementMng.ImprovementId.ToString();
+                string impResultId = improvementMng.ImpResultId.ToString();
+                string tPId = improvementMng.TPId.ToString();
+                string itemId = improvementMng.ItemId.ToString();
+                if (_commonHelper.IsNetWorkConnected() == true)
                 {
-                    _commonFun.ShowLoading("查询中...");
-                    var result = await improveService.GetImpPlanOrResultDetail(improvementId, "0", impResultId, tPId, itemId);
-                    if (result.ResultCode == Module.ResultType.Success)
+                    try
                     {
-                        _commonFun.HideLoading();
-                        var impAllocateData = CommonHelper.DecodeString<ImpAllocateDto>(result.Body);
-                        if (impAllocateData != null)
+                        _commonFun.ShowLoading("查询中...");
+                        var result = await improveService.GetImpPlanOrResultDetail(improvementId, "0", impResultId, tPId, itemId);
+                        if (result.ResultCode == Module.ResultType.Success)
                         {
-
-                            if (CommonContext.Account.UserType == "S")
+                            _commonFun.HideLoading();
+                            var impAllocateData = CommonHelper.DecodeString<ImpAllocateDto>(result.Body);
+                            if (impAllocateData != null)
                             {
-                                if (impAllocateData.PlanStatus == "A")
+
+                                if (CommonContext.Account.UserType == "S")
                                 {
-                                    IsEdit = true;
-                                    IsShow = false;
+                                    if (impAllocateData.PlanStatus == "A")
+                                    {
+                                        IsEdit = true;
+                                        IsShow = false;
+                                    }
+                                    else
+                                    {
+                                        IsEdit = false;
+                                        IsShow = true;
+                                    }
                                 }
                                 else
                                 {
                                     IsEdit = false;
                                     IsShow = true;
                                 }
+                                ExecDepartmentName = impAllocateData.ExecDepartmentName;
+                                AllocateYN = impAllocateData.AllocateYN;
+                                PlanApproal = impAllocateData.PlanApproalYN == true ? "评估师" : "总经理";
+                                ResultApproal = impAllocateData.ResultApproalYN == true ? "评估师" : "总经理";
+                                StandardList = impAllocateData.StandardList;
+                                PicList = impAllocateData.PicList;
+                                LossImageList = impAllocateData.PicList.Count * 40;
+                                PicDescList = impAllocateData.PicDescList;
+                                if (PicDescList != null)
+                                {
+                                    foreach (var item in PicDescList)
+                                    {
+                                        item.IsPreview = string.IsNullOrEmpty(item.Url) ? false : true;
+                                    }
+                                }
+                                ImprovementCaption = impAllocateData.ImprovementCaption;
+                                LostDescription = impAllocateData.LostDescription;
+                                Score = impAllocateData.Score.ToString();
+                                PlanFinishDate = impAllocateData.PlanFinishDate;
+                                ResultFinishDate = impAllocateData.ResultFinishDate;
+                                PicDescLstHeight = 40 * PicDescList.Count + 45;
+                                StandardLstHeight = 40 * StandardList.Count + 45;
                             }
                             else
                             {
-                                IsEdit = false;
-                                IsShow = true;
+                                _commonFun.HideLoading();
+                                _commonFun.ShowToast("查无数据");
                             }
-                            ExecDepartmentName = impAllocateData.ExecDepartmentName;
-                            AllocateYN = impAllocateData.AllocateYN;
-                            PlanApproal = impAllocateData.PlanApproalYN == true ? "评估师" : "总经理";
-                            ResultApproal = impAllocateData.ResultApproalYN == true ? "评估师" : "总经理";
-                            StandardList = impAllocateData.StandardList;
-                            PicList = impAllocateData.PicList;
-                            LossImageList = impAllocateData.PicList.Count * 40;
-                            PicDescList = impAllocateData.PicDescList;
-                            if (PicDescList != null)
-                            {
-                                foreach (var item in PicDescList)
-                                {
-                                    item.IsPreview = string.IsNullOrEmpty(item.Url) ? false : true;
-                                }
-                            }
-                            ImprovementCaption = impAllocateData.ImprovementCaption;
-                            LostDescription = impAllocateData.LostDescription;
-                            Score = impAllocateData.Score.ToString();
-                            PlanFinishDate = impAllocateData.PlanFinishDate;
-                            ResultFinishDate = impAllocateData.ResultFinishDate;
-                            PicDescLstHeight = 40 * PicDescList.Count + 45;
-                            StandardLstHeight = 40 * StandardList.Count + 45;
                         }
                         else
                         {
                             _commonFun.HideLoading();
-                            _commonFun.ShowToast("查无数据");
+                            _commonFun.AlertLongText("查询失败，请重试。 " + result.Msg);
                         }
                     }
-                    else
+                    catch (OperationCanceledException)
                     {
                         _commonFun.HideLoading();
-                        _commonFun.AlertLongText("查询失败，请重试。 " + result.Msg);
+                        _commonFun.AlertLongText("请求超时。");
+                    }
+                    catch (Exception)
+                    {
+                        _commonFun.HideLoading();
+                        _commonFun.AlertLongText("查询异常，请重试。");
+                    }
+                    finally
+                    {
+                        _commonFun.HideLoading();
+
                     }
                 }
-                catch (OperationCanceledException)
+                else
                 {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("请求超时。");
-                }
-                catch (Exception)
-                {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("查询异常，请重试。");
-                }
-                finally
-                {
-                    _commonFun.HideLoading();
-
+                    _commonFun.AlertLongText("网络连接异常");
                 }
             }
-            else
+            catch (Exception)
             {
-                _commonFun.AlertLongText("网络连接异常");
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveDistributionViewModel");
+                return;
             }
         }
         private async void Commit()
         {
             try
             {
-                if (AllocateYN==true&&Department == null)
+                if (AllocateYN == true && Department == null)
                 {
                     _commonFun.AlertLongText("请选择责任部门");
                     return;
@@ -460,14 +492,14 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 }
                 string tpId = improvementMng.TPId.ToString();
                 string itemId = improvementMng.ItemId.ToString();
-                string departmentId = Department==null?null: Department.DId;
+                string departmentId = Department == null ? null : Department.DId;
                 string improvementCaption = ImprovementCaption;
                 string lostDescription = LostDescription;
                 string inUserId = CommonContext.Account.UserId;
                 if (_commonHelper.IsNetWorkConnected() == true)
                 {
                     _commonFun.ShowLoading("提交中...");
-                    var result = await improveService.SaveImproveDistribution(tpId, itemId, departmentId, improvementCaption, lostDescription, inUserId,AllocateYN);
+                    var result = await improveService.SaveImproveDistribution(tpId, itemId, departmentId, improvementCaption, lostDescription, inUserId, AllocateYN);
                     if (result.ResultCode == ResultType.Success)
                     {
                         await Navigation.PopAsync();
@@ -504,22 +536,38 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         }
         private async void Cancel()
         {
-            await Navigation.PopAsync();
+            try
+            {
+                await Navigation.PopAsync();
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveDistributionViewModel");
+                return;
+            }
         }
         #endregion
         #region Init
-        public void Init(ImprovementMngDto m, List<RequestParameter> param=null)
+        public void Init(ImprovementMngDto m, List<RequestParameter> param = null)
         {
-            DepartmentSelect = "选择";
-            Department = null;
-            if (m != null)
+            try
             {
-                improvementMng = m;
-                GetImproveDistributionDetail(m);
+                DepartmentSelect = "选择";
+                Department = null;
+                if (m != null)
+                {
+                    improvementMng = m;
+                    GetImproveDistributionDetail(m);
+                }
+                if (param != null && param.Count > 0)
+                {
+                    paramList = param;
+                }
             }
-            if (param != null && param.Count > 0)
+            catch (Exception)
             {
-                paramList = param;
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveDistributionViewModel");
+                return;
             }
         }
         #endregion

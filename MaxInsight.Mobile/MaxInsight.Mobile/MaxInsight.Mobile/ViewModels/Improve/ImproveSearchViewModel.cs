@@ -19,37 +19,45 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         List<RequestParameter> paramList = new List<RequestParameter>();
         public ImproveSearchViewModel()
         {
-            improveService = Resolver.Resolve<IImproveService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            MessagingCenter.Unsubscribe<string>(this, MessageConst.IMPROVE_IMPPLANORRESULTDATA_GET);
-            MessagingCenter.Subscribe<string>(this, MessageConst.IMPROVE_IMPPLANORRESULTDATA_GET, (c) =>
+            try
             {
-                if(paramList != null && paramList.Count > 0)
-                    GetImproveResultOrPlan(paramList);
-            });
-            MessagingCenter.Subscribe<List<RequestParameter>>(this, MessageConst.PASS_IMPROVESEARCHCONDITION, (param) =>
-             {
-                 if (param!=null&&param.Count>0)
+                improveService = Resolver.Resolve<IImproveService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                MessagingCenter.Unsubscribe<string>(this, MessageConst.IMPROVE_IMPPLANORRESULTDATA_GET);
+                MessagingCenter.Subscribe<string>(this, MessageConst.IMPROVE_IMPPLANORRESULTDATA_GET, (c) =>
+                {
+                    if (paramList != null && paramList.Count > 0)
+                        GetImproveResultOrPlan(paramList);
+                });
+                MessagingCenter.Subscribe<List<RequestParameter>>(this, MessageConst.PASS_IMPROVESEARCHCONDITION, (param) =>
                  {
-                     paramList = param;
-                     StatueType = param.Find(p => p.Name == "StatueTypeName").Value;
-                     StartDate = param.Find(p => p.Name == "StartDate").Value;
-                     EndDate = param.Find(p => p.Name == "EndDate").Value;
-                     Statue = param.Find(p => p.Name == "StatueName").Value;
-                     Service = param.Find(p => p.Name == "ServiceName").Value;
-                     Department = param.Find(p => p.Name == "DepartmentName").Value;
-                     ItemName= param.Find(p => p.Name == "ItemName").Value;
-                     PlanSelectName = param.Find(p => p.Name == "PlanSelectName").Value;
-                     SourceTypeName = param.Find(p => p.Name == "SourceTypeName").Value;
-                     GetImproveResultOrPlan(param);
-                 }
-                 else if (paramList != null && paramList.Count > 0)
-                 {
-                     GetImproveResultOrPlan(paramList);
-                 }
-                 
-             });
+                     if (param != null && param.Count > 0)
+                     {
+                         paramList = param;
+                         StatueType = param.Find(p => p.Name == "StatueTypeName").Value;
+                         StartDate = param.Find(p => p.Name == "StartDate").Value;
+                         EndDate = param.Find(p => p.Name == "EndDate").Value;
+                         Statue = param.Find(p => p.Name == "StatueName").Value;
+                         Service = param.Find(p => p.Name == "ServiceName").Value;
+                         Department = param.Find(p => p.Name == "DepartmentName").Value;
+                         ItemName = param.Find(p => p.Name == "ItemName").Value;
+                         PlanSelectName = param.Find(p => p.Name == "PlanSelectName").Value;
+                         SourceTypeName = param.Find(p => p.Name == "SourceTypeName").Value;
+                         GetImproveResultOrPlan(param);
+                     }
+                     else if (paramList != null && paramList.Count > 0)
+                     {
+                         GetImproveResultOrPlan(paramList);
+                     }
+
+                 });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveSearchViewModel");
+                return;
+            }
         }
         #region Property
         private string itemName;
@@ -170,7 +178,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 {
                     try
                     {
-                        await Navigation.PushAsync<ImproveSearchConditionViewModel>((vm,v)=>vm.Init(),true);
+                        await Navigation.PushAsync<ImproveSearchConditionViewModel>((vm, v) => vm.Init(), true);
                     }
                     catch (Exception)
                     {
@@ -258,45 +266,53 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 IsLoading = false;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
         }
         private void GetImproveResultOrPlan(List<RequestParameter> param)
         {
-            string startDate = param.Find(p => p.Name == "StartDate").Value.Replace("-", "");
-            string endDate = param.Find(p => p.Name == "EndDate").Value.Replace("-", "");
-            string statue = param.Find(p => p.Name == "Statue").Value;
-            int serviceId =Int32.Parse( param.Find(p => p.Name == "ServiceId").Value);
-            int departmentId = Int32.Parse(param.Find(p => p.Name == "DepartmentId").Value);
-            int userId = Int32.Parse(CommonContext.Account.UserId);
-            string itemName = ItemName;
-            int planid = Int32.Parse(param.Find(p => p.Name == "PlanSelect").Value);
-            string sourceType = param.Find(p => p.Name == "SourceType").Value;
-            if (param.Find(p => p.Name == "StatueType").Value == "A")
+            try
             {
-                
-                GetImprovePlan(itemName, startDate,endDate,userId,"A",statue,serviceId,departmentId,planid, sourceType);
+                string startDate = param.Find(p => p.Name == "StartDate").Value.Replace("-", "");
+                string endDate = param.Find(p => p.Name == "EndDate").Value.Replace("-", "");
+                string statue = param.Find(p => p.Name == "Statue").Value;
+                int serviceId = Int32.Parse(param.Find(p => p.Name == "ServiceId").Value);
+                int departmentId = Int32.Parse(param.Find(p => p.Name == "DepartmentId").Value);
+                int userId = Int32.Parse(CommonContext.Account.UserId);
+                string itemName = ItemName;
+                int planid = Int32.Parse(param.Find(p => p.Name == "PlanSelect").Value);
+                string sourceType = param.Find(p => p.Name == "SourceType").Value;
+                if (param.Find(p => p.Name == "StatueType").Value == "A")
+                {
+
+                    GetImprovePlan(itemName, startDate, endDate, userId, "A", statue, serviceId, departmentId, planid, sourceType);
+                }
+                else
+                {
+                    GetImproveResult(itemName, startDate, endDate, userId, "R", statue, serviceId, departmentId, planid, sourceType);
+                }
             }
-            else
+            catch (Exception)
             {
-                GetImproveResult(itemName, startDate, endDate, userId, "R", statue, serviceId, departmentId, planid, sourceType);
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveSearchViewModel");
+                return;
             }
         }
 
-        private async void GetImproveResult(string itemNae, string startDate, string endDate, int userId, string statueType, string statue, int serviceId, int departmentId,int planid,string sourceType)
+        private async void GetImproveResult(string itemNae, string startDate, string endDate, int userId, string statueType, string statue, int serviceId, int departmentId, int planid, string sourceType)
         {
             try
             {
                 _commonFun.ShowLoading("查询中...");
                 //TO-DO
-                var result =await improveService.GetResult(itemNae, startDate, endDate, userId, statueType, statue, serviceId, departmentId,planid, sourceType);
+                var result = await improveService.GetResult(itemNae, startDate, endDate, userId, statueType, statue, serviceId, departmentId, planid, sourceType);
                 if (result.ResultCode == Module.ResultType.Success)
                 {
 
                     List<ImprovementMngDto> improveResultInfo = CommonHelper.DecodeString<List<ImprovementMngDto>>(result.Body);
-                    if (improveResultInfo!=null&&improveResultInfo.Count > 0)
+                    if (improveResultInfo != null && improveResultInfo.Count > 0)
                     {
                         _commonFun.HideLoading();
                         ImprovePlansOrResults = improveResultInfo;
@@ -333,7 +349,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
             }
         }
 
-        private async void GetImprovePlan(string itemNae,string startDate,string endDate,int userId,string statueType,string statue,int serviceId,int departmentId,int planid,string sourceType)
+        private async void GetImprovePlan(string itemNae, string startDate, string endDate, int userId, string statueType, string statue, int serviceId, int departmentId, int planid, string sourceType)
         {
             if (_commonHelper.IsNetWorkConnected() == true)
             {
@@ -341,12 +357,12 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 {
                     _commonFun.ShowLoading("查询中...");
                     // TO-DO
-                    var result = await improveService.GetResult(itemNae, startDate, endDate, userId, statueType, statue, serviceId, departmentId,planid, sourceType);
+                    var result = await improveService.GetResult(itemNae, startDate, endDate, userId, statueType, statue, serviceId, departmentId, planid, sourceType);
                     if (result.ResultCode == Module.ResultType.Success)
                     {
 
                         List<ImprovementMngDto> improvePlanInfo = CommonHelper.DecodeString<List<ImprovementMngDto>>(result.Body);
-                        if (improvePlanInfo!=null&&improvePlanInfo.Count > 0)
+                        if (improvePlanInfo != null && improvePlanInfo.Count > 0)
                         {
                             ImprovePlansOrResults = improvePlanInfo;
                             _commonFun.HideLoading();
@@ -399,7 +415,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 list.Add(new RequestParameter { Name = "planApproalYN", Value = improvementMng.PlanApproalYN.ToString() });
                 list.Add(new RequestParameter { Name = "PlanStatus", Value = improvementMng.PlanStatus });
                 list.Add(new RequestParameter { Name = "AllocateYN", Value = improvementMng.AllocateYN.ToString() });
-                await Navigation.PushAsync<ImpPlanCommitViewModel>((vm, v) => vm.Init(improvementMng,list), true);
+                await Navigation.PushAsync<ImpPlanCommitViewModel>((vm, v) => vm.Init(improvementMng, list), true);
             }
             catch (Exception)
             {
@@ -417,7 +433,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 list.Add(new RequestParameter { Name = "ResultApproalYN", Value = improvementMng.ResultApproalYN.ToString() });
                 list.Add(new RequestParameter { Name = "ResultStatus", Value = improvementMng.ResultStatus });
                 list.Add(new RequestParameter { Name = "AllocateYN", Value = improvementMng.AllocateYN.ToString() });
-                await Navigation.PushAsync<ImpResultCommitViewModel>((vm, v) => vm.Init(improvementMng,list),true);
+                await Navigation.PushAsync<ImpResultCommitViewModel>((vm, v) => vm.Init(improvementMng, list), true);
             }
             catch (Exception)
             {
@@ -430,7 +446,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                 CommonContext.ImpPlanStatus = improvementMng.PlanStatus;
                 if (CommonContext.Account.UserType == "S")
                 {
-                    await Navigation.PushAsync<ImproveDistributionViewModel>((vm,v)=>vm.Init(improvementMng, paramList),true);
+                    await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(improvementMng, paramList), true);
                 }
                 else
                 {
@@ -440,7 +456,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
                     }
                     else
                     {
-                        await Navigation.PushAsync<ImproveDistributionViewModel>((vm,v)=>vm.Init(improvementMng,paramList),true);
+                        await Navigation.PushAsync<ImproveDistributionViewModel>((vm, v) => vm.Init(improvementMng, paramList), true);
                     }
                 }
             }

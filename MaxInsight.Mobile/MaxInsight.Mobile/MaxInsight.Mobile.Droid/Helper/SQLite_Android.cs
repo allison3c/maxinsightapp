@@ -15,11 +15,17 @@ namespace MaxInsight.Mobile.Droid.Helper
         {
             if (_sQLiteConnection == null)
             {
-                var sqliteFilename = "MaxInsight.db3";
-                string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal); // Documents folder
-                var path = Path.Combine(documentsPath, sqliteFilename);
-                _sQLiteConnection = new SQLiteConnection(new SQLitePlatformAndroid(), path, false);
-                _sQLiteConnection.Execute(@"PRAGMA synchronous = off;");
+                try
+                {
+                    var sqliteFilename = "MaxInsight.db3";
+                    string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal); // Documents folder
+                    var path = Path.Combine(documentsPath, sqliteFilename);
+                    _sQLiteConnection = new SQLiteConnection(new SQLitePlatformAndroid(), path, false);
+                    _sQLiteConnection.Execute(@"PRAGMA synchronous = off;");
+                }
+                catch
+                {
+                }
             }
             return _sQLiteConnection;
         }
@@ -28,12 +34,18 @@ namespace MaxInsight.Mobile.Droid.Helper
         {
             if (_sQLiteAsyncConnection == null)
             {
-                var sqliteFilename = "MaxInsight.db3";
-                string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal); // Documents folder
-                var path =Path.Combine(documentsPath, sqliteFilename);
-                var connectionString = new SQLiteConnectionString(path, false);
-                var connectionWithLock = new SQLiteConnectionWithLock(new SQLitePlatformAndroid(), connectionString);
-                _sQLiteAsyncConnection = new SQLiteAsyncConnection(() => connectionWithLock);
+                try
+                {
+                    var sqliteFilename = "MaxInsight.db3";
+                    string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal); // Documents folder
+                    var path = Path.Combine(documentsPath, sqliteFilename);
+                    var connectionString = new SQLiteConnectionString(path, false);
+                    var connectionWithLock = new SQLiteConnectionWithLock(new SQLitePlatformAndroid(), connectionString);
+                    _sQLiteAsyncConnection = new SQLiteAsyncConnection(() => connectionWithLock);
+                }
+                catch
+                {
+                }
             }
             return _sQLiteAsyncConnection;
         }

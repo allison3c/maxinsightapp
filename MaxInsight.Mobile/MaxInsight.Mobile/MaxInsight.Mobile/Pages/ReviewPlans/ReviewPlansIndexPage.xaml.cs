@@ -18,7 +18,13 @@ namespace MaxInsight.Mobile.Pages.ReviewPlans
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<string>("", MessageConst.GETREVIEWPLANSLIST);
+            try
+            {
+                MessagingCenter.Send<string>("", MessageConst.GETREVIEWPLANSLIST);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

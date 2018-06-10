@@ -19,25 +19,31 @@ namespace MaxInsight.Mobile.Pages.Notifi
         public NotifiMngSearchConditionPage()
         {
             InitializeComponent();
-            MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DISTRIBUTOR_SHOW_LIST);
-            MessagingCenter.Subscribe<List<MultiSelectDto>>(
-            this,
-            MessageConst.NOTICE_DISTRIBUTOR_SHOW_LIST,
-            (paramList) =>
+            try
             {
-                disSource = paramList;
-            });
-            MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DEPARTMENT_SHOW_LIST);
-            MessagingCenter.Subscribe<List<MultiSelectDto>>(
-            this,
-            MessageConst.NOTICE_DEPARTMENT_SHOW_LIST,
-            (paramList) =>
+                MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DISTRIBUTOR_SHOW_LIST);
+                MessagingCenter.Subscribe<List<MultiSelectDto>>(
+                this,
+                MessageConst.NOTICE_DISTRIBUTOR_SHOW_LIST,
+                (paramList) =>
+                {
+                    disSource = paramList;
+                });
+                MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DEPARTMENT_SHOW_LIST);
+                MessagingCenter.Subscribe<List<MultiSelectDto>>(
+                this,
+                MessageConst.NOTICE_DEPARTMENT_SHOW_LIST,
+                (paramList) =>
+                {
+                    depSource = paramList;
+                });
+                replyRdo.ItemsSource = new List<string> { "是", "否" };
+                replyRdo.Items[0].Checked = true;
+                SetControlWithRole();
+            }
+            catch (Exception)
             {
-                depSource = paramList;
-            });
-            replyRdo.ItemsSource = new List<string> { "是","否" };
-            replyRdo.Items[0].Checked = true;
-            SetControlWithRole();
+            }
         }
         private ComSinglePopPage _comPopPage;
         public ComSinglePopPage ComPopPage
@@ -116,23 +122,29 @@ namespace MaxInsight.Mobile.Pages.Notifi
         }
         private void SetControlWithRole()
         {
-            //服务商登陆，只显示服务商的名字
-            if (CommonContext.Account.UserType == "S")
+            try
             {
-                distributorLbl.IsVisible = true;
-                distributorLbl.Text = CommonContext.Account.OrgServerName;
-                distributorBtn.IsVisible = false;
-            }
-            //部门登陆，显示服务商的名字和部门的名字
-            else if (CommonContext.Account.UserType == "D")
-            {
-                distributorLbl.IsVisible = true;
-                distributorLbl.Text = CommonContext.Account.OrgServerName;
-                distributorBtn.IsVisible = false;
+                //服务商登陆，只显示服务商的名字
+                if (CommonContext.Account.UserType == "S")
+                {
+                    distributorLbl.IsVisible = true;
+                    distributorLbl.Text = CommonContext.Account.OrgServerName;
+                    distributorBtn.IsVisible = false;
+                }
+                //部门登陆，显示服务商的名字和部门的名字
+                else if (CommonContext.Account.UserType == "D")
+                {
+                    distributorLbl.IsVisible = true;
+                    distributorLbl.Text = CommonContext.Account.OrgServerName;
+                    distributorBtn.IsVisible = false;
 
-                departmentLbl.IsVisible = true;
-                departmentLbl.Text = CommonContext.Account.OrgDepartmentName;
-                departmentBtn.IsVisible = false;
+                    departmentLbl.IsVisible = true;
+                    departmentLbl.Text = CommonContext.Account.OrgDepartmentName;
+                    departmentBtn.IsVisible = false;
+                }
+            }
+            catch (Exception)
+            {
             }
         }
     }

@@ -16,8 +16,16 @@ namespace MaxInsight.Mobile.ViewModels.Calendar
         #region Constructor
         public CalendarRegViewModel()
         {
-            _calendarService = Resolver.Resolve<ICalendarService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
+            try
+            {
+                _calendarService = Resolver.Resolve<ICalendarService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->CalendarRegViewModel");
+                return;
+            }
         }
         #endregion
 
@@ -335,15 +343,22 @@ namespace MaxInsight.Mobile.ViewModels.Calendar
 
         private string TwoString(int t)
         {
-            if (t < 10)
+            try
             {
-                return "0" + t.ToString();
+                if (t < 10)
+                {
+                    return "0" + t.ToString();
+                }
+                else
+                {
+                    return t.ToString();
+                }
             }
-            else
+            catch (Exception)
             {
-                return t.ToString();
+                _commonFun.AlertLongText("操作异常,请重试。-->CalendarRegViewModel");
+                return "";
             }
-
         }
         #endregion
     }

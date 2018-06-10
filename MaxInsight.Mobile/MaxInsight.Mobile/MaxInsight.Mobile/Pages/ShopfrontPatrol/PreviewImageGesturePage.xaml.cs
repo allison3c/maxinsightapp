@@ -21,7 +21,13 @@ namespace MaxInsight.Mobile.Pages.ShopfrontPatrol
         }
         async void Handle_Clicked(object sender, System.EventArgs e)
         {
-            await PopupNavigation.PopAsync();
+            try
+            {
+                await PopupNavigation.PopAsync();
+            }
+            catch
+            {
+            }
         }
     }
 }

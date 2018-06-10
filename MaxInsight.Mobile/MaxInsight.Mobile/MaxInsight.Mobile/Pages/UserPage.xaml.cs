@@ -18,100 +18,124 @@ namespace MaxInsight.Mobile.Pages
         public UserPage()
         {
             InitializeComponent();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
+            try
+            {
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
 
-            lblDisName.Text = CommonContext.Account.DisName;
-            lblUserTypeName.Text = CommonContext.Account.UserTypeName;
-            txtTelNo.Text = CommonContext.Account.Phone;
-            layPassword.GestureRecognizers.Add(new TapGestureRecognizer
-            {
-                Command = new Command(async () =>
+                lblDisName.Text = CommonContext.Account.DisName;
+                lblUserTypeName.Text = CommonContext.Account.UserTypeName;
+                txtTelNo.Text = CommonContext.Account.Phone;
+                layPassword.GestureRecognizers.Add(new TapGestureRecognizer
                 {
-                    try
+                    Command = new Command(async () =>
                     {
-                        await Navigation.PushAsync(ViewFactory.CreatePage<ChangePasswordViewModel, ChangePasswordPage>() as Page, true);
-                    }
-                    catch (System.Exception)
-                    {
-                    }
-                })
-            });
-            layCheckUpdate.GestureRecognizers.Add(new TapGestureRecognizer
-            {
-                Command = new Command(async () =>
-                {
-                    try
-                    {
-                        if (IsDoaning)
+                        try
                         {
-                            string msg = "";
-                            if (App.SysOS == "Android")
-                            {
-                                msg = "安装程序正在后台下载";
-                            }
-                            else
-                            {
-                                msg = "按Home键回到桌面即可看到更新进度";
-                            }
-                            _commonFun.AlertLongText(msg);
+                            await Navigation.PushAsync(ViewFactory.CreatePage<ChangePasswordViewModel, ChangePasswordPage>() as Page, true);
                         }
-                        else
+                        catch (System.Exception)
                         {
-                            if (info != null && !string.IsNullOrEmpty(info.appKey))
+                        }
+                    })
+                });
+                layCheckUpdate.GestureRecognizers.Add(new TapGestureRecognizer
+                {
+                    Command = new Command(async () =>
+                    {
+                        try
+                        {
+                            if (IsDoaning)
                             {
-                                UpdateNewVersion();
+                                string msg = "";
+                                if (App.SysOS == "Android")
+                                {
+                                    msg = "安装程序正在后台下载";
+                                }
+                                else
+                                {
+                                    msg = "按Home键回到桌面即可看到更新进度";
+                                }
+                                _commonFun.AlertLongText(msg);
                             }
                             else
                             {
-                                _commonFun.ShowLoading("检查中...");
-                                info = await App.CheckUpdate();
-                                _commonFun.HideLoading();
                                 if (info != null && !string.IsNullOrEmpty(info.appKey))
                                 {
                                     UpdateNewVersion();
                                 }
                                 else
                                 {
-                                    _commonFun.AlertLongText("恭喜你，你已经是最新版本了。");
+                                    _commonFun.ShowLoading("检查中...");
+                                    info = await App.CheckUpdate();
+                                    _commonFun.HideLoading();
+                                    if (info != null && !string.IsNullOrEmpty(info.appKey))
+                                    {
+                                        UpdateNewVersion();
+                                    }
+                                    else
+                                    {
+                                        _commonFun.AlertLongText("恭喜你，你已经是最新版本了。");
+                                    }
                                 }
                             }
                         }
-                    }
-                    catch (Exception)
-                    {
-                    }
-                })
-            });
+                        catch (Exception)
+                        {
+                        }
+                    })
+                });
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected async override void OnAppearing()
         {
-            info = await App.CheckUpdate();
-            if (info != null && !string.IsNullOrEmpty(info.appKey))
+            try
             {
-                lblCheckUpdate.Text = "有新版本发布";
-                lblCheckUpdate.TextColor = Color.Red;
+                info = await App.CheckUpdate();
+                if (info != null && !string.IsNullOrEmpty(info.appKey))
+                {
+                    lblCheckUpdate.Text = "有新版本发布";
+                    lblCheckUpdate.TextColor = Color.Red;
+                }
+                else
+                {
+                    lblCheckUpdate.Text = "检查更新";
+                    lblCheckUpdate.TextColor = Color.FromHex("A0A0A0");
+                }
             }
-            else
+            catch (Exception)
             {
-                lblCheckUpdate.Text = "检查更新";
-                lblCheckUpdate.TextColor = Color.FromHex("A0A0A0");
             }
             base.OnAppearing();
         }
         public void ExistSystem(object sender, EventArgs e)
         {
-            Helpers.ICommonFun commonFun = XLabs.Ioc.Resolver.Resolve<Helpers.ICommonFun>();
-            commonFun.ExistSystem();
+            try
+            {
+                Helpers.ICommonFun commonFun = XLabs.Ioc.Resolver.Resolve<Helpers.ICommonFun>();
+                commonFun.ExistSystem();
+            }
+            catch (Exception)
+            {
+            }
         }
         private async void UpdateNewVersion()
         {
-            if (await _commonFun.Confirm("新的版本已发布，是否更新?"))
+            try
             {
-                MessagingCenter.Send<IOSVersionInfoDto>(info, "UpdateApp");
-                IsDoaning = true;
-                info = null;
+                if (await _commonFun.Confirm("新的版本已发布，是否更新?"))
+                {
+                    MessagingCenter.Send<IOSVersionInfoDto>(info, "UpdateApp");
+                    IsDoaning = true;
+                    info = null;
+                }
+            }
+            catch (Exception)
+            {
             }
         }
     }

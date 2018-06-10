@@ -25,29 +25,47 @@ namespace MaxInsight.Mobile.Pages.Common
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            MessagingCenter.Send<string>(DataType, MessageConst.COMMON_SOURCE_GET);
+            try
+            {
+                MessagingCenter.Send<string>(DataType, MessageConst.COMMON_SOURCE_GET);
+            }
+            catch (Exception)
+            {
+            }
         }
         public void PassSelectItem(object sender, ItemTappedEventArgs e)
         {
-            Navigation.PopPopupAsync();
-            switch (DataType)
+            try
             {
-                case "NoticeStatus":
-                    MessagingCenter.Send<NameValueObject>((statusLst.SelectedItem as NameValueObject), MessageConst.NOTICE_STATUSLIST_SELECT);
-                    break;
-                case "ImpAllTaskOfPlan":
-                    MessagingCenter.Send<NameValueObject>((statusLst.SelectedItem as NameValueObject), MessageConst.IMP_TASKOFPLANLIST_SELECT);
-                    break;
-                case "ImpAllSourceType":
-                    MessagingCenter.Send<NameValueObject>((statusLst.SelectedItem as NameValueObject), MessageConst.IMP_SOURCETYPELIST_SELECT);
-                    break;
-                default:
-                    break;
+                Navigation.PopPopupAsync();
+                switch (DataType)
+                {
+                    case "NoticeStatus":
+                        MessagingCenter.Send<NameValueObject>((statusLst.SelectedItem as NameValueObject), MessageConst.NOTICE_STATUSLIST_SELECT);
+                        break;
+                    case "ImpAllTaskOfPlan":
+                        MessagingCenter.Send<NameValueObject>((statusLst.SelectedItem as NameValueObject), MessageConst.IMP_TASKOFPLANLIST_SELECT);
+                        break;
+                    case "ImpAllSourceType":
+                        MessagingCenter.Send<NameValueObject>((statusLst.SelectedItem as NameValueObject), MessageConst.IMP_SOURCETYPELIST_SELECT);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception)
+            {
             }
         }
         private void Cancel(object sender, EventArgs e)
         {
-            Navigation.PopPopupAsync();
+            try
+            {
+                Navigation.PopPopupAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

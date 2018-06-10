@@ -16,7 +16,5 @@ namespace MaxInsight.Mobile
 			get { return images; }
 			set { SetProperty(ref images, value); }
 		}
-
-
 	}
 }

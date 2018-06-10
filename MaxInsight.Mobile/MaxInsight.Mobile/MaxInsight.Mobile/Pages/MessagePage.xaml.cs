@@ -29,20 +29,32 @@ namespace MaxInsight.Mobile.Pages
         public MessagePage()
         {
             InitializeComponent();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _noticeMngService = Resolver.Resolve<INotifiMngService>();
-
-
-            MessagingCenter.Unsubscribe<string>(this, "MessagePageReSearch");
-            MessagingCenter.Subscribe<string>(this, "MessagePageReSearch", (c) =>
+            try
             {
-                SetData();
-            });
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _noticeMngService = Resolver.Resolve<INotifiMngService>();
+
+
+                MessagingCenter.Unsubscribe<string>(this, "MessagePageReSearch");
+                MessagingCenter.Subscribe<string>(this, "MessagePageReSearch", (c) =>
+                {
+                    SetData();
+                });
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private async void SetData()
         {
-            lstMessages.ItemsSource = await GetMessageData2();
+            try
+            {
+                lstMessages.ItemsSource = await GetMessageData2();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         //private async void GoMessageItemDetail(object sender, ItemTappedEventArgs args)
@@ -100,11 +112,11 @@ namespace MaxInsight.Mobile.Pages
                             list.Add(new RequestParameter { Name = "PLANSTATUS", Value = notice.Status });
                             list.Add(new RequestParameter { Name = "AllocateYN", Value = ids[5] });
                             ImprovementMngDto paramDto = new ImprovementMngDto();
-                            paramDto.ImprovementId =Convert.ToInt32(ids[0]);
+                            paramDto.ImprovementId = Convert.ToInt32(ids[0]);
                             paramDto.ImpResultId = 0;
-                            paramDto.TPId= Convert.ToInt32(ids[1]);
+                            paramDto.TPId = Convert.ToInt32(ids[1]);
                             paramDto.ItemId = Convert.ToInt32(ids[2]);
-                            await Navigation.PushAsync(ViewFactory.CreatePage<ImpPlanCommitViewModel, ImpPlanCommitPage>((vm, v) => vm.Init(paramDto,list)) as Page, true);
+                            await Navigation.PushAsync(ViewFactory.CreatePage<ImpPlanCommitViewModel, ImpPlanCommitPage>((vm, v) => vm.Init(paramDto, list)) as Page, true);
                         }
                         break;
                     //Push详细    
@@ -133,7 +145,7 @@ namespace MaxInsight.Mobile.Pages
                             paramDto.ItemId = Convert.ToInt32(ids[3]);
                             paramDto.PlanApproalYN = Convert.ToBoolean(ids[4]);
                             paramDto.PlanStatus = "G";
-                            paramDto.AllocateYN= Convert.ToBoolean(ids[6]);
+                            paramDto.AllocateYN = Convert.ToBoolean(ids[6]);
                             await Navigation.PushAsync(ViewFactory.CreatePage<ImpResultCommitViewModel, ImpResultCommitPage>((vm, v) => vm.Init(paramDto, list)) as Page, true);
                         }
                         break;
@@ -231,7 +243,13 @@ namespace MaxInsight.Mobile.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            SetData();
+            try
+            {
+                SetData();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

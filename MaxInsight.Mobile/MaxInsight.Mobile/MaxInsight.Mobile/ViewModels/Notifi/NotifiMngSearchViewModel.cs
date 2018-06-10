@@ -20,31 +20,39 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region Constructor
         public NotifiMngSearchViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _noticeMngService= Resolver.Resolve<INotifiMngService>();
-            MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.NOTIFI_SEARCHCONDITION_PASS);
-            MessagingCenter.Subscribe<List<RequestParameter>>(this, MessageConst.NOTIFI_SEARCHCONDITION_PASS, (param) =>
+            try
             {
-                if (param != null && param.Count > 0)
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _noticeMngService = Resolver.Resolve<INotifiMngService>();
+                MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.NOTIFI_SEARCHCONDITION_PASS);
+                MessagingCenter.Subscribe<List<RequestParameter>>(this, MessageConst.NOTIFI_SEARCHCONDITION_PASS, (param) =>
                 {
-                    paramList = param;
-                    StatusSelectName = param.Find(p => p.Name == "StatusSelectName").Value;
-                    ReplySelectedName = param.Find(p => p.Name == "ReplySelectedName").Value;
-                    StartDateAndEndDate = param.Find(p => p.Name == "StartDate").Value+"~"+param.Find(p => p.Name == "EndDate").Value;
-                    NoticeReaderDes = param.Find(p => p.Name == "NoticeReaderDes").Value;
-                    NoticeNo = param.Find(p => p.Name == "NoticeNo").Value;
-                    NoticeTitle = param.Find(p => p.Name == "NoticeTitle").Value;
-                    GetNoticeList(param);
-                }
+                    if (param != null && param.Count > 0)
+                    {
+                        paramList = param;
+                        StatusSelectName = param.Find(p => p.Name == "StatusSelectName").Value;
+                        ReplySelectedName = param.Find(p => p.Name == "ReplySelectedName").Value;
+                        StartDateAndEndDate = param.Find(p => p.Name == "StartDate").Value + "~" + param.Find(p => p.Name == "EndDate").Value;
+                        NoticeReaderDes = param.Find(p => p.Name == "NoticeReaderDes").Value;
+                        NoticeNo = param.Find(p => p.Name == "NoticeNo").Value;
+                        NoticeTitle = param.Find(p => p.Name == "NoticeTitle").Value;
+                        GetNoticeList(param);
+                    }
 
-            });
-            MessagingCenter.Unsubscribe<string>(this, MessageConst.NOTIFI_SAVEREFRESH_GO);
-            MessagingCenter.Subscribe<string>(this, MessageConst.NOTIFI_SAVEREFRESH_GO, (c) =>
+                });
+                MessagingCenter.Unsubscribe<string>(this, MessageConst.NOTIFI_SAVEREFRESH_GO);
+                MessagingCenter.Subscribe<string>(this, MessageConst.NOTIFI_SAVEREFRESH_GO, (c) =>
+                {
+                    if (paramList != null && paramList.Count > 0)
+                        GetNoticeList(paramList);
+                });
+            }
+            catch (Exception)
             {
-                if(paramList!=null&&paramList.Count>0)
-                    GetNoticeList(paramList);
-            });
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngSearchViewModel");
+                return;
+            }
         }
         #endregion
         #region Property(s)
@@ -106,7 +114,7 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
             get { return _noticeList; }
             set { SetProperty(ref _noticeList, value); }
         }
-       private NoticeListInfoDto _selectedNoticeItem;
+        private NoticeListInfoDto _selectedNoticeItem;
         public NoticeListInfoDto SelectedNoticeItem
         {
             get { return _selectedNoticeItem; }
@@ -122,7 +130,7 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                 {
                     try
                     {
-                        await Navigation.PushAsync<NotifiMngSearchConditionViewModel>((vm, v) => vm.Init(),true);
+                        await Navigation.PushAsync<NotifiMngSearchConditionViewModel>((vm, v) => vm.Init(), true);
                     }
                     catch (Exception)
                     {
@@ -136,51 +144,59 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region Event
         private void ItemTapped()
         {
-            IsLoading = true;
-            if(SelectedNoticeItem.Status=="T")
+            try
             {
-                GoNoticeMngMadePage(SelectedNoticeItem);
-            }
-            //经销商登陆
-            else if(CommonContext.Account.UserType == "S")
-            {
-                if (SelectedNoticeItem.FeedbackYN == "Y" && SelectedNoticeItem.NeedReply == "1"&& SelectedNoticeItem.Status != "U")
-                {
-                        GoNoticeFeedbackPage(SelectedNoticeItem);
-                }
-                else if(SelectedNoticeItem.Status== "U"||SelectedNoticeItem.Status == "R")
+                IsLoading = true;
+                if (SelectedNoticeItem.Status == "T")
                 {
                     GoNoticeMngMadePage(SelectedNoticeItem);
                 }
-                else
+                //经销商登陆
+                else if (CommonContext.Account.UserType == "S")
+                {
+                    if (SelectedNoticeItem.FeedbackYN == "Y" && SelectedNoticeItem.NeedReply == "1" && SelectedNoticeItem.Status != "U")
+                    {
+                        GoNoticeFeedbackPage(SelectedNoticeItem);
+                    }
+                    else if (SelectedNoticeItem.Status == "U" || SelectedNoticeItem.Status == "R")
+                    {
+                        GoNoticeMngMadePage(SelectedNoticeItem);
+                    }
+                    else
+                    {
+                        GoNotifiMngReaderListPage(SelectedNoticeItem);
+                    }
+                }
+                //部门登陆  
+                else if (CommonContext.Account.UserType == "D")
+                {
+
+                    if (SelectedNoticeItem.NeedReply == "1" && SelectedNoticeItem.Status != "U")
+                    {
+                        GoNoticeFeedbackPage(SelectedNoticeItem);
+                    }
+                    else
+                    {
+                        GoNoticeMngMadePage(SelectedNoticeItem);
+                    }
+                }
+                else//跳转至通知对象列表
                 {
                     GoNotifiMngReaderListPage(SelectedNoticeItem);
                 }
+                IsLoading = false;
             }
-            //部门登陆  
-            else if (CommonContext.Account.UserType == "D")
+            catch (Exception)
             {
-                
-                if (SelectedNoticeItem.NeedReply == "1"&& SelectedNoticeItem.Status != "U")
-                {
-                    GoNoticeFeedbackPage(SelectedNoticeItem);
-                }
-                else 
-                {
-                    GoNoticeMngMadePage(SelectedNoticeItem);
-                }
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngSearchViewModel");
+                return;
             }
-            else//跳转至通知对象列表
-            {
-                GoNotifiMngReaderListPage(SelectedNoticeItem);
-            }
-            IsLoading = false;
         }
         private async void GoNoticeMngMadePage(NoticeListInfoDto noticeListInfoDto)
         {
             try
             {
-                await Navigation.PushAsync<NotifiMngViewModel>((vm, v) => vm.Init(noticeListInfoDto.NoticeId.ToString(), noticeListInfoDto.DisId, noticeListInfoDto.DepartId,  noticeListInfoDto.Status), true);            
+                await Navigation.PushAsync<NotifiMngViewModel>((vm, v) => vm.Init(noticeListInfoDto.NoticeId.ToString(), noticeListInfoDto.DisId, noticeListInfoDto.DepartId, noticeListInfoDto.Status), true);
             }
             catch (Exception)
             {
@@ -191,7 +207,7 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
             try
             {
                 //CommonContext.ImpPlanStatus = noticeListInfoDto.Status;
-                await Navigation.PushAsync<NotifiMngReaderListViewModel>((vm,v)=>vm.Init(noticeListInfoDto.NoticeId.ToString()),true);
+                await Navigation.PushAsync<NotifiMngReaderListViewModel>((vm, v) => vm.Init(noticeListInfoDto.NoticeId.ToString()), true);
             }
             catch (Exception)
             {

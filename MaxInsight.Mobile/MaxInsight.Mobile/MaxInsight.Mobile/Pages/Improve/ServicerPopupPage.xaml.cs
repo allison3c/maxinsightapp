@@ -3,9 +3,6 @@ using Rg.Plugins.Popup.Extensions;
 using Rg.Plugins.Popup.Pages;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
@@ -16,23 +13,41 @@ namespace MaxInsight.Mobile.Pages.Improve
         public ServicerPopupPage()
         {
             InitializeComponent();
-            List<ServerDto> serverList = new List<ServerDto>();
-            serverList.Add(new ServerDto { SId="0",SName="全部"});
-            foreach (var item in CommonContext.Account.ZionList[0].AreaList)
+            try
             {
-                serverList.AddRange(item.ServerList);
+                List<ServerDto> serverList = new List<ServerDto>();
+                serverList.Add(new ServerDto { SId = "0", SName = "全部" });
+                foreach (var item in CommonContext.Account.ZionList[0].AreaList)
+                {
+                    serverList.AddRange(item.ServerList);
+                }
+                servicerLst.ItemsSource = serverList;
+                servicerLst.HeightRequest = serverList.Count * 45;
             }
-            servicerLst.ItemsSource = serverList;
-            servicerLst.HeightRequest = serverList.Count * 45;
+            catch (Exception)
+            {
+            }
         }
         private void Cancel(object sender, EventArgs e)
         {
-            Navigation.PopPopupAsync();
+            try
+            {
+                Navigation.PopPopupAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
         public void PassServicer(object sender, ItemTappedEventArgs e)
         {
-            Navigation.PopPopupAsync();
-            MessagingCenter.Send<ServerDto>((servicerLst.SelectedItem as ServerDto), MessageConst.SERVICERSLIST_SEND);
+            try
+            {
+                Navigation.PopPopupAsync();
+                MessagingCenter.Send<ServerDto>((servicerLst.SelectedItem as ServerDto), MessageConst.SERVICERSLIST_SEND);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

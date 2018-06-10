@@ -19,14 +19,22 @@ namespace MaxInsight.Mobile.ViewModels.ReviewPlans
         public RelayCommand<ReviewPlansListDto> ItemTappedCommand { get; set; }
         public ReviewPlansIndexViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _reviewPlansService = Resolver.Resolve<IReviewPlansService>();
-            ItemTappedCommand = new RelayCommand<ReviewPlansListDto>(TappedCommand);
-            MessagingCenter.Subscribe<string>(this, MessageConst.GETREVIEWPLANSLIST, (c) =>
+            try
             {
-                SearchReviewPlansList();
-            });
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _reviewPlansService = Resolver.Resolve<IReviewPlansService>();
+                ItemTappedCommand = new RelayCommand<ReviewPlansListDto>(TappedCommand);
+                MessagingCenter.Subscribe<string>(this, MessageConst.GETREVIEWPLANSLIST, (c) =>
+                {
+                    SearchReviewPlansList();
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ReviewPlansIndexViewModel");
+                return;
+            }
         }
         #region Property
         public List<ReviewPlansListDto> _reviewPlansList;
@@ -72,7 +80,7 @@ namespace MaxInsight.Mobile.ViewModels.ReviewPlans
         {
             try
             {
-                _commonFun.ShowLoading("查询中...");              
+                _commonFun.ShowLoading("查询中...");
                 var result = await _reviewPlansService.GetReviewPlansList_Mobile(CommonContext.Account.UserId);
                 if (null != result && result.ResultCode == Module.ResultType.Success)
                 {

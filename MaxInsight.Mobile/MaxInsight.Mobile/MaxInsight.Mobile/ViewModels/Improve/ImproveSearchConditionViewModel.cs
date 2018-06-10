@@ -20,89 +20,97 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         ICommonFun _commonFun;
         public ImproveSearchConditionViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            //MessagingCenter.Unsubscribe<ImpPlanStatusDto>(this, MessageConst.PLANSTATUSLIST_SEND);
-            //MessagingCenter.Subscribe<ImpPlanStatusDto>(this, MessageConst.PLANSTATUSLIST_SEND, m =>
-            //  {
-            //      StatusSelect = m.PName;
-            //      ImpPlanStatus = m;
-            //      if (ImpPlanStatus!=null)
-            //      {
-            //          if (ImpPlanStatus.PCode=="A")
-            //          {
-            //              IsClick = false;
-            //          }
-            //          else
-            //          {
-            //              IsClick = true;
-            //          }
-            //      }
-            //  });
-            //MessagingCenter.Unsubscribe<ImpResultStatusDto>(this, MessageConst.RESULTSTATUSLIST_SEND);
-            //MessagingCenter.Subscribe<ImpResultStatusDto>(this, MessageConst.RESULTSTATUSLIST_SEND, k =>
-            //{
-            //    StatusSelect = k.RName;
-            //    ImpResultStatus = k;
-            //    if (ImpResultStatus != null)
-            //    {
-            //        if (ImpResultStatus.RCode == "A")
-            //        {
-            //            IsClick = false;
-            //        }
-            //        else
-            //        {
-            //            IsClick = true;
-            //        }
-            //    }
-            //});
-
-            MessagingCenter.Unsubscribe<ImpStatusDto>(this, MessageConst.IMPSTATUSLIST_SEND);
-            MessagingCenter.Subscribe<ImpStatusDto>(this, MessageConst.IMPSTATUSLIST_SEND, k =>
+            try
             {
-                StatusSelect = k.ImpStatusName;
-                ItemSelected = k.StatusKind;
-                ImpStatus = k;
-                if (ImpStatus != null&& ItemSelected==1)
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                //MessagingCenter.Unsubscribe<ImpPlanStatusDto>(this, MessageConst.PLANSTATUSLIST_SEND);
+                //MessagingCenter.Subscribe<ImpPlanStatusDto>(this, MessageConst.PLANSTATUSLIST_SEND, m =>
+                //  {
+                //      StatusSelect = m.PName;
+                //      ImpPlanStatus = m;
+                //      if (ImpPlanStatus!=null)
+                //      {
+                //          if (ImpPlanStatus.PCode=="A")
+                //          {
+                //              IsClick = false;
+                //          }
+                //          else
+                //          {
+                //              IsClick = true;
+                //          }
+                //      }
+                //  });
+                //MessagingCenter.Unsubscribe<ImpResultStatusDto>(this, MessageConst.RESULTSTATUSLIST_SEND);
+                //MessagingCenter.Subscribe<ImpResultStatusDto>(this, MessageConst.RESULTSTATUSLIST_SEND, k =>
+                //{
+                //    StatusSelect = k.RName;
+                //    ImpResultStatus = k;
+                //    if (ImpResultStatus != null)
+                //    {
+                //        if (ImpResultStatus.RCode == "A")
+                //        {
+                //            IsClick = false;
+                //        }
+                //        else
+                //        {
+                //            IsClick = true;
+                //        }
+                //    }
+                //});
+
+                MessagingCenter.Unsubscribe<ImpStatusDto>(this, MessageConst.IMPSTATUSLIST_SEND);
+                MessagingCenter.Subscribe<ImpStatusDto>(this, MessageConst.IMPSTATUSLIST_SEND, k =>
                 {
-                    if (ImpStatus.ImpStatusCode == "A")
+                    StatusSelect = k.ImpStatusName;
+                    ItemSelected = k.StatusKind;
+                    ImpStatus = k;
+                    if (ImpStatus != null && ItemSelected == 1)
                     {
-                        IsClick = false;
+                        if (ImpStatus.ImpStatusCode == "A")
+                        {
+                            IsClick = false;
+                        }
+                        else
+                        {
+                            IsClick = true;
+                        }
                     }
-                    else
-                    {
-                        IsClick = true;
-                    }
-                }
-            });
+                });
 
-            //所属计划
-            MessagingCenter.Unsubscribe<NameValueObject>(this, MessageConst.IMP_TASKOFPLANLIST_SELECT);
-            MessagingCenter.Subscribe<NameValueObject>(this, MessageConst.IMP_TASKOFPLANLIST_SELECT, n =>
-            {
-                PlanSelectName = n.Name;
-                PlanSelect = n.Value;
-            });
+                //所属计划
+                MessagingCenter.Unsubscribe<NameValueObject>(this, MessageConst.IMP_TASKOFPLANLIST_SELECT);
+                MessagingCenter.Subscribe<NameValueObject>(this, MessageConst.IMP_TASKOFPLANLIST_SELECT, n =>
+                {
+                    PlanSelectName = n.Name;
+                    PlanSelect = n.Value;
+                });
 
-            MessagingCenter.Unsubscribe<ServerDto>(this, MessageConst.SERVICERSLIST_SEND);
-            MessagingCenter.Subscribe<ServerDto>(this, MessageConst.SERVICERSLIST_SEND, n =>
-            {
-                ServicerSelect = n.SName;
-                Server = n;
-            });
-            MessagingCenter.Unsubscribe<DepartmentDto>(this, MessageConst.DEPARTMENTLIST_SEND);
-            MessagingCenter.Subscribe<DepartmentDto>(this, MessageConst.DEPARTMENTLIST_SEND, l =>
-            {
-                DepartmentSelect = l.DName;
-                Department = l;
-            });
+                MessagingCenter.Unsubscribe<ServerDto>(this, MessageConst.SERVICERSLIST_SEND);
+                MessagingCenter.Subscribe<ServerDto>(this, MessageConst.SERVICERSLIST_SEND, n =>
+                {
+                    ServicerSelect = n.SName;
+                    Server = n;
+                });
+                MessagingCenter.Unsubscribe<DepartmentDto>(this, MessageConst.DEPARTMENTLIST_SEND);
+                MessagingCenter.Subscribe<DepartmentDto>(this, MessageConst.DEPARTMENTLIST_SEND, l =>
+                {
+                    DepartmentSelect = l.DName;
+                    Department = l;
+                });
 
-            //来源类型
-            MessagingCenter.Unsubscribe<NameValueObject>(this, MessageConst.IMP_SOURCETYPELIST_SELECT);
-            MessagingCenter.Subscribe<NameValueObject>(this, MessageConst.IMP_SOURCETYPELIST_SELECT, n =>
+                //来源类型
+                MessagingCenter.Unsubscribe<NameValueObject>(this, MessageConst.IMP_SOURCETYPELIST_SELECT);
+                MessagingCenter.Subscribe<NameValueObject>(this, MessageConst.IMP_SOURCETYPELIST_SELECT, n =>
+                {
+                    SourceTypeName = n.Name;
+                    SourceType = n.Value;
+                });
+            }
+            catch (Exception)
             {
-                SourceTypeName = n.Name;
-                SourceType = n.Value;
-            });
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveSearchConditionViewModel");
+                return;
+            }
         }
         #region Property
         private DateTime startDate;
@@ -165,7 +173,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         //    get { return impPlanStatus; }
         //    set { SetProperty(ref impPlanStatus, value); }
         //}
-        
+
         private ImpStatusDto impStatus;
         public ImpStatusDto ImpStatus
         {
@@ -188,7 +196,7 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         public bool IsClick
         {
             get { return isClick; }
-            set { SetProperty(ref isClick,value); }
+            set { SetProperty(ref isClick, value); }
         }
 
         //所属计划
@@ -223,73 +231,89 @@ namespace MaxInsight.Mobile.ViewModels.Improve
         #region Event
         private async void PassImproveCondition()
         {
-            if (StartDate>EndDate)
+            try
             {
-                _commonFun.AlertLongText("开始日期不能大于结束日期");
+                if (StartDate > EndDate)
+                {
+                    _commonFun.AlertLongText("开始日期不能大于结束日期");
+                    return;
+                }
+                List<RequestParameter> parameterLst = new List<RequestParameter>();
+                parameterLst.Add(new RequestParameter { Name = "StatueType", Value = ItemSelected == 0 ? "A" : "R" });
+                parameterLst.Add(new RequestParameter { Name = "StatueTypeName", Value = ItemSelected == 0 ? "计划" : "结果" });
+                parameterLst.Add(new RequestParameter { Name = "StartDate", Value = StartDate.ToString("yyyy-MM-dd") });
+                parameterLst.Add(new RequestParameter { Name = "EndDate", Value = EndDate.ToString("yyyy-MM-dd") });
+                //parameterLst.Add(new RequestParameter { Name = "Statue", Value =ItemSelected==0?(ImpPlanStatus==null?"": ImpPlanStatus.PCode):(ImpResultStatus==null?"":ImpResultStatus.RCode) });
+                parameterLst.Add(new RequestParameter { Name = "Statue", Value = ImpStatus == null ? "" : ImpStatus.ImpStatusCode });
+                parameterLst.Add(new RequestParameter { Name = "StatueName", Value = StatusSelect });
+                parameterLst.Add(new RequestParameter { Name = "ItemName", Value = ItemName });
+                parameterLst.Add(new RequestParameter { Name = "PlanSelectName", Value = PlanSelectName });
+                parameterLst.Add(new RequestParameter { Name = "PlanSelect", Value = PlanSelect });
+                parameterLst.Add(new RequestParameter { Name = "SourceTypeName", Value = SourceTypeName });
+                parameterLst.Add(new RequestParameter { Name = "SourceType", Value = SourceType });
+                if (CommonContext.Account.UserType == "D")
+                {
+                    parameterLst.Add(new RequestParameter { Name = "DepartmentId", Value = CommonContext.Account.OrgDepartmentId });
+                    parameterLst.Add(new RequestParameter { Name = "ServiceId", Value = CommonContext.Account.OrgServerId });
+                    parameterLst.Add(new RequestParameter { Name = "DepartmentName", Value = CommonContext.Account.OrgDepartmentName });
+                    parameterLst.Add(new RequestParameter { Name = "ServiceName", Value = CommonContext.Account.OrgServerName });
+                }
+                else if (CommonContext.Account.UserType == "S")
+                {
+                    parameterLst.Add(new RequestParameter { Name = "DepartmentId", Value = Department == null ? "0" : Department.DId });
+                    parameterLst.Add(new RequestParameter { Name = "ServiceId", Value = CommonContext.Account.OrgServerId });
+                    parameterLst.Add(new RequestParameter { Name = "DepartmentName", Value = Department == null ? "全部" : Department.DName });
+                    parameterLst.Add(new RequestParameter { Name = "ServiceName", Value = CommonContext.Account.OrgServerName });
+
+                }
+                else
+                {
+                    parameterLst.Add(new RequestParameter { Name = "DepartmentId", Value = Department == null ? "0" : Department.DId });
+                    parameterLst.Add(new RequestParameter { Name = "ServiceId", Value = Server == null ? "0" : Server.SId });
+                    parameterLst.Add(new RequestParameter { Name = "DepartmentName", Value = Department == null ? "全部" : Department.DName });
+                    parameterLst.Add(new RequestParameter { Name = "ServiceName", Value = Server == null ? "全部" : Server.SName });
+                }
+                await Navigation.PopAsync();
+                MessagingCenter.Send<List<RequestParameter>>(parameterLst, MessageConst.PASS_IMPROVESEARCHCONDITION);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveSearchConditionViewModel");
                 return;
             }
-            List<RequestParameter> parameterLst = new List<RequestParameter>();
-            parameterLst.Add(new RequestParameter { Name = "StatueType", Value = ItemSelected == 0 ? "A" : "R" });
-            parameterLst.Add(new RequestParameter { Name = "StatueTypeName", Value = ItemSelected == 0 ? "计划" : "结果" });
-            parameterLst.Add(new RequestParameter { Name = "StartDate", Value = StartDate.ToString("yyyy-MM-dd") });
-            parameterLst.Add(new RequestParameter { Name = "EndDate", Value = EndDate.ToString("yyyy-MM-dd") });
-            //parameterLst.Add(new RequestParameter { Name = "Statue", Value =ItemSelected==0?(ImpPlanStatus==null?"": ImpPlanStatus.PCode):(ImpResultStatus==null?"":ImpResultStatus.RCode) });
-            parameterLst.Add(new RequestParameter { Name = "Statue", Value = ImpStatus == null ? "" : ImpStatus.ImpStatusCode });
-            parameterLst.Add(new RequestParameter { Name = "StatueName", Value = StatusSelect });
-            parameterLst.Add(new RequestParameter { Name = "ItemName", Value = ItemName });
-            parameterLst.Add(new RequestParameter { Name = "PlanSelectName", Value = PlanSelectName });
-            parameterLst.Add(new RequestParameter { Name = "PlanSelect", Value = PlanSelect });
-            parameterLst.Add(new RequestParameter { Name = "SourceTypeName", Value = SourceTypeName });
-            parameterLst.Add(new RequestParameter { Name = "SourceType", Value = SourceType });
-            if (CommonContext.Account.UserType == "D")
-            {
-                parameterLst.Add(new RequestParameter { Name = "DepartmentId", Value = CommonContext.Account.OrgDepartmentId });
-                parameterLst.Add(new RequestParameter { Name = "ServiceId", Value = CommonContext.Account.OrgServerId });
-                parameterLst.Add(new RequestParameter { Name = "DepartmentName", Value = CommonContext.Account.OrgDepartmentName });
-                parameterLst.Add(new RequestParameter { Name = "ServiceName", Value = CommonContext.Account.OrgServerName });
-            }
-            else if (CommonContext.Account.UserType == "S")
-            {
-                parameterLst.Add(new RequestParameter { Name = "DepartmentId", Value =Department==null?"0": Department.DId });
-                parameterLst.Add(new RequestParameter { Name = "ServiceId", Value = CommonContext.Account.OrgServerId });
-                parameterLst.Add(new RequestParameter { Name = "DepartmentName", Value =Department==null?"全部": Department.DName });
-                parameterLst.Add(new RequestParameter { Name = "ServiceName", Value = CommonContext.Account.OrgServerName });
-
-            }
-            else
-            {
-                parameterLst.Add(new RequestParameter { Name = "DepartmentId", Value =Department==null?"0": Department.DId });
-                parameterLst.Add(new RequestParameter { Name = "ServiceId", Value =Server==null?"0": Server.SId });
-                parameterLst.Add(new RequestParameter { Name = "DepartmentName", Value =Department==null? "全部" : Department.DName });
-                parameterLst.Add(new RequestParameter { Name = "ServiceName", Value =Server==null? "全部" : Server.SName });
-            }
-            await Navigation.PopAsync();
-            MessagingCenter.Send<List<RequestParameter>>(parameterLst, MessageConst.PASS_IMPROVESEARCHCONDITION);           
         }
         #endregion
         #region Init
         public void Init()
         {
-            DateTime now = DateTime.Now;
-            StartDate = new DateTime(now.Year, now.Month, 1);
-            EndDate = DateTime.Now;
-            StatusSelect = "全部";
-            ServicerSelect = "全部";
-            DepartmentSelect = "全部";
-            //ImpPlanStatus = null;
-            //ImpResultStatus = null;
-            ImpStatus = null;
-            Department = null;
-            Server = null;
-            IsClick = true;
-            //所属计划
-            PlanSelectName = "全部";
-            PlanSelect = "0";
-            //来源类型
-            SourceTypeName = "全部";
-            SourceType = "";
+            try
+            {
+                DateTime now = DateTime.Now;
+                StartDate = new DateTime(now.Year, now.Month, 1);
+                EndDate = DateTime.Now;
+                StatusSelect = "全部";
+                ServicerSelect = "全部";
+                DepartmentSelect = "全部";
+                //ImpPlanStatus = null;
+                //ImpResultStatus = null;
+                ImpStatus = null;
+                Department = null;
+                Server = null;
+                IsClick = true;
+                //所属计划
+                PlanSelectName = "全部";
+                PlanSelect = "0";
+                //来源类型
+                SourceTypeName = "全部";
+                SourceType = "";
 
-            ItemSelected = 0;
+                ItemSelected = 0;
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ImproveSearchConditionViewModel");
+                return;
+            }
         }
         #endregion
     }

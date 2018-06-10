@@ -28,27 +28,34 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
         #region Constructor
         public CustImproveViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _localScoreService = Resolver.Resolve<ILocalScoreService>();
-
-            Device.BeginInvokeOnMainThread(async () =>
+            try
             {
-                var cardType = await _localScoreService.LocalGetTypeFromHiddenCode("16");
-                if (cardType != null && cardType.Count > 0)
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _localScoreService = Resolver.Resolve<ILocalScoreService>();
+
+                Device.BeginInvokeOnMainThread(async () =>
                 {
-                    foreach (var item in cardType)
+                    var cardType = await _localScoreService.LocalGetTypeFromHiddenCode("16");
+                    if (cardType != null && cardType.Count > 0)
                     {
-                        _dIcCardType.Add(item.Value, item.Name);
+                        foreach (var item in cardType)
+                        {
+                            _dIcCardType.Add(item.Value, item.Name);
+                        }
                     }
-                }
-                else
-                {
+                    else
+                    {
 
-                }
+                    }
 
-            });
-
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->LocalRegistScoreViewModel");
+                return;
+            }
         }
         #endregion
 
@@ -334,7 +341,7 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
                        await Navigation.PopAsync();
                        MessagingCenter.Send<string>(DisId.ToString(), "SearchTaskList");
                    }
-                   catch (Exception ex)
+                   catch (Exception)
                    {
                    }
                });
@@ -345,36 +352,44 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
         #endregion
         public void Init(int disId)
         {
-            DisId = disId;
-            PId = 0;
-            PlanName = "请选择";
-            CardType = "请选择";
-            CardTypeCode = "";
-            ImproveTitle = "";
-            ImproveDesc = "";
-            PlanApproalYN = false;
-            ResultApproalYN = true;
-            Remark = "";
-            PlanFinishDate = DateTime.Now.AddDays(7);
-            ResultFinishDate = DateTime.Now.AddDays(7);
-
-            Device.BeginInvokeOnMainThread(async () =>
+            try
             {
-                var planList = await _localScoreService.SearchPlanList(DisId);
-                _dIcPlans.Clear();
-                if (planList != null && planList.Count > 0)
+                DisId = disId;
+                PId = 0;
+                PlanName = "请选择";
+                CardType = "请选择";
+                CardTypeCode = "";
+                ImproveTitle = "";
+                ImproveDesc = "";
+                PlanApproalYN = false;
+                ResultApproalYN = true;
+                Remark = "";
+                PlanFinishDate = DateTime.Now.AddDays(7);
+                ResultFinishDate = DateTime.Now.AddDays(7);
+
+                Device.BeginInvokeOnMainThread(async () =>
                 {
-                    foreach (var item in planList)
+                    var planList = await _localScoreService.SearchPlanList(DisId);
+                    _dIcPlans.Clear();
+                    if (planList != null && planList.Count > 0)
                     {
-                        _dIcPlans.Add(item.PId, item.PTitle);
+                        foreach (var item in planList)
+                        {
+                            _dIcPlans.Add(item.PId, item.PTitle);
+                        }
                     }
-                }
-                else
-                {
+                    else
+                    {
 
-                }
+                    }
 
-            });
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->CustImproveViewModel");
+                return;
+            }
         }
     }
 }

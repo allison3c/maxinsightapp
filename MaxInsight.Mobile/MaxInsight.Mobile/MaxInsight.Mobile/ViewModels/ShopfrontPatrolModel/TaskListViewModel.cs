@@ -30,165 +30,173 @@ namespace MaxInsight.Mobile
 
         public TaskListViewModel()
         {
-            _tourService = Resolver.Resolve<ITourService>();
-            _localScoreService = Resolver.Resolve<ILocalScoreService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _remoteService = Resolver.Resolve<IRemoteService>();
-
-
-            MessagingCenter.Subscribe<TourDistributorDto>(this, "SendShopItem", (obj) =>
+            try
             {
-                _disId = obj.DisId;
-                _isChecking = true;
-                _statu = "N";
-                //if (_commonHelper.IsNetWorkConnected() == true)
-                //{
-                //    GetPlans(_disId, "", "", _statu);
-                //}
-                //else
-                //{
-                GetLocalPlans(_disId);
-                //}
-            });
+                _tourService = Resolver.Resolve<ITourService>();
+                _localScoreService = Resolver.Resolve<ILocalScoreService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _remoteService = Resolver.Resolve<IRemoteService>();
 
 
-            //MessagingCenter.Subscribe<TaskListPage>(this, "RefreshTask", (obj) =>
-            //{
-            //	if (_disId != 0)
-            //	{
-            //		GetPlans(_disId);
-            //	}
-            //});
-
-            MessagingCenter.Subscribe<TaskOfPlanDto>(this, "CheckTask", async (obj) =>
-            {
-                if (_isChecking)
+                MessagingCenter.Subscribe<TourDistributorDto>(this, "SendShopItem", (obj) =>
                 {
+                    _disId = obj.DisId;
+                    _isChecking = true;
+                    _statu = "N";
                     //if (_commonHelper.IsNetWorkConnected() == true)
                     //{
-                    //    if (obj.TPStatus == "E")
-                    //    {
-                    //        if (obj.TPType == "C")
-                    //        {
-                    //            CheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
-                    //        }
-                    //        else
-                    //        {
-                    //            CheckPlan(obj.TPId, "A");
-                    //        }
-
-                    //    }
-                    //    else
-                    //    {
-                    //        var action = await _commonFun.ShowActionSheet("开始检查", "结束检查");
-
-                    //        if (action == "开始检查")
-                    //        {
-                    //            if (obj.TPType == "C")// 自定义任务
-                    //            {
-                    //                CheckCustomizedTask(obj.TPId, "S", obj.TPStatus);
-                    //            }
-                    //            else
-                    //            {
-                    //                CheckStartPlan(obj.TPId);
-                    //            }
-                    //        }
-                    //        else if (action == "结束检查")
-                    //        {
-                    //            if (obj.TPType == "C")// 自定义任务
-                    //            {
-                    //                CheckCustomizedTask(obj.TPId, "E", obj.TPStatus);
-                    //            }
-                    //            else
-                    //            {
-                    //                CheckEndPlan(obj.TPId);
-                    //            }
-
-                    //        }
-                    //    }
+                    //    GetPlans(_disId, "", "", _statu);
                     //}
+                    //else
+                    //{
+                    GetLocalPlans(_disId);
+                    //}
+                });
 
-                    // 没有网络的状态下
-                    if (obj.TPStatus == "E")
+
+                //MessagingCenter.Subscribe<TaskListPage>(this, "RefreshTask", (obj) =>
+                //{
+                //	if (_disId != 0)
+                //	{
+                //		GetPlans(_disId);
+                //	}
+                //});
+
+                MessagingCenter.Subscribe<TaskOfPlanDto>(this, "CheckTask", async (obj) =>
+                {
+                    if (_isChecking)
                     {
-                        if (obj.TPType == "C")
+                        //if (_commonHelper.IsNetWorkConnected() == true)
+                        //{
+                        //    if (obj.TPStatus == "E")
+                        //    {
+                        //        if (obj.TPType == "C")
+                        //        {
+                        //            CheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
+                        //        }
+                        //        else
+                        //        {
+                        //            CheckPlan(obj.TPId, "A");
+                        //        }
+
+                        //    }
+                        //    else
+                        //    {
+                        //        var action = await _commonFun.ShowActionSheet("开始检查", "结束检查");
+
+                        //        if (action == "开始检查")
+                        //        {
+                        //            if (obj.TPType == "C")// 自定义任务
+                        //            {
+                        //                CheckCustomizedTask(obj.TPId, "S", obj.TPStatus);
+                        //            }
+                        //            else
+                        //            {
+                        //                CheckStartPlan(obj.TPId);
+                        //            }
+                        //        }
+                        //        else if (action == "结束检查")
+                        //        {
+                        //            if (obj.TPType == "C")// 自定义任务
+                        //            {
+                        //                CheckCustomizedTask(obj.TPId, "E", obj.TPStatus);
+                        //            }
+                        //            else
+                        //            {
+                        //                CheckEndPlan(obj.TPId);
+                        //            }
+
+                        //        }
+                        //    }
+                        //}
+
+                        // 没有网络的状态下
+                        if (obj.TPStatus == "E")
                         {
-                            //CheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
-                            LocalCheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
+                            if (obj.TPType == "C")
+                            {
+                                //CheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
+                                LocalCheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
+                            }
+                            else
+                            {
+                                LocalCheckPlan(obj.TPId, "A");
+                            }
+
                         }
                         else
                         {
-                            LocalCheckPlan(obj.TPId, "A");
-                        }
+                            var action = await _commonFun.ShowActionSheet("开始检查", "结束检查");//, "取消任务");
 
-                    }
-                    else
-                    {
-                        var action = await _commonFun.ShowActionSheet("开始检查", "结束检查");//, "取消任务");
-
-                        if (action == "开始检查")
-                        {
-                            if (obj.TPType == "C")// 自定义任务
-                            {
-                                //CheckCustomizedTask(obj.TPId, "S", obj.TPStatus);
-                                LocalCheckCustomizedTask(obj.TPId, "S", obj.TPStatus);
-                            }
-                            else
-                            {
-                                LocalCheckStartPlan(obj.TPId);
-                            }
-                        }
-                        else if (action == "结束检查")
-                        {
-                            if (obj.TPType == "C")// 自定义任务
-                            {
-                                //CheckCustomizedTask(obj.TPId, "E", obj.TPStatus);
-                                LocalCheckCustomizedTask(obj.TPId, "E", obj.TPStatus);
-                            }
-                            else
-                            {
-                                LocalCheckEndPlan(obj.TPId);
-                            }
-
-                        }
-                        else if (action == "取消任务")
-                        {
-                            if (await _commonFun.Confirm("确定取消该任务吗?"))
+                            if (action == "开始检查")
                             {
                                 if (obj.TPType == "C")// 自定义任务
                                 {
-                                    LocalCheckCustomizedTask(obj.TPId, "C", obj.TPStatus);
+                                    //CheckCustomizedTask(obj.TPId, "S", obj.TPStatus);
+                                    LocalCheckCustomizedTask(obj.TPId, "S", obj.TPStatus);
                                 }
                                 else
                                 {
-                                    LocalClosePlanTask(obj.TPId);
+                                    LocalCheckStartPlan(obj.TPId);
+                                }
+                            }
+                            else if (action == "结束检查")
+                            {
+                                if (obj.TPType == "C")// 自定义任务
+                                {
+                                    //CheckCustomizedTask(obj.TPId, "E", obj.TPStatus);
+                                    LocalCheckCustomizedTask(obj.TPId, "E", obj.TPStatus);
+                                }
+                                else
+                                {
+                                    LocalCheckEndPlan(obj.TPId);
+                                }
+
+                            }
+                            else if (action == "取消任务")
+                            {
+                                if (await _commonFun.Confirm("确定取消该任务吗?"))
+                                {
+                                    if (obj.TPType == "C")// 自定义任务
+                                    {
+                                        LocalCheckCustomizedTask(obj.TPId, "C", obj.TPStatus);
+                                    }
+                                    else
+                                    {
+                                        LocalClosePlanTask(obj.TPId);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                }
-                else
-                {
-                    if (obj.TPType == "C")
-                    {
-                        CheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
                     }
                     else
                     {
-                        CheckPlan(obj.TPId, "");
+                        if (obj.TPType == "C")
+                        {
+                            CheckCustomizedTask(obj.TPId, "A", obj.TPStatus);
+                        }
+                        else
+                        {
+                            CheckPlan(obj.TPId, "");
+                        }
                     }
-                }
-            });
+                });
 
-            MessagingCenter.Subscribe<string>(this, "SearchTaskList", (disId) =>
+                MessagingCenter.Subscribe<string>(this, "SearchTaskList", (disId) =>
+                {
+                    _isChecking = true;
+                    _statu = "N";
+
+                    GetLocalPlans(Convert.ToInt32(disId));
+                });
+            }
+            catch (Exception)
             {
-                _isChecking = true;
-                _statu = "N";
-
-                GetLocalPlans(Convert.ToInt32(disId));
-            });
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
 
         private List<TaskOfPlanDto> _taskList;
@@ -271,28 +279,36 @@ namespace MaxInsight.Mobile
 
         public void Init(int disId, string startDate, string endDate, bool isCheck, string sourceTypeCode)
         {
-            _startTime = startDate;
-            _endTime = endDate;
-            // only view the record
-            //if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
-            //{
-            //    //服务商 search done
-            //    _statu = "F";
-            //    _isChecking = false;
-            //}
-            ////else if (CommonContext.Account.UserType == "Z")
-            //else
-            //{
-            //    _statu = "F";
-            //    _isChecking = false;
-            //}
+            try
+            {
+                _startTime = startDate;
+                _endTime = endDate;
+                // only view the record
+                //if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+                //{
+                //    //服务商 search done
+                //    _statu = "F";
+                //    _isChecking = false;
+                //}
+                ////else if (CommonContext.Account.UserType == "Z")
+                //else
+                //{
+                //    _statu = "F";
+                //    _isChecking = false;
+                //}
 
-            MessagingCenter.Send<string>("search", "ComeFromSeachYN");
+                MessagingCenter.Send<string>("search", "ComeFromSeachYN");
 
-            //只查看结束的任务
-            _statu = "F";
-            _isChecking = isCheck;
-            GetPlans(disId, startDate, endDate, _statu, sourceTypeCode);
+                //只查看结束的任务
+                _statu = "F";
+                _isChecking = isCheck;
+                GetPlans(disId, startDate, endDate, _statu, sourceTypeCode);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
 
         private RelayCommand<string> _startCheckCommand;
@@ -307,11 +323,27 @@ namespace MaxInsight.Mobile
 
         private void CheckStartPlan(string taskId)
         {
-            CheckPlan(taskId, "S");
+            try
+            {
+                CheckPlan(taskId, "S");
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
         private void LocalCheckStartPlan(string taskId)
         {
-            LocalCheckPlan(taskId, "S");
+            try
+            {
+                LocalCheckPlan(taskId, "S");
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
 
         private RelayCommand<string> _finishCheckCommand;
@@ -326,15 +358,39 @@ namespace MaxInsight.Mobile
 
         private void CheckEndPlan(string taskId)
         {
-            CheckPlan(taskId, "E");
+            try
+            {
+                CheckPlan(taskId, "E");
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
         private void LocalCheckEndPlan(string taskId)
         {
-            LocalCheckPlan(taskId, "E");
+            try
+            {
+                LocalCheckPlan(taskId, "E");
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
         private void LocalClosePlanTask(string taskId)
         {
-            LocalCheckPlan(taskId, "C");
+            try
+            {
+                LocalCheckPlan(taskId, "C");
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
 
         private async void CheckPlan(string taskId, string operation)
@@ -505,7 +561,6 @@ namespace MaxInsight.Mobile
 
         private async void LocalCheckCustomizedTask(string taskId, string operation, string tPStatus)
         {
-
             try
             {
                 _commonFun.ShowLoading("查询中...");
@@ -632,7 +687,15 @@ namespace MaxInsight.Mobile
         }
         private async void AddCustImprove()
         {
-            await Navigation.PushAsync<CustImproveViewModel>((vm, v) => vm.Init(_disId), true);
+            try
+            {
+                await Navigation.PushAsync<CustImproveViewModel>((vm, v) => vm.Init(_disId), true);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->TaskListViewModel");
+                return;
+            }
         }
 
         #endregion

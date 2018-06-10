@@ -11,70 +11,93 @@ namespace MaxInsight.Mobile
     {
         //ViewRecordPage viewRecordPage = null;
         CommonHelper _commonHelper;
-		
+
         ToolbarItem tbDownLoad;
         public ShopfrontMainPage()
         {
             InitializeComponent();
-			_commonHelper = Resolver.Resolve<CommonHelper>();
-
-            if (CommonContext.Account.UserType == "S") //区域:Z  服务商:S
+            try
             {
-                stackRecord.IsVisible = false;
-                listView.IsVisible = false;
-                stackViewRecord.HorizontalOptions = LayoutOptions.StartAndExpand;
-                stackImproveDistri.IsVisible = true;
-                Title = "详情查看";
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+
+                if (CommonContext.Account.UserType == "S") //区域:Z  服务商:S
+                {
+                    stackRecord.IsVisible = false;
+                    listView.IsVisible = false;
+                    stackViewRecord.HorizontalOptions = LayoutOptions.StartAndExpand;
+                    stackImproveDistri.IsVisible = true;
+                    Title = "详情查看";
+                }
+                else
+                {
+                    Title = "巡视检核";
+                }
+
+                stackRecord.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(RecordCommand)
+                });
+
+                stackViewRecord.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(ViewRecordCommand)
+                });
+
+                stackImproveDistri.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(GetImproveDitstriLstCommand)
+                });
             }
-            else
+            catch (Exception)
             {
-                Title = "巡视检核";
             }
-
-            stackRecord.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1,
-                Command = new Command(RecordCommand)
-            });
-
-            stackViewRecord.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1,
-                Command = new Command(ViewRecordCommand)
-            });
-
-            stackImproveDistri.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1,
-                Command = new Command(GetImproveDitstriLstCommand)
-            });
-
         }
 
         private void RecordCommand()
         {
-            MessagingCenter.Send<ShopfrontMainPage>(this, "GetShops");
+            try
+            {
+                MessagingCenter.Send<ShopfrontMainPage>(this, "GetShops");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private async void ViewRecordCommand()
         {
-			if (!_commonHelper.IsNetWorkConnected())
-			{
-				await DisplayAlert("温馨提示", "请在有网络时访问。", "确定");
-				return;
-			}
-            var viewRecordPage = ViewFactory.CreatePage<ViewRecordViewModel, ViewRecordPage>() as Page;
-
-            if (!Navigation.NavigationStack.Contains(viewRecordPage))
+            try
             {
-                await Navigation.PushAsync(viewRecordPage, true);
-                MessagingCenter.Send<string>("", "InitParameter");
+                if (!_commonHelper.IsNetWorkConnected())
+                {
+                    await DisplayAlert("温馨提示", "请在有网络时访问。", "确定");
+                    return;
+                }
+                var viewRecordPage = ViewFactory.CreatePage<ViewRecordViewModel, ViewRecordPage>() as Page;
+
+                if (!Navigation.NavigationStack.Contains(viewRecordPage))
+                {
+                    await Navigation.PushAsync(viewRecordPage, true);
+                    MessagingCenter.Send<string>("", "InitParameter");
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         private void GetImproveDitstriLstCommand()
         {
-            MessagingCenter.Send<string>("", "GetImproveDitstriLst");
+            try
+            {
+                MessagingCenter.Send<string>("", "GetImproveDitstriLst");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override void OnAppearing()
@@ -90,18 +113,24 @@ namespace MaxInsight.Mobile
             //	MessagingCenter.Send<ShopfrontMainPage>(this, "GetShops");
             //}
             base.OnAppearing();
-            if (CommonContext.Account.UserType == "Z")
+            try
             {
-                if (tbDownLoad == null)
+                if (CommonContext.Account.UserType == "Z")
                 {
-                    tbDownLoad = new ToolbarItem();
-                    tbDownLoad.Text = "刷新";
-                    tbDownLoad.Command = (this.BindingContext as ShopfrontMainPageViewModel).DownLoadTaskCommand;
+                    if (tbDownLoad == null)
+                    {
+                        tbDownLoad = new ToolbarItem();
+                        tbDownLoad.Text = "刷新";
+                        tbDownLoad.Command = (this.BindingContext as ShopfrontMainPageViewModel).DownLoadTaskCommand;
+                    }
+                    if (!this.ToolbarItems.Contains(tbDownLoad))
+                    {
+                        this.ToolbarItems.Add(tbDownLoad);
+                    }
                 }
-                if (!this.ToolbarItems.Contains(tbDownLoad))
-                {
-                    this.ToolbarItems.Add(tbDownLoad);
-                }
+            }
+            catch (Exception)
+            {
             }
         }
 

@@ -19,10 +19,17 @@ namespace MaxInsight.Mobile.ViewModels.ReviewPlans
 
         public ReviewPlansViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _reviewPlansService = Resolver.Resolve<IReviewPlansService>();
-
+            try
+            {
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _reviewPlansService = Resolver.Resolve<IReviewPlansService>();
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ReviewPlansViewModel");
+                return;
+            }
         }
         #region properties
         public string _name;
@@ -128,8 +135,16 @@ namespace MaxInsight.Mobile.ViewModels.ReviewPlans
         #region Mothod
         public void Init(string pid)
         {
-            ReviewPlansContent = "";
-            GetPlansDtlList(pid);
+            try
+            {
+                ReviewPlansContent = "";
+                GetPlansDtlList(pid);
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ReviewPlansViewModel");
+                return;
+            }
         }
 
         public async void GetPlansDtlList(string Id)
@@ -192,8 +207,6 @@ namespace MaxInsight.Mobile.ViewModels.ReviewPlans
         {
             try
             {
-
-
                 if (ReviewPlansContent == "")
                 {
                     _commonFun.AlertLongText("请填写审核意见");
@@ -240,8 +253,6 @@ namespace MaxInsight.Mobile.ViewModels.ReviewPlans
         {
             try
             {
-
-
                 if (ReviewPlansContent == "")
                 {
                     _commonFun.AlertLongText("请填写审核意见");

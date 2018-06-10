@@ -21,16 +21,24 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
 
         public CustomizedTaskViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _tourService = Resolver.Resolve<ITourService>();
-            _localScoreService = Resolver.Resolve<ILocalScoreService>();
-
-
-            MessagingCenter.Subscribe<string>(this, "TaskSearchParam", (param) =>
+            try
             {
-                fromSeachYN = param;
-            });
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _tourService = Resolver.Resolve<ITourService>();
+                _localScoreService = Resolver.Resolve<ILocalScoreService>();
+
+
+                MessagingCenter.Subscribe<string>(this, "TaskSearchParam", (param) =>
+                {
+                    fromSeachYN = param;
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->CustImproveViewModel");
+                return;
+            }
         }
 
         #region properties
@@ -77,14 +85,22 @@ namespace MaxInsight.Mobile.ViewModels.ShopfrontPatrolModel
         #region methods
         public void Init(CustomizedTaskDto dto, string tPStatus)
         {
-            CustomizedTask = dto;
-            if (tPStatus == "E" && fromSeachYN == "search")//结束
+            try
             {
-                VisibleYN = "N";
+                CustomizedTask = dto;
+                if (tPStatus == "E" && fromSeachYN == "search")//结束
+                {
+                    VisibleYN = "N";
+                }
+                else
+                {
+                    VisibleYN = "Y";
+                }
             }
-            else
+            catch (Exception)
             {
-                VisibleYN = "Y";
+                _commonFun.AlertLongText("操作异常,请重试。-->CustomizedTaskViewModel");
+                return;
             }
         }
 

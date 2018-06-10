@@ -26,38 +26,45 @@ namespace MaxInsight.Mobile
 
         public ShopfrontMainPageViewModel()
         {
-            _tourService = Resolver.Resolve<ITourService>();
-            _localScoreService = Resolver.Resolve<ILocalScoreService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            ItemTappedCommand = new RelayCommand<TourDistributorDto>(TappedCommand);
-            _improveService = Resolver.Resolve<IImproveService>();
-
-            MessagingCenter.Subscribe<ShopfrontMainPage>(this, "GetShops", (sender) =>
+            try
             {
-                canGo = false;
-                Task.Run(async () =>
+                _tourService = Resolver.Resolve<ITourService>();
+                _localScoreService = Resolver.Resolve<ILocalScoreService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                ItemTappedCommand = new RelayCommand<TourDistributorDto>(TappedCommand);
+                _improveService = Resolver.Resolve<IImproveService>();
+
+                MessagingCenter.Subscribe<ShopfrontMainPage>(this, "GetShops", (sender) =>
                 {
-                    await GetShops();
+                    canGo = false;
+                    Task.Run(async () =>
+                    {
+                        await GetShops();
+                    });
                 });
-            });
-            MessagingCenter.Subscribe<string>(this, "GetImproveDitstriLst", async (arg) =>
-            {
-                await GetImproveDitstriLst(arg);
-            });
-
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                if (CommonContext.Account.UserType == "S")
+                MessagingCenter.Subscribe<string>(this, "GetImproveDitstriLst", async (arg) =>
                 {
-                    await GetImproveDitstriLst("");
-                }
-                else
-                {
-                    await GetShops();
-                }
-            });
+                    await GetImproveDitstriLst(arg);
+                });
 
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    if (CommonContext.Account.UserType == "S")
+                    {
+                        await GetImproveDitstriLst("");
+                    }
+                    else
+                    {
+                        await GetShops();
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ShopfrontMainPageViewModel");
+                return;
+            }
         }
 
         private async Task GetShops()
@@ -240,7 +247,15 @@ namespace MaxInsight.Mobile
 
         private async void DownLoadTask()
         {
-            await MasterDataDownloadHelper.DownloadData();
+            try
+            {
+                await MasterDataDownloadHelper.DownloadData();
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->ShopfrontMainPageViewModel");
+                return;
+            }
         }
     }
 }

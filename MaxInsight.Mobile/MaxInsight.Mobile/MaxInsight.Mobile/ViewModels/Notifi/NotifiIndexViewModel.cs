@@ -20,65 +20,73 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         public RelayCommand<FeedBackListDto> FeedItemTappedCommand { get; set; }
         public NotifiIndexViewModel()
         {
-            _notifiMngService = Resolver.Resolve<INotifiMngService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            ItemTappedCommand = new RelayCommand<NeedApprovalDto>(TappedCommand);
-            FeedItemTappedCommand = new RelayCommand<FeedBackListDto>(FeedTappedCommand);
-            MessagingCenter.Subscribe<NotifiIndexPage>(
-                this,
-                MessageConst.NOTICE_MAKEDATA_GET,
-                (c) =>
-                {
-                    //GetNofifiListOfMake();
-                });
-
-            if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+            try
             {
+                _notifiMngService = Resolver.Resolve<INotifiMngService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                ItemTappedCommand = new RelayCommand<NeedApprovalDto>(TappedCommand);
+                FeedItemTappedCommand = new RelayCommand<FeedBackListDto>(FeedTappedCommand);
                 MessagingCenter.Subscribe<NotifiIndexPage>(
                     this,
-                    MessageConst.NOTICE_FEEDBDATA_GET,
+                    MessageConst.NOTICE_MAKEDATA_GET,
                     (c) =>
                     {
-                        GetNofifiListOfFeedB();
+                        //GetNofifiListOfMake();
                     });
-                MessagingCenter.Subscribe<string>(
+
+                if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+                {
+                    MessagingCenter.Subscribe<NotifiIndexPage>(
+                        this,
+                        MessageConst.NOTICE_FEEDBDATA_GET,
+                        (c) =>
+                        {
+                            GetNofifiListOfFeedB();
+                        });
+                    MessagingCenter.Subscribe<string>(
+                        this,
+                        MessageConst.NOTICE_FEEDBACKDATA_GET,
+                        (c) =>
+                        {
+                            GetNofifiListOfFeedB();
+                        });
+                }
+                else
+                {
+                    //获取待审核的通知列表
+                    MessagingCenter.Subscribe<string>(
                     this,
-                    MessageConst.NOTICE_FEEDBACKDATA_GET,
+                    MessageConst.NOTICE_APPROALDATA_GET,
                     (c) =>
                     {
-                        GetNofifiListOfFeedB();
+                        GetNofifiListOfApproal();
                     });
-            }
-            else
-            {
-                //获取待审核的通知列表
+
+                    GetNofifiListOfApproal();
+                }
+
                 MessagingCenter.Subscribe<string>(
                 this,
-                MessageConst.NOTICE_APPROALDATA_GET,
+                "noticeApproalSearch1",
                 (c) =>
                 {
                     GetNofifiListOfApproal();
                 });
 
-                GetNofifiListOfApproal();
+                MessagingCenter.Subscribe<string>(
+                 this,
+                 "noticeFeedBackList",
+                 (c) =>
+                 {
+                     GetNofifiListOfFeedB();
+                 });
             }
-
-            MessagingCenter.Subscribe<string>(
-            this,
-            "noticeApproalSearch1",
-            (c) =>
+            catch (Exception)
             {
-                GetNofifiListOfApproal();
-            });
-
-          MessagingCenter.Subscribe<string>(
-           this,
-           "noticeFeedBackList",
-           (c) =>
-           {
-               GetNofifiListOfFeedB();
-           });
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiIndexViewModel");
+                return;
+            }
         }
         #region Properties
 
@@ -137,45 +145,53 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region searchData
         public async void GetNofifiListOfMake()
         {
-            if (_commonHelper.IsNetWorkConnected() == true)
+            try
             {
-                try
+                if (_commonHelper.IsNetWorkConnected() == true)
                 {
-                    _commonFun.ShowLoading("查询中...");
-                    var result = await _notifiMngService.GetNotifiListOfMake("NoticeList", "20160901", "20160930", CommonContext.Account.UserId, "1", "", "T");
-                    if (result.ResultCode == Module.ResultType.Success)
+                    try
                     {
-                        _commonFun.HideLoading();
-                        NotifiListOfMakeData = CommonHelper.DecodeString<List<NoticeDto>>(result.Body.Replace("\r\n", ""));
-                        if (NotifiListOfMakeData == null || NotifiListOfMakeData.Count < 1)
+                        _commonFun.ShowLoading("查询中...");
+                        var result = await _notifiMngService.GetNotifiListOfMake("NoticeList", "20160901", "20160930", CommonContext.Account.UserId, "1", "", "T");
+                        if (result.ResultCode == Module.ResultType.Success)
                         {
-                            _commonFun.AlertLongText("无制作中的任务通知。");
+                            _commonFun.HideLoading();
+                            NotifiListOfMakeData = CommonHelper.DecodeString<List<NoticeDto>>(result.Body.Replace("\r\n", ""));
+                            if (NotifiListOfMakeData == null || NotifiListOfMakeData.Count < 1)
+                            {
+                                _commonFun.AlertLongText("无制作中的任务通知。");
+                            }
+                        }
+                        else
+                        {
+                            _commonFun.HideLoading();
+                            _commonFun.AlertLongText("查询失败，请重试。 " + result.Msg);
                         }
                     }
-                    else
+                    catch (OperationCanceledException)
                     {
                         _commonFun.HideLoading();
-                        _commonFun.AlertLongText("查询失败，请重试。 " + result.Msg);
+                        _commonFun.AlertLongText("请求超时。");
+                    }
+                    catch (Exception)
+                    {
+                        _commonFun.HideLoading();
+                        _commonFun.AlertLongText("查询异常，请重试。");
+                    }
+                    finally
+                    {
+                        _commonFun.HideLoading();
                     }
                 }
-                catch (OperationCanceledException)
+                else
                 {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("请求超时。");
-                }
-                catch (Exception)
-                {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("查询异常，请重试。");
-                }
-                finally
-                {
-                    _commonFun.HideLoading();
+                    _commonFun.AlertLongText("网络连接异常。");
                 }
             }
-            else
+            catch (Exception)
             {
-                _commonFun.AlertLongText("网络连接异常。");
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiIndexViewModel");
+                return;
             }
         }
 

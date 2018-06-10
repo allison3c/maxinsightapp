@@ -29,27 +29,35 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region Constructor
         public NotifiFeedbackViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _notifiMngService = Resolver.Resolve<INotifiMngService>();
-            _tourService = Resolver.Resolve<ITourService>();
-
-            //Device.BeginInvokeOnMainThread(() =>
-            //{
-            //    GetNoticeApproalDetail(NotifiContentItem.NoticeReaderId);
-
-            //});
-
-
-            MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.CASEATTACH_DELETE);
-
-            MessagingCenter.Subscribe<string>(
-            this,
-            MessageConst.CASEATTACH_DELETE,
-            (SeqNo) =>
+            try
             {
-                DeleteCaseAttach(SeqNo);
-            });
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _notifiMngService = Resolver.Resolve<INotifiMngService>();
+                _tourService = Resolver.Resolve<ITourService>();
+
+                //Device.BeginInvokeOnMainThread(() =>
+                //{
+                //    GetNoticeApproalDetail(NotifiContentItem.NoticeReaderId);
+
+                //});
+
+
+                MessagingCenter.Unsubscribe<List<RequestParameter>>(this, MessageConst.CASEATTACH_DELETE);
+
+                MessagingCenter.Subscribe<string>(
+                this,
+                MessageConst.CASEATTACH_DELETE,
+                (SeqNo) =>
+                {
+                    DeleteCaseAttach(SeqNo);
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiFeedbackViewModel");
+                return;
+            }
         }
         #endregion
         public List<AttachDto> AttachList = new List<AttachDto>();
@@ -231,140 +239,148 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         }
         public async void UploadFile(string fileType)
         {
-            await CrossMedia.Current.Initialize();
-            _mediaFile = null;
-            string _path = "";
-            Stream _stream = null;
-
-            if (fileType == "V")
+            try
             {
-                if (!CrossMedia.Current.IsPickVideoSupported)
-                {
-                    _commonFun.AlertLongText("此设备不支持视频上传");
-                    return;
-                }
-                var action = await _commonFun.ShowActionSheet("从相册", "录制");
+                await CrossMedia.Current.Initialize();
+                _mediaFile = null;
+                string _path = "";
+                Stream _stream = null;
 
-                IsLoading = true;
-                if (action == "从相册")
+                if (fileType == "V")
                 {
-                    _mediaFile = await CrossMedia.Current.PickVideoAsync();
-                }
-                else if (action == "录制")
-                {
-                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
+                    if (!CrossMedia.Current.IsPickVideoSupported)
                     {
+                        _commonFun.AlertLongText("此设备不支持视频上传");
                         return;
                     }
-                    _mediaFile = await CrossMedia.Current.TakeVideoAsync(new Plugin.Media.Abstractions.StoreVideoOptions
-                    {
-                        Directory = "RMMT",
-                        Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
-                                       + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
-                    });
-                }
-            }
-            else if (fileType == "P")
-            {
-                if (!CrossMedia.Current.IsPickPhotoSupported)
-                {
-                    _commonFun.AlertLongText("此设备不支持图片上传");
-                    return;
-                }
-                var action = await _commonFun.ShowActionSheet("从相册", "拍照");
-                IsLoading = true;
+                    var action = await _commonFun.ShowActionSheet("从相册", "录制");
 
-                if (action == "从相册")
-                {
-                    _mediaFile = await CrossMedia.Current.PickPhotoAsync();
-                }
-                else if (action == "拍照")
-                {
-                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-                    {
-                        return;
-                    }
-                    _mediaFile = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-                    {
-                        Directory = "RMMT",
-                        Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
-                                       + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
-                    });
-                }
-            }
-            else
-            {
-                try
-                {
                     IsLoading = true;
-                    FileData filedata = new FileData();
-                    filedata = await CrossFilePicker.Current.PickFile();
-                    if (filedata == null)
+                    if (action == "从相册")
+                    {
+                        _mediaFile = await CrossMedia.Current.PickVideoAsync();
+                    }
+                    else if (action == "录制")
+                    {
+                        if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakeVideoSupported)
+                        {
+                            return;
+                        }
+                        _mediaFile = await CrossMedia.Current.TakeVideoAsync(new Plugin.Media.Abstractions.StoreVideoOptions
+                        {
+                            Directory = "RMMT",
+                            Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
+                                           + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
+                        });
+                    }
+                }
+                else if (fileType == "P")
+                {
+                    if (!CrossMedia.Current.IsPickPhotoSupported)
+                    {
+                        _commonFun.AlertLongText("此设备不支持图片上传");
+                        return;
+                    }
+                    var action = await _commonFun.ShowActionSheet("从相册", "拍照");
+                    IsLoading = true;
+
+                    if (action == "从相册")
+                    {
+                        _mediaFile = await CrossMedia.Current.PickPhotoAsync();
+                    }
+                    else if (action == "拍照")
+                    {
+                        if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                        {
+                            return;
+                        }
+                        _mediaFile = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                        {
+                            Directory = "RMMT",
+                            Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
+                                           + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
+                        });
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        IsLoading = true;
+                        FileData filedata = new FileData();
+                        filedata = await CrossFilePicker.Current.PickFile();
+                        if (filedata == null)
+                        {
+                            IsLoading = false;
+                            return;
+                        }
+                        string filename = filedata.FileName;
+                        byte[] file = filedata.DataArray;
+                        _stream = new MemoryStream(file);
+                        _path = filename;
+                    }
+                    catch (Exception)
                     {
                         IsLoading = false;
-                        return;
                     }
-                    string filename = filedata.FileName;
-                    byte[] file = filedata.DataArray;
-                    _stream = new MemoryStream(file);
-                    _path = filename;
                 }
-                catch (Exception)
+
+                if (_mediaFile != null)
                 {
+                    _stream = _mediaFile.GetStream();
+                    _path = _mediaFile.Path;
+                }
+                if (_stream == null)
+                {
+                    IsLoading = false;
+                    return;
+                }
+                if (_commonHelper.IsNetWorkConnected() == true)
+                {
+                    try
+                    {
+                        string filename = _path.Substring(_path.LastIndexOf("/") + 1);
+                        var result = await _tourService.UploadFiletoOss(_stream, filename, _path);
+
+                        if (result != null)
+                        {
+                            AttachList.Add((JsonConvert.DeserializeObject<AttachDto>(result.Body)));
+                            List<AttachDto> resultList = new List<AttachDto>();
+                            resultList.AddRange(AttachList);
+                            int i = 1;
+                            resultList.Select(c => { c.SeqNo = i++; return c; }).ToList();
+                            CaseAttachList = resultList;
+                            LstHeight = CaseAttachList.Count * _lstRowHeight;
+                        }
+                        else
+                        {
+                            _commonFun.AlertLongText("上传失败，请重试。 " + result.Msg);
+                        }
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        _commonFun.AlertLongText("请求超时。");
+                    }
+                    catch (Exception)
+                    {
+                        _commonFun.AlertLongText("上传异常，请重试。");
+                    }
+                    finally
+                    {
+                        IsLoading = false;
+                    }
+                }
+                else
+                {
+                    _mediaFile.Dispose();
+                    _commonFun.AlertLongText("网络连接异常。");
                     IsLoading = false;
                 }
             }
-
-            if (_mediaFile != null)
+            catch (Exception)
             {
-                _stream = _mediaFile.GetStream();
-                _path = _mediaFile.Path;
-            }
-            if (_stream == null)
-            {
-                IsLoading = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiFeedbackViewModel");
                 return;
-            }
-            if (_commonHelper.IsNetWorkConnected() == true)
-            {
-                try
-                {
-                    string filename = _path.Substring(_path.LastIndexOf("/") + 1);
-                    var result = await _tourService.UploadFiletoOss(_stream, filename,_path);
-
-                    if (result != null)
-                    {
-                        AttachList.Add((JsonConvert.DeserializeObject<AttachDto>(result.Body)));
-                        List<AttachDto> resultList = new List<AttachDto>();
-                        resultList.AddRange(AttachList);
-                        int i = 1;
-                        resultList.Select(c => { c.SeqNo = i++; return c; }).ToList();
-                        CaseAttachList = resultList;
-                        LstHeight = CaseAttachList.Count * _lstRowHeight;
-                    }
-                    else
-                    {
-                        _commonFun.AlertLongText("上传失败，请重试。 " + result.Msg);
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    _commonFun.AlertLongText("请求超时。");
-                }
-                catch (Exception)
-                {
-                    _commonFun.AlertLongText("上传异常，请重试。");
-                }
-                finally
-                {
-                    IsLoading = false;
-                }
-            }
-            else
-            {
-                _mediaFile.Dispose();
-                _commonFun.AlertLongText("网络连接异常。");
-                IsLoading = false;
             }
         }
         public void DeleteCaseAttach(string SeqNo)
@@ -432,8 +448,6 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         {
             try
             {
-
-
                 if (FeedbackContent == "")
                 {
                     _commonFun.AlertLongText("请填写反馈内容");
@@ -470,8 +484,6 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                 {
                     _commonFun.AlertLongText("保存时服务出现错误,,请重试");
                 }
-
-
             }
             catch (OperationCanceledException)
             {

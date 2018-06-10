@@ -69,7 +69,13 @@ namespace MaxInsight.Mobile.Droid.Helper
         /// </summary>
         public async void Alert(string msg, string title)
         {
-            await UserDialogs.Instance.AlertAsync(msg, null, "关闭");
+            try
+            {
+                await UserDialogs.Instance.AlertAsync(msg, null, "关闭");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>
@@ -79,54 +85,92 @@ namespace MaxInsight.Mobile.Droid.Helper
         /// <param name="content"></param>
         public void AlertLongText(string msg)
         {
-            UserDialogs.Instance.Alert(msg, null, "关闭");
+            try
+            {
+                UserDialogs.Instance.Alert(msg, null, "关闭");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void ShowToast(string msg)
         {
-            UserDialogs.Instance.Toast(new ToastConfig(msg).SetDuration(TimeSpan.FromSeconds(3)).SetAction(x => x.SetText("确定")));
+            try
+            {
+                UserDialogs.Instance.Toast(new ToastConfig(msg).SetDuration(TimeSpan.FromSeconds(3)).SetAction(x => x.SetText("确定")));
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public async Task<bool> Confirm(string msg)
         {
-            var result = await UserDialogs.Instance.ConfirmAsync(msg, "温馨提示", "确定", "取消");
+            try
+            {
+                var result = await UserDialogs.Instance.ConfirmAsync(msg, "温馨提示", "确定", "取消");
 
-            return result;
+                return result;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<bool> NoCancelConfirm(string msg)
         {
-            var result = await UserDialogs.Instance.ConfirmAsync(msg, "温馨提示", "确定", string.Empty);
+            try
+            {
+                var result = await UserDialogs.Instance.ConfirmAsync(msg, "温馨提示", "确定", string.Empty);
 
-            return result;
+                return result;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<string> ShowPromt(string title)
         {
-            PromptConfig config = new PromptConfig()
+            try
             {
-                CancelText = "取消",
-                InputType = InputType.Default,
-                IsCancellable = true,
-                OkText = "确定",
-                Title = title,
-                Text = ""
-            };
-            var result = await UserDialogs.Instance.PromptAsync(config);
-            if (result.Ok)
+                PromptConfig config = new PromptConfig()
+                {
+                    CancelText = "取消",
+                    InputType = InputType.Default,
+                    IsCancellable = true,
+                    OkText = "确定",
+                    Title = title,
+                    Text = ""
+                };
+                var result = await UserDialogs.Instance.PromptAsync(config);
+                if (result.Ok)
+                {
+                    return result.Text;
+                }
+            }
+            catch (Exception)
             {
-                return result.Text;
             }
             return "Cancel";
         }
 
         public async Task<string> ShowActionSheetAny(params string[] buttons)
         {
-            var result = await UserDialogs.Instance.ActionSheetAsync("请选择", "取消", null, null, buttons);
-
-            if (result != null)
+            try
             {
-                return result;
+                var result = await UserDialogs.Instance.ActionSheetAsync("请选择", "取消", null, null, buttons);
+
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            catch (Exception)
+            {
             }
 
             return string.Empty;
@@ -134,26 +178,30 @@ namespace MaxInsight.Mobile.Droid.Helper
 
         public async Task<string> ShowActionSheet(string action1, string action2, string action3 = "")
         {
-
-            if (!string.IsNullOrEmpty(action3))
+            try
             {
-                var result = await UserDialogs.Instance.ActionSheetAsync("请选择", "取消", null, null, action1, action2, action3);
-
-                if (result != null)
+                if (!string.IsNullOrEmpty(action3))
                 {
-                    return result;
+                    var result = await UserDialogs.Instance.ActionSheetAsync("请选择", "取消", null, null, action1, action2, action3);
+
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    var result = await UserDialogs.Instance.ActionSheetAsync("请选择", "取消", null, null, action1, action2);
+
+                    if (result != null)
+                    {
+                        return result;
+                    }
                 }
             }
-            else
+            catch (Exception)
             {
-                var result = await UserDialogs.Instance.ActionSheetAsync("请选择", "取消", null, null, action1, action2);
-
-                if (result != null)
-                {
-                    return result;
-                }
             }
-
             return string.Empty;
         }
         public Stream GetFileStream(byte[] imageData, int width, int height)
@@ -204,27 +252,46 @@ namespace MaxInsight.Mobile.Droid.Helper
 
         private static byte[] ResizeImageAndroid(byte[] imageData, float width, float height)
         {
-            // Load the bitmap
-            Bitmap originalImage = BitmapFactory.DecodeByteArray(imageData, 0, imageData.Length);
-            Bitmap resizedImage = Bitmap.CreateScaledBitmap(originalImage, originalImage.Width, originalImage.Height, false);
-
-            using (MemoryStream ms = new MemoryStream())
+            try
             {
-                resizedImage.Compress(Bitmap.CompressFormat.Jpeg, 50, ms);
-                return ms.ToArray();
+                // Load the bitmap
+                Bitmap originalImage = BitmapFactory.DecodeByteArray(imageData, 0, imageData.Length);
+                Bitmap resizedImage = Bitmap.CreateScaledBitmap(originalImage, originalImage.Width, originalImage.Height, false);
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    resizedImage.Compress(Bitmap.CompressFormat.Jpeg, 50, ms);
+                    return ms.ToArray();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
         public void SetCach(string key, string value)
         {
-            CrossSecureStorage.Current.SetValue(key, value);
+            try
+            {
+                CrossSecureStorage.Current.SetValue(key, value);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public string GetCach(string key)
         {
-            if (CrossSecureStorage.Current.HasKey(key))
+            try
             {
-                return CrossSecureStorage.Current.GetValue(key);
+                if (CrossSecureStorage.Current.HasKey(key))
+                {
+                    return CrossSecureStorage.Current.GetValue(key);
+                }
+            }
+            catch (Exception)
+            {
             }
 
             return string.Empty;
@@ -232,15 +299,27 @@ namespace MaxInsight.Mobile.Droid.Helper
 
         public void DeleteCach(string key)
         {
-            if (CrossSecureStorage.Current.HasKey(key))
+            try
             {
-                CrossSecureStorage.Current.DeleteKey(key);
+                if (CrossSecureStorage.Current.HasKey(key))
+                {
+                    CrossSecureStorage.Current.DeleteKey(key);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         public void JPushSetAlias(string aliasName)
         {
-            JPushInterface.SetAlias(Application.Context, aliasName, new TagAliasCallback());
+            try
+            {
+                JPushInterface.SetAlias(Application.Context, aliasName, new TagAliasCallback());
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void ExistSystem()
@@ -265,61 +344,73 @@ namespace MaxInsight.Mobile.Droid.Helper
         /// <returns></returns>
         public void DownLoadFile(string url, string exterName)
         {
-            // Instantiate the builder and set notification elements:
-            builder = new Notification.Builder(Application.Context.ApplicationContext);
-            // Build the notification:
-            notification = builder.Build();
-            contentView = new RemoteViews(Application.Context.PackageName, Resource.Layout.progress_notify);
-            // Get the notification manager:
-            notificationManager =
-                Application.Context.ApplicationContext.GetSystemService(Context.NotificationService) as NotificationManager;
-
-
-            string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            string localFilename = DateTime.Now.ToString("yyyyMMddHHmmss") + exterName;
-
-            fileLocalPath = System.IO.Path.Combine(GetPath().Path, localFilename);
-            WebClient webClient = new WebClient();
-
             try
             {
-                webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
-                webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
-                Task.Factory.StartNew(() => { webClient.DownloadFileAsync(new Uri(url), fileLocalPath); });
+                // Instantiate the builder and set notification elements:
+                builder = new Notification.Builder(Application.Context.ApplicationContext);
+                // Build the notification:
+                notification = builder.Build();
+                contentView = new RemoteViews(Application.Context.PackageName, Resource.Layout.progress_notify);
+                // Get the notification manager:
+                notificationManager =
+                    Application.Context.ApplicationContext.GetSystemService(Context.NotificationService) as NotificationManager;
 
+
+                string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                string localFilename = DateTime.Now.ToString("yyyyMMddHHmmss") + exterName;
+
+                fileLocalPath = System.IO.Path.Combine(GetPath().Path, localFilename);
+                WebClient webClient = new WebClient();
+
+                try
+                {
+                    webClient.DownloadProgressChanged += WebClient_DownloadProgressChanged;
+                    webClient.DownloadFileCompleted += WebClient_DownloadFileCompleted;
+                    Task.Factory.StartNew(() => { webClient.DownloadFileAsync(new Uri(url), fileLocalPath); });
+
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch (System.Exception)
+                {
+                    return;
+                }
             }
-            catch (OperationCanceledException)
+            catch (Exception)
             {
-                return;
-            }
-            catch (System.Exception)
-            {
-                return;
             }
         }
         public void DownLoadFileFromOss(string url, string fileName, string localFile)
         {
-            string localFilename = fileName;
-
-            fileLocalPath = System.IO.Path.Combine(GetImagePath(localFile), localFilename);
-            WebClient webClient = new WebClient();
-
             try
             {
-                ShowLoading("");
-                webClient.DownloadFileCompleted += WebClient_DownloadImageCompleted;
-                Task t = Task.Factory.StartNew(() =>
+                string localFilename = fileName;
+
+                fileLocalPath = System.IO.Path.Combine(GetImagePath(localFile), localFilename);
+                WebClient webClient = new WebClient();
+
+                try
                 {
-                    webClient.DownloadFileAsync(new Uri(url), fileLocalPath);
-                });
+                    ShowLoading("");
+                    webClient.DownloadFileCompleted += WebClient_DownloadImageCompleted;
+                    Task t = Task.Factory.StartNew(() =>
+                    {
+                        webClient.DownloadFileAsync(new Uri(url), fileLocalPath);
+                    });
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch (System.Exception)
+                {
+                    return;
+                }
             }
-            catch (OperationCanceledException)
+            catch (Exception)
             {
-                return;
-            }
-            catch (System.Exception)
-            {
-                return;
             }
         }
         private void WebClient_DownloadImageCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
@@ -351,76 +442,101 @@ namespace MaxInsight.Mobile.Droid.Helper
         }
         private void WebClient_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            //install app
-            if (e.Cancelled)
+            try
             {
-                Toast.MakeText(Application.Context.ApplicationContext, e.Error.Message, ToastLength.Long).Show();
-                return;
+                //install app
+                if (e.Cancelled)
+                {
+                    Toast.MakeText(Application.Context.ApplicationContext, e.Error.Message, ToastLength.Long).Show();
+                    return;
+                }
+
+                notificationManager.CancelAll();
+                notificationManager.Dispose();
+
+                Intent intent = new Intent(Intent.ActionView);
+                intent.SetFlags(ActivityFlags.NewTask);
+                intent.SetDataAndType(Android.Net.Uri.Parse(@"file://" + fileLocalPath), "application/vnd.android.package-archive");
+                Application.Context.ApplicationContext.StartActivity(intent);
             }
-
-            notificationManager.CancelAll();
-            notificationManager.Dispose();
-
-            Intent intent = new Intent(Intent.ActionView);
-            intent.SetFlags(ActivityFlags.NewTask);
-            intent.SetDataAndType(Android.Net.Uri.Parse(@"file://" + fileLocalPath), "application/vnd.android.package-archive");
-            Application.Context.ApplicationContext.StartActivity(intent);
+            catch (Exception)
+            {
+            }
         }
 
         private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            if (e.ProgressPercentage % 10 == 0)
+            try
             {
-                Notify(e.ProgressPercentage);
+                if (e.ProgressPercentage % 10 == 0)
+                {
+                    Notify(e.ProgressPercentage);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         public void DownLoadFileFromOssForReport(string url, string fileName, string localFile)
         {
-            string localFilename = fileName;
-
-            fileLocalPath = System.IO.Path.Combine(GetImagePath(localFile), localFilename);
-            WebClient webClient = new WebClient();
-
             try
             {
-                ShowLoading("");
-                Task t = Task.Factory.StartNew(() =>
+                string localFilename = fileName;
+
+                fileLocalPath = System.IO.Path.Combine(GetImagePath(localFile), localFilename);
+                WebClient webClient = new WebClient();
+
+                try
                 {
-                    webClient.DownloadFileAsync(new Uri(url), fileLocalPath);
-                });
-                AlertLongText("请到如下路径查看文件 " + fileLocalPath.Replace("emulated/0/", ""));
+                    ShowLoading("");
+                    Task t = Task.Factory.StartNew(() =>
+                    {
+                        webClient.DownloadFileAsync(new Uri(url), fileLocalPath);
+                    });
+                    AlertLongText("请到如下路径查看文件 " + fileLocalPath.Replace("emulated/0/", ""));
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+                catch (System.Exception)
+                {
+                    return;
+                }
             }
-            catch (OperationCanceledException)
+            catch (Exception)
             {
-                return;
-            }
-            catch (System.Exception)
-            {
-                return;
             }
         }
 
         public Java.IO.File GetPath()
         {
-            Java.IO.File file = new Java.IO.File(new Java.IO.File(Android.OS.Environment.GetExternalStoragePublicDirectory(""), Application.Context.PackageName), "cach");
-            Java.IO.File newFile = new Java.IO.File(file, "RMMT");
-
-            if (!newFile.Exists())
+            try
             {
-                if (!newFile.Mkdirs())
+                Java.IO.File file = new Java.IO.File(new Java.IO.File(Android.OS.Environment.GetExternalStoragePublicDirectory(""), Application.Context.PackageName), "cach");
+                Java.IO.File newFile = new Java.IO.File(file, "RMMT");
+
+                if (!newFile.Exists())
                 {
-                    return null;
+                    if (!newFile.Mkdirs())
+                    {
+                        return null;
+                    }
+                    try
+                    {
+                        new Java.IO.File(newFile, ".nomedia").CreateNewFile();
+                    }
+                    catch (Java.IO.IOException)
+                    {
+                    }
                 }
-                try
-                {
-                    new Java.IO.File(newFile, ".nomedia").CreateNewFile();
-                }
-                catch (Java.IO.IOException)
-                {
-                }
+                return newFile;
             }
-            return newFile;
+            catch (Exception)
+            {
+                return null;
+            }
         }
         public void Notify(int rate)
         {
@@ -469,106 +585,133 @@ namespace MaxInsight.Mobile.Droid.Helper
         #region
         public string SaveAttachLocal(Stream stream, string filename)
         {
-            _config = Resolver.Resolve<Config.Config>();
-            string basePath = _config.Get<string>(Config.Config.AliyunOss_Domain);
-            string dir = _config.Get<string>(Config.Config.AliyunOss_Dir);
-            string filepath = string.Empty;
             try
             {
-                string documentsPath = GetImagePath("RMMT_ORGIMAGE"); //CreateDirectoryForPictures().Path;
-                string localFilename = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + filename.Substring(filename.LastIndexOf("."));
-                string newFile = System.IO.Path.Combine(documentsPath, localFilename);
-
-                if (File.Exists(filename))
+                _config = Resolver.Resolve<Config.Config>();
+                string basePath = _config.Get<string>(Config.Config.AliyunOss_Domain);
+                string dir = _config.Get<string>(Config.Config.AliyunOss_Dir);
+                string filepath = string.Empty;
+                try
                 {
-                    File.Copy(filename, newFile);
-                    filepath = ResizeImage(newFile);
-                    File.Delete(newFile);
+                    string documentsPath = GetImagePath("RMMT_ORGIMAGE"); //CreateDirectoryForPictures().Path;
+                    string localFilename = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + filename.Substring(filename.LastIndexOf("."));
+                    string newFile = System.IO.Path.Combine(documentsPath, localFilename);
+
+                    if (File.Exists(filename))
+                    {
+                        File.Copy(filename, newFile);
+                        filepath = ResizeImage(newFile);
+                        File.Delete(newFile);
+                    }
                 }
+                catch (System.Exception)
+                {
+                    filepath = "";
+                }
+                if (filepath.LastIndexOf("/") != -1)
+                {
+                    filepath = basePath + dir + filepath.Substring(filepath.LastIndexOf("/") + 1);
+                }
+                else
+                {
+                    filepath = "";
+                }
+                return filepath;
             }
-            catch (System.Exception)
+            catch (Exception)
             {
-                filepath = "";
+                return "";
             }
-            if (filepath.LastIndexOf("/") != -1)
-            {
-                filepath = basePath + dir + filepath.Substring(filepath.LastIndexOf("/") + 1);
-            }
-            else
-            {
-                filepath = "";
-            }
-            return filepath;
         }
 
         public string GetFilesSizeOfUpload()
         {
-            string documentsPath = GetImagePath("RMMT_IMAGE");
-            long size = 0;
-            foreach (var item in Directory.GetFiles(documentsPath))
+            try
             {
-                FileInfo fi = new FileInfo(item);
-                size += fi.Length;
+                string documentsPath = GetImagePath("RMMT_IMAGE");
+                long size = 0;
+                foreach (var item in Directory.GetFiles(documentsPath))
+                {
+                    FileInfo fi = new FileInfo(item);
+                    size += fi.Length;
+                }
+                if (size < 1024 * 1024)
+                {
+                    return (int)(size / 1024) + "KB";
+                }
+                else
+                {
+                    return (int)(size / 1024 / 1024) + "M";
+                }
             }
-            if (size < 1024 * 1024)
+            catch (Exception)
             {
-                return (int)(size / 1024) + "KB";
-            }
-            else
-            {
-                return (int)(size / 1024 / 1024) + "M";
+                return "";
             }
 
         }
 
         public async Task UploadLocalFileToServer()
         {
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            string documentsPath = GetImagePath("RMMT_IMAGE");
-            int fileCnt = Directory.GetFiles(documentsPath).Length;
-            int t = 100;
-            if (fileCnt != 0)
+            try
             {
-                t = (int)Math.Floor(((double)1.0) / fileCnt * 100);
-            }
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                string documentsPath = GetImagePath("RMMT_IMAGE");
+                int fileCnt = Directory.GetFiles(documentsPath).Length;
+                int t = 100;
+                if (fileCnt != 0)
+                {
+                    t = (int)Math.Floor(((double)1.0) / fileCnt * 100);
+                }
 
-            using (var dialog = UserDialogs.Instance.Progress())
-            {
-                if (fileCnt > 0)
+                using (var dialog = UserDialogs.Instance.Progress())
                 {
-                    foreach (var item in Directory.GetFiles(documentsPath))
+                    if (fileCnt > 0)
                     {
-                        APIResult result = await _commonHelper.UploadFileToOSS(GetAttachLocal(item), item.Substring(item.LastIndexOf("/") + 1), "L");
-                        if (result.ResultCode == ResultType.Success)
+                        foreach (var item in Directory.GetFiles(documentsPath))
                         {
-                            File.Delete(item);
+                            APIResult result = await _commonHelper.UploadFileToOSS(GetAttachLocal(item), item.Substring(item.LastIndexOf("/") + 1), "L");
+                            if (result.ResultCode == ResultType.Success)
+                            {
+                                File.Delete(item);
+                            }
+                            dialog.PercentComplete += t;
                         }
-                        dialog.PercentComplete += t;
+                        if (dialog.PercentComplete < 100)
+                        {
+                            dialog.PercentComplete += (100 - dialog.PercentComplete);
+                        }
                     }
-                    if (dialog.PercentComplete < 100)
+                    else
                     {
-                        dialog.PercentComplete += (100 - dialog.PercentComplete);
+                        dialog.PercentComplete += 100;
+                    }
+                    if (dialog.PercentComplete == 100)
+                    {
+                        dialog.Hide();
                     }
                 }
-                else
-                {
-                    dialog.PercentComplete += 100;
-                }
-                if (dialog.PercentComplete == 100)
-                {
-                    dialog.Hide();
-                }
+            }
+            catch (Exception)
+            {
             }
         }
 
         public Stream GetAttachLocal(string path)
         {
-            if (File.Exists(path))
+            try
             {
-                Stream stream = new MemoryStream(File.ReadAllBytes(path));
-                return stream;
+                if (File.Exists(path))
+                {
+                    Stream stream = new MemoryStream(File.ReadAllBytes(path));
+                    return stream;
+                }
+                else
+                {
+                    return null;
+                }
             }
-            else
+            catch (Exception)
             {
                 return null;
             }
@@ -576,62 +719,47 @@ namespace MaxInsight.Mobile.Droid.Helper
 
         private string GetImagePath(string localFile)
         {
-            Java.IO.File file = new Java.IO.File(new Java.IO.File(Android.OS.Environment.GetExternalStoragePublicDirectory(""), Application.Context.PackageName), "cach");
-            Java.IO.File newFile = new Java.IO.File(file, localFile);//
-
-            if (!newFile.Exists())
+            try
             {
-                if (!newFile.Mkdirs())
+                Java.IO.File file = new Java.IO.File(new Java.IO.File(Android.OS.Environment.GetExternalStoragePublicDirectory(""), Application.Context.PackageName), "cach");
+                Java.IO.File newFile = new Java.IO.File(file, localFile);//
+
+                if (!newFile.Exists())
                 {
-                    return null;
+                    if (!newFile.Mkdirs())
+                    {
+                        return null;
+                    }
+                    try
+                    {
+                        new Java.IO.File(newFile, ".nomedia").CreateNewFile();
+                    }
+                    catch (Java.IO.IOException)
+                    {
+                    }
                 }
-                try
-                {
-                    new Java.IO.File(newFile, ".nomedia").CreateNewFile();
-                }
-                catch (Java.IO.IOException)
-                {
-                }
+                return newFile.Path;
             }
-            return newFile.Path;
+            catch (Exception)
+            {
+                return "";
+            }
         }
 
         private string ResizeImage(string sourceFilePath)
         {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.InJustDecodeBounds = false;
-            options.InPreferredConfig = Bitmap.Config.Rgb565;
-            options.InDither = true;
-
-            Bitmap bmp = BitmapFactory.DecodeFile(sourceFilePath, options);
-
-            string documentsPath = GetImagePath("RMMT_IMAGE"); //CreateDirectoryForPictures().Path;
-            string localFilename = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + sourceFilePath.Substring(sourceFilePath.LastIndexOf("."));
-            string newPath = System.IO.Path.Combine(documentsPath, localFilename);
-
-            using (var fs = new FileStream(newPath, FileMode.OpenOrCreate,
-                                       FileAccess.ReadWrite,
-                                       FileShare.None))
-            {
-                bmp.Compress(Bitmap.CompressFormat.Jpeg, 50, fs);
-            }
-
-            return newPath;
-        }
-
-        public string GetTempPathForApiToOss(string localpath, string temppath, string localfilename)
-        {
-            string documentsPath = GetImagePath(temppath); //"RMMTIMAGEVIEW"
-            string newPath = System.IO.Path.Combine(documentsPath, localfilename);
-
-            if (File.Exists(localpath))
+            try
             {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.InJustDecodeBounds = false;
                 options.InPreferredConfig = Bitmap.Config.Rgb565;
                 options.InDither = true;
 
-                Bitmap bmp = BitmapFactory.DecodeFile(localpath, options);
+                Bitmap bmp = BitmapFactory.DecodeFile(sourceFilePath, options);
+
+                string documentsPath = GetImagePath("RMMT_IMAGE"); //CreateDirectoryForPictures().Path;
+                string localFilename = DateTime.Now.ToString("yyyyMMddHHmmssfffffff") + sourceFilePath.Substring(sourceFilePath.LastIndexOf("."));
+                string newPath = System.IO.Path.Combine(documentsPath, localFilename);
 
                 using (var fs = new FileStream(newPath, FileMode.OpenOrCreate,
                                            FileAccess.ReadWrite,
@@ -639,28 +767,77 @@ namespace MaxInsight.Mobile.Droid.Helper
                 {
                     bmp.Compress(Bitmap.CompressFormat.Jpeg, 50, fs);
                 }
+
+                return newPath;
             }
-            return newPath;
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public string GetTempPathForApiToOss(string localpath, string temppath, string localfilename)
+        {
+            try
+            {
+                string documentsPath = GetImagePath(temppath); //"RMMTIMAGEVIEW"
+                string newPath = System.IO.Path.Combine(documentsPath, localfilename);
+
+                if (File.Exists(localpath))
+                {
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.InJustDecodeBounds = false;
+                    options.InPreferredConfig = Bitmap.Config.Rgb565;
+                    options.InDither = true;
+
+                    Bitmap bmp = BitmapFactory.DecodeFile(localpath, options);
+
+                    using (var fs = new FileStream(newPath, FileMode.OpenOrCreate,
+                                               FileAccess.ReadWrite,
+                                               FileShare.None))
+                    {
+                        bmp.Compress(Bitmap.CompressFormat.Jpeg, 50, fs);
+                    }
+                }
+                return newPath;
+            }
+            catch (Exception)
+            {
+                return "";
+            }
         }
         public void DeleteFileForApiToOss(string tempPath)
         {
-            File.Delete(tempPath);
+            try
+            {
+                File.Delete(tempPath);
+            }
+            catch (Exception)
+            {
+            }
         }
         #endregion
 
         public Stream ResizeImage(Stream stream)
         {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.InJustDecodeBounds = false;
-            options.InPreferredConfig = Bitmap.Config.Rgb565;
-            options.InDither = true;
+            try
+            {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.InJustDecodeBounds = false;
+                options.InPreferredConfig = Bitmap.Config.Rgb565;
+                options.InDither = true;
 
-            Bitmap bmp = BitmapFactory.DecodeStream(stream, null, options);
+                Bitmap bmp = BitmapFactory.DecodeStream(stream, null, options);
 
-            MemoryStream newStream = new MemoryStream();
-            bmp.Compress(Bitmap.CompressFormat.Jpeg, 50, newStream);
+                MemoryStream newStream = new MemoryStream();
+                bmp.Compress(Bitmap.CompressFormat.Jpeg, 50, newStream);
 
-            return newStream;
+                return newStream;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public void DownDB()

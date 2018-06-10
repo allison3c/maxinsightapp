@@ -14,61 +14,79 @@ namespace MaxInsight.Mobile.Pages.Notifi
         public NotifiIndexPage()
         {
             InitializeComponent();
-            SetControlRole();
-
-            noticeReg.GestureRecognizers.Add(new TapGestureRecognizer()
+            try
             {
-                NumberOfTapsRequired = 1,
-                Command = new Command(NoticeRegCommand)
-            });
+                SetControlRole();
 
-            noticeApproal.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1,
-                Command = new Command(NoticeApproalCommand)
-            });
+                noticeReg.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(NoticeRegCommand)
+                });
 
-            noticeSearch.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1,
-                Command = new Command(NoticeSearchCommand)
-            });
+                noticeApproal.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(NoticeApproalCommand)
+                });
 
-            noticeFeed.GestureRecognizers.Add(new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1,
-                Command = new Command(NoticeFeedCommand)
-            });
+                noticeSearch.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(NoticeSearchCommand)
+                });
 
-            noticeSearch2.GestureRecognizers.Add(new TapGestureRecognizer()
+                noticeFeed.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(NoticeFeedCommand)
+                });
+
+                noticeSearch2.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    NumberOfTapsRequired = 1,
+                    Command = new Command(NoticeSearchCommand)
+                });
+            }
+            catch (Exception)
             {
-                NumberOfTapsRequired = 1,
-                Command = new Command(NoticeSearchCommand)
-            });
+            }
         }
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+            try
             {
-                MessagingCenter.Send<NotifiIndexPage>(this, MessageConst.NOTICE_FEEDBDATA_GET);
+                if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+                {
+                    MessagingCenter.Send<NotifiIndexPage>(this, MessageConst.NOTICE_FEEDBDATA_GET);
+                }
+                else
+                {
+                    //MessagingCenter.Send<string>("", MessageConst.NOTICE_APPROALDATA_GET);
+                }
             }
-            else
+            catch (Exception)
             {
-                //MessagingCenter.Send<string>("", MessageConst.NOTICE_APPROALDATA_GET);
             }
         }
 
         #region events
         public void GoNotifiContentTapped(object sender, EventArgs args)
         {
-            if (notifiMngPage == null)
+            try
             {
-                notifiMngPage = new NotifiMngPage((args as ItemTappedEventArgs).Item as NoticeDto);
+                if (notifiMngPage == null)
+                {
+                    notifiMngPage = new NotifiMngPage((args as ItemTappedEventArgs).Item as NoticeDto);
+                }
+                if (!Navigation.NavigationStack.Contains(notifiMngPage))
+                {
+                    Navigation.PushAsync(notifiMngPage);
+                }
             }
-            if (!Navigation.NavigationStack.Contains(notifiMngPage))
+            catch (Exception)
             {
-                Navigation.PushAsync(notifiMngPage);
             }
         }
 
@@ -91,48 +109,77 @@ namespace MaxInsight.Mobile.Pages.Notifi
 
         private void SetControlRole()
         {
-            if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+            try
             {
-                lstNotifiFeedB.IsVisible = true;
-                lstNotifiContent.IsVisible = false;
-                topMenu.IsVisible = false;
-                topMenu2.IsVisible = true;
+                if (CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D")
+                {
+                    lstNotifiFeedB.IsVisible = true;
+                    lstNotifiContent.IsVisible = false;
+                    topMenu.IsVisible = false;
+                    topMenu2.IsVisible = true;
+                }
+                else
+                {
+                    lstNotifiFeedB.IsVisible = false;
+                    lstNotifiContent.IsVisible = true;
+                    topMenu.IsVisible = true;
+                    topMenu2.IsVisible = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                lstNotifiFeedB.IsVisible = false;
-                lstNotifiContent.IsVisible = true;
-                topMenu.IsVisible = true;
-                topMenu2.IsVisible = false;
-
             }
         }
 
         private async void NoticeRegCommand()
         {
-            var page = ViewFactory.CreatePage<NotifiMngViewModel, NotifiMngPage>((vm, v) => vm.Init("0", noticeStatus: "Reg")) as Page;
-
-            if (!Navigation.NavigationStack.Contains(page))
+            try
             {
-                await Navigation.PushAsync(page, true);
+                var page = ViewFactory.CreatePage<NotifiMngViewModel, NotifiMngPage>((vm, v) => vm.Init("0", noticeStatus: "Reg")) as Page;
+
+                if (!Navigation.NavigationStack.Contains(page))
+                {
+                    await Navigation.PushAsync(page, true);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
         private void NoticeApproalCommand()
         {
-            MessagingCenter.Send<string>("", "noticeApproalSearch1");
+            try
+            {
+                MessagingCenter.Send<string>("", "noticeApproalSearch1");
+            }
+            catch (Exception)
+            {
+            }
         }
         private async void NoticeSearchCommand()
         {
-            var page = ViewFactory.CreatePage<NotifiMngSearchViewModel, NotifiMngSearchPage>() as Page;
-
-            if (!Navigation.NavigationStack.Contains(page))
+            try
             {
-                await Navigation.PushAsync(page, true);
+                var page = ViewFactory.CreatePage<NotifiMngSearchViewModel, NotifiMngSearchPage>() as Page;
+
+                if (!Navigation.NavigationStack.Contains(page))
+                {
+                    await Navigation.PushAsync(page, true);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
         private void NoticeFeedCommand()
         {
-            MessagingCenter.Send<string>("", "noticeFeedBackList");
+            try
+            {
+                MessagingCenter.Send<string>("", "noticeFeedBackList");
+            }
+            catch (Exception)
+            {
+            }
         }
 
         #endregion

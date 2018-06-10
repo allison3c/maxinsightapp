@@ -14,30 +14,48 @@ namespace MaxInsight.Mobile.Pages.ReviewPlans
         {
             Title = "计划任务详细";
             InitializeComponent();
-            image.GestureRecognizers.Add(new TapGestureRecognizer()
+            try
             {
-                Command = new Command(ShowOrHideImage),
-                NumberOfTapsRequired = 1
-            });
+                image.GestureRecognizers.Add(new TapGestureRecognizer()
+                {
+                    Command = new Command(ShowOrHideImage),
+                    NumberOfTapsRequired = 1
+                });
+            }
+            catch (Exception)
+            {
+            }
         }
         private void ShowOrHideImage()
         {
-            if (stackImage.IsVisible)
+            try
             {
-                stackImage.IsVisible = false;
-                oneImage.Source = ImageSource.FromFile("icon_hide");
+                if (stackImage.IsVisible)
+                {
+                    stackImage.IsVisible = false;
+                    oneImage.Source = ImageSource.FromFile("icon_hide");
+                }
+                else
+                {
+                    stackImage.IsVisible = true;
+                    oneImage.Source = ImageSource.FromFile("icon_show");
+                }
             }
-            else
+            catch (Exception)
             {
-                stackImage.IsVisible = true;
-                oneImage.Source = ImageSource.FromFile("icon_show");
             }
         }
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            stackImage.IsVisible = false;          
-            oneImage.Source = ImageSource.FromFile("icon_hide");          
+            try
+            {
+                stackImage.IsVisible = false;
+                oneImage.Source = ImageSource.FromFile("icon_hide");
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

@@ -16,37 +16,55 @@ namespace MaxInsight.Mobile.Pages.Improve
         string type;
         public DepartmentPopupPage()
         {
-            
+
         }
         public DepartmentPopupPage(string type)
         {
             InitializeComponent();
-            this.type = type;
-            List<DepartmentDto> departmentList = new List<DepartmentDto>();
-            if (type=="A")
+            try
             {
-                departmentList.Add(new DepartmentDto { DId = "0", DName = "全部" });
+                this.type = type;
+                List<DepartmentDto> departmentList = new List<DepartmentDto>();
+                if (type == "A")
+                {
+                    departmentList.Add(new DepartmentDto { DId = "0", DName = "全部" });
+                }
+                departmentList.AddRange(CommonContext.Account.DepartmentList);
+                departmentLst.ItemsSource = departmentList;
+                departmentLst.HeightRequest = departmentList.Count * 45;
             }
-            departmentList.AddRange(CommonContext.Account.DepartmentList);
-            departmentLst.ItemsSource = departmentList;
-            departmentLst.HeightRequest = departmentList.Count * 45;
+            catch (Exception)
+            {
+            }
         }
 
         private void Cancel(object sender, EventArgs e)
         {
-            Navigation.PopPopupAsync();
+            try
+            {
+                Navigation.PopPopupAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void PassDepartment(object sender, ItemTappedEventArgs e)
         {
-            Navigation.PopPopupAsync();
-            if (type=="A")
+            try
             {
-                MessagingCenter.Send<DepartmentDto>((departmentLst.SelectedItem as DepartmentDto), MessageConst.DEPARTMENTLIST_SEND);
+                Navigation.PopPopupAsync();
+                if (type == "A")
+                {
+                    MessagingCenter.Send<DepartmentDto>((departmentLst.SelectedItem as DepartmentDto), MessageConst.DEPARTMENTLIST_SEND);
+                }
+                else
+                {
+                    MessagingCenter.Send<DepartmentDto>((departmentLst.SelectedItem as DepartmentDto), MessageConst.RESPONSIBLEDEPARTMENT_SEND);
+                }
             }
-            else
+            catch (Exception)
             {
-                MessagingCenter.Send<DepartmentDto>((departmentLst.SelectedItem as DepartmentDto), MessageConst.RESPONSIBLEDEPARTMENT_SEND);
             }
         }
     }

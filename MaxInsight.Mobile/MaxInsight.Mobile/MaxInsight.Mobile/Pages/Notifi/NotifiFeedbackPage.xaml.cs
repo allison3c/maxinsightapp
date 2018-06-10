@@ -1,9 +1,5 @@
 ﻿using MaxInsight.Mobile.Module.Dto.Notifi;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using XLabs.Forms.Controls;
@@ -27,8 +23,14 @@ namespace MaxInsight.Mobile.Pages.Notifi
         }
         public void OnDeleteCaseAttechment(object sender, EventArgs e)
         {
-            ImageButton img = sender as ImageButton;
-            MessagingCenter.Send<string>(img.CommandParameter.ToString(), MessageConst.CASEATTACH_DELETE);
+            try
+            {
+                ImageButton img = sender as ImageButton;
+                MessagingCenter.Send<string>(img.CommandParameter.ToString(), MessageConst.CASEATTACH_DELETE);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

@@ -32,44 +32,50 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region constructor
         public NotifiMngViewModel()
         {
-            _tourService = Resolver.Resolve<ITourService>();
-            _notifiMngService = Resolver.Resolve<INotifiMngService>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
+            try
+            {
+                _tourService = Resolver.Resolve<ITourService>();
+                _notifiMngService = Resolver.Resolve<INotifiMngService>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
 
-            #region MultiSelectDistributor
-            MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DISTRIBUTOR_SET);
-            MessagingCenter.Subscribe<List<MultiSelectDto>>(
+                #region MultiSelectDistributor
+                MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DISTRIBUTOR_SET);
+                MessagingCenter.Subscribe<List<MultiSelectDto>>(
+                    this,
+                    MessageConst.NOTICE_DISTRIBUTOR_SET,
+                    (paramList) =>
+                    {
+                        SetNoticeDistributor(paramList);
+                    });
+                #endregion
+
+                #region MultiSelectDepartment
+                MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DEPARTMENT_SET);
+                MessagingCenter.Subscribe<List<MultiSelectDto>>(
                 this,
-                MessageConst.NOTICE_DISTRIBUTOR_SET,
+                MessageConst.NOTICE_DEPARTMENT_SET,
                 (paramList) =>
                 {
-                    SetNoticeDistributor(paramList);
+                    SetNoticeDepartment(paramList);
                 });
-            #endregion
+                #endregion
 
-            #region MultiSelectDepartment
-            MessagingCenter.Unsubscribe<List<MultiSelectDto>>(this, MessageConst.NOTICE_DEPARTMENT_SET);
-            MessagingCenter.Subscribe<List<MultiSelectDto>>(
-            this,
-            MessageConst.NOTICE_DEPARTMENT_SET,
-            (paramList) =>
+                #region Attachment
+                MessagingCenter.Subscribe<string>(
+                this,
+                MessageConst.NOTICE_ATTECHMENT_DELETE,
+                (seqNo) =>
+                {
+                    DeleteAttechmentNotice(seqNo);
+                });
+                #endregion
+            }
+            catch (Exception)
             {
-                SetNoticeDepartment(paramList);
-            });
-            #endregion
-
-            #region Attachment
-            MessagingCenter.Subscribe<string>(
-            this,
-            MessageConst.NOTICE_ATTECHMENT_DELETE,
-            (seqNo) =>
-            {
-                DeleteAttechmentNotice(seqNo);
-            });
-            #endregion
-
-
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
+            }
         }
         #endregion
 
@@ -263,19 +269,27 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region MultiSelectDistributor
         private void SetNoticeDistributor(List<MultiSelectDto> paramList)
         {
-            AllDisItems = paramList;
-            List<MultiSelectDto> selectItems = paramList.FindAll(item => item.IsChecked);
-            if (selectItems != null && selectItems.Count > 0)
+            try
             {
-                NoticeReadersSelect = string.Format("共选择{0}项", selectItems.Count);
-                NoticeReadersColor = Color.FromHex("3998C0");//"#3998c0"
-                DisHasSelect = true;
+                AllDisItems = paramList;
+                List<MultiSelectDto> selectItems = paramList.FindAll(item => item.IsChecked);
+                if (selectItems != null && selectItems.Count > 0)
+                {
+                    NoticeReadersSelect = string.Format("共选择{0}项", selectItems.Count);
+                    NoticeReadersColor = Color.FromHex("3998C0");//"#3998c0"
+                    DisHasSelect = true;
+                }
+                else
+                {
+                    NoticeReadersSelect = "选择经销商";
+                    NoticeReadersColor = StaticColor.ContentFontColor;
+                    DisHasSelect = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                NoticeReadersSelect = "选择经销商";
-                NoticeReadersColor = StaticColor.ContentFontColor;
-                DisHasSelect = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
             }
         }
         #endregion
@@ -284,19 +298,27 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
 
         private void SetNoticeDepartment(List<MultiSelectDto> paramList)
         {
-            AllDepItems = paramList;
-            List<MultiSelectDto> selectItems = paramList.FindAll(item => item.IsChecked);
-            if (selectItems != null && selectItems.Count > 0)
+            try
             {
-                NoticeSelectDep = string.Format("共选择{0}项", selectItems.Count);
-                NoticeColorDep = Color.FromHex("3998C0");
-                DepHasSelect = true;
+                AllDepItems = paramList;
+                List<MultiSelectDto> selectItems = paramList.FindAll(item => item.IsChecked);
+                if (selectItems != null && selectItems.Count > 0)
+                {
+                    NoticeSelectDep = string.Format("共选择{0}项", selectItems.Count);
+                    NoticeColorDep = Color.FromHex("3998C0");
+                    DepHasSelect = true;
+                }
+                else
+                {
+                    NoticeSelectDep = "选择角色";
+                    NoticeColorDep = StaticColor.ContentFontColor;
+                    DepHasSelect = false;
+                }
             }
-            else
+            catch (Exception)
             {
-                NoticeSelectDep = "选择角色";
-                NoticeColorDep = StaticColor.ContentFontColor;
-                DepHasSelect = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
             }
         }
         #endregion
@@ -304,13 +326,21 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region Attachment
         private void DeleteAttechmentNotice(string SeqNo)
         {
-            oldAttachmentList.Remove(oldAttachmentList.Find(item => item.SeqNo == int.Parse(SeqNo)));
-            List<AttachDto> newList = new List<AttachDto>();
-            newList.AddRange(oldAttachmentList);
-            int i = 1;
-            newList.Select(c => { c.SeqNo = i++; return c; }).ToList();
-            NotifiAttachmentList = newList;
-            LstHeight = NotifiAttachmentList.Count * _lstRowHeight;
+            try
+            {
+                oldAttachmentList.Remove(oldAttachmentList.Find(item => item.SeqNo == int.Parse(SeqNo)));
+                List<AttachDto> newList = new List<AttachDto>();
+                newList.AddRange(oldAttachmentList);
+                int i = 1;
+                newList.Select(c => { c.SeqNo = i++; return c; }).ToList();
+                NotifiAttachmentList = newList;
+                LstHeight = NotifiAttachmentList.Count * _lstRowHeight;
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
+            }
         }
         #endregion
 
@@ -456,94 +486,102 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region SaveNoticeInfo
         private async void SaveNoticeInfo(string saveType)
         {
-            if (_noticeId == 0 && saveType.Equals("C"))
+            try
             {
-                await Navigation.PopAsync();
-                return;
-            }
-            //通知标题
-            if (string.IsNullOrEmpty(NoticeTitle) || NoticeTitle.Trim() == "")
-            {
-                _commonFun.AlertLongText("请输入通知标题");
-                return;
-            }
-            //通知有效期
-            if (Convert.ToDateTime(StartNoticeDate.ToString("yyyy-MM-dd")) > Convert.ToDateTime(EndNoticeDate.ToString("yyyy-MM-dd")))
-            {
-                _commonFun.AlertLongText("开始日期不能大于结束日期");
-                return;
-            }
-            //通知对象
-            if (!DisHasSelect)
-            {
-                _commonFun.AlertLongText("请选择经销商");
-                return;
-            }
-            //if (!DepHasSelect)
-            //{
-            //    _commonFun.AlertLongText("请选择部门");
-            //    return;
-            //}
-            //结果反馈
-            //通知内容
-            if (string.IsNullOrEmpty(NoticeContent) || NoticeContent.Trim() == "")
-            {
-                _commonFun.AlertLongText("请输入通知内容");
-                return;
-            }
-            _commonFun.ShowLoading("保存中...");
-            if (_commonHelper.IsNetWorkConnected() == true)
-            {
-                try
+                if (_noticeId == 0 && saveType.Equals("C"))
                 {
-                    List<MultiSelectDto> saveDepList = new List<MultiSelectDto>();
-                    if (AllDepItems == null || AllDepItems.Count == 0)
-                        saveDepList.Add(new MultiSelectDto() { DisCode = "0", DisName = "" });
-                    else
-                        saveDepList = AllDepItems;
-                    string disdepList = CommonUtil.DisAndDepToString(AllDisItems, saveDepList);
-                    var result = await _notifiMngService.SaveMadeNotifi(NoticeTitle,
-                                            StartNoticeDate.ToString("yyyyMMdd"),
-                                            EndNoticeDate.ToString("yyyyMMdd"),
-                                            disdepList,
-                                            ReplySelected == 0 ? "0" : "1",
-                                            NoticeContent,
-                                            NotifiAttachmentList,
-                                            saveType.ToString(),
-                                            _noticeId,
-                                            Convert.ToInt32(CommonContext.Account.UserId));
-                    if (result.ResultCode == Module.ResultType.Success)
+                    await Navigation.PopAsync();
+                    return;
+                }
+                //通知标题
+                if (string.IsNullOrEmpty(NoticeTitle) || NoticeTitle.Trim() == "")
+                {
+                    _commonFun.AlertLongText("请输入通知标题");
+                    return;
+                }
+                //通知有效期
+                if (Convert.ToDateTime(StartNoticeDate.ToString("yyyy-MM-dd")) > Convert.ToDateTime(EndNoticeDate.ToString("yyyy-MM-dd")))
+                {
+                    _commonFun.AlertLongText("开始日期不能大于结束日期");
+                    return;
+                }
+                //通知对象
+                if (!DisHasSelect)
+                {
+                    _commonFun.AlertLongText("请选择经销商");
+                    return;
+                }
+                //if (!DepHasSelect)
+                //{
+                //    _commonFun.AlertLongText("请选择部门");
+                //    return;
+                //}
+                //结果反馈
+                //通知内容
+                if (string.IsNullOrEmpty(NoticeContent) || NoticeContent.Trim() == "")
+                {
+                    _commonFun.AlertLongText("请输入通知内容");
+                    return;
+                }
+                _commonFun.ShowLoading("保存中...");
+                if (_commonHelper.IsNetWorkConnected() == true)
+                {
+                    try
                     {
-                        _noticeId = 0;
-                        //发条消息让 审批查询，通知结果查询查询
-                        MessagingCenter.Send<string>("", MessageConst.NOTIFI_SAVEREFRESH_GO);
-                        await Navigation.PopAsync(true);
-                        _commonFun.AlertLongText("保存成功");
+                        List<MultiSelectDto> saveDepList = new List<MultiSelectDto>();
+                        if (AllDepItems == null || AllDepItems.Count == 0)
+                            saveDepList.Add(new MultiSelectDto() { DisCode = "0", DisName = "" });
+                        else
+                            saveDepList = AllDepItems;
+                        string disdepList = CommonUtil.DisAndDepToString(AllDisItems, saveDepList);
+                        var result = await _notifiMngService.SaveMadeNotifi(NoticeTitle,
+                                                StartNoticeDate.ToString("yyyyMMdd"),
+                                                EndNoticeDate.ToString("yyyyMMdd"),
+                                                disdepList,
+                                                ReplySelected == 0 ? "0" : "1",
+                                                NoticeContent,
+                                                NotifiAttachmentList,
+                                                saveType.ToString(),
+                                                _noticeId,
+                                                Convert.ToInt32(CommonContext.Account.UserId));
+                        if (result.ResultCode == Module.ResultType.Success)
+                        {
+                            _noticeId = 0;
+                            //发条消息让 审批查询，通知结果查询查询
+                            MessagingCenter.Send<string>("", MessageConst.NOTIFI_SAVEREFRESH_GO);
+                            await Navigation.PopAsync(true);
+                            _commonFun.AlertLongText("保存成功");
+                        }
+                        else
+                        {
+                            _commonFun.HideLoading();
+                            _commonFun.AlertLongText("保存失败，请重试。 " + result.Msg);
+                        }
                     }
-                    else
+                    catch (OperationCanceledException)
                     {
                         _commonFun.HideLoading();
-                        _commonFun.AlertLongText("保存失败，请重试。 " + result.Msg);
+                        _commonFun.AlertLongText("请求超时。");
+                    }
+                    catch (Exception)
+                    {
+                        _commonFun.HideLoading();
+                        _commonFun.AlertLongText("保存失败，请重试。");
+                    }
+                    finally
+                    {
+                        _commonFun.HideLoading();
                     }
                 }
-                catch (OperationCanceledException)
+                else
                 {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("请求超时。");
-                }
-                catch (Exception)
-                {
-                    _commonFun.HideLoading();
-                    _commonFun.AlertLongText("保存失败，请重试。");
-                }
-                finally
-                {
-                    _commonFun.HideLoading();
+                    _commonFun.AlertLongText("网络连接异常。");
                 }
             }
-            else
+            catch (Exception)
             {
-                _commonFun.AlertLongText("网络连接异常。");
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
             }
         }
         #endregion
@@ -671,7 +709,7 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                     string filename = filedata.FileName;
                     byte[] file = filedata.DataArray;
                     _stream = new MemoryStream(file);
-                    _path =  filename;
+                    _path = filename;
                 }
                 catch (Exception)
                 {
@@ -695,9 +733,9 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                 try
                 {
                     string filenameselected = _path.Substring(_path.LastIndexOf("/") + 1);
-                    var result = await _tourService.UploadFiletoOss(_stream, filenameselected,_path);
+                    var result = await _tourService.UploadFiletoOss(_stream, filenameselected, _path);
 
-                    if (result != null&&result.ResultCode==0)
+                    if (result != null && result.ResultCode == 0)
                     {
                         oldAttachmentList.Add((JsonConvert.DeserializeObject<AttachDto>(result.Body)));
                         List<AttachDto> resultList = new List<AttachDto>();
@@ -758,7 +796,7 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                 if (url.EndsWith(".JPG") || url.EndsWith(".BMP") || url.EndsWith(".GIF") ||
                     url.EndsWith(".JPEG") || url.EndsWith(".PNG") || url.EndsWith(".SVG"))
                 {
-                    string filename = NotifiAttachItem.Url.LastIndexOf("/")>0? NotifiAttachItem.Url.Substring(NotifiAttachItem.Url.LastIndexOf("/") + 1).ToLower():"";
+                    string filename = NotifiAttachItem.Url.LastIndexOf("/") > 0 ? NotifiAttachItem.Url.Substring(NotifiAttachItem.Url.LastIndexOf("/") + 1).ToLower() : "";
                     if (String.IsNullOrEmpty(filename)) return;
                     if (CrossFilePicker.Current.IsExistFile(filename, "RMMT_IMAGE"))
                     {
@@ -826,30 +864,46 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region multiple download from oss
         public MemoryStream GetObjectPartly(string bucketName, string key)
         {
-            OssClient client = CommonHelper.CreateOssClient();
-            var memoryStream = new MemoryStream();
-            var objectMetadata = client.GetObjectMetadata(bucketName, key);
-            var fileLength = objectMetadata.ContentLength;
-            const int partSize = 1024 * 1024 * 10;
-
-            var partCount = CalPartCount(fileLength, partSize);
-
-            for (var i = 0; i < partCount; i++)
+            try
             {
-                var startPos = partSize * i;
-                var endPos = partSize * i + (partSize < (fileLength - startPos) ? partSize : (fileLength - startPos)) - 1;
-                Download(memoryStream, startPos, endPos,bucketName, key,client);
+                OssClient client = CommonHelper.CreateOssClient();
+                var memoryStream = new MemoryStream();
+                var objectMetadata = client.GetObjectMetadata(bucketName, key);
+                var fileLength = objectMetadata.ContentLength;
+                const int partSize = 1024 * 1024 * 10;
+
+                var partCount = CalPartCount(fileLength, partSize);
+
+                for (var i = 0; i < partCount; i++)
+                {
+                    var startPos = partSize * i;
+                    var endPos = partSize * i + (partSize < (fileLength - startPos) ? partSize : (fileLength - startPos)) - 1;
+                    Download(memoryStream, startPos, endPos, bucketName, key, client);
+                }
+                return memoryStream;
             }
-            return memoryStream;
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return null;
+            }
         }
         private int CalPartCount(long fileLength, long partSize)
         {
-            var partCount = (int)(fileLength / partSize);
-            if (fileLength % partSize != 0)
+            try
             {
-                partCount++;
+                var partCount = (int)(fileLength / partSize);
+                if (fileLength % partSize != 0)
+                {
+                    partCount++;
+                }
+                return partCount;
             }
-            return partCount;
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return 0;
+            }
         }
         private void Download(MemoryStream memoryStream, long startPos, long endPos, String bucketName, String fileKey, OssClient client)
         {
@@ -868,6 +922,11 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
                     memoryStream.Write(buffer, 0, bytesRead);
                 }
             }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
+            }
             finally
             {
                 if (contentStream != null)
@@ -880,57 +939,64 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #region page init
         public void Init(string noticeId, int disId = 0, int departId = 0, string noticeStatus = "")
         {
-            MessagingCenter.Send<string>(noticeStatus, MessageConst.NOTICE_MADE_SETCONTROLROLE);
-            IsLoading = false;
-            if (noticeId == "0")
+            try
             {
-                NoticeTitle = string.Empty;
-                NoticeNo = string.Empty;
-                StartNoticeDate = DateTime.Now;
-                EndNoticeDate = DateTime.Now;
-                NoticeReadersSelect = "选择经销商";
-                NoticeReadersColor = StaticColor.ContentFontColor;
-                DisHasSelect = false;
-                NoticeSelectDep = "选择角色";
-                NoticeColorDep = StaticColor.ContentFontColor;
-                DepHasSelect = false;
-                MessagingCenter.Send<List<MultiSelectDto>>(new List<MultiSelectDto>(), MessageConst.NOTICE_DISTRIBUTOR_SHOW);
-                MessagingCenter.Send<List<MultiSelectDto>>(new List<MultiSelectDto>(), MessageConst.NOTICE_DEPARTMENT_SHOW);
-                NoticeContent = string.Empty;
-                ReplySelected = 0;
-                oldAttachmentList = new List<AttachDto>();
-                NotifiAttachmentList = new List<AttachDto>();
-                LstHeight = 0;
-                NoticeMngPageTitle = "通知拟定";
-                _noticeId = 0;
-                AllDepItems = new List<MultiSelectDto>();
-                AllDisItems = new List<MultiSelectDto>();
-            }
-            else
-            {
-                AllDisItems = new List<MultiSelectDto>();
-                AllDepItems = new List<MultiSelectDto>();
-                SetNoticeDetail(noticeId);
-                if ((CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D") && noticeStatus == "U")
-
+                MessagingCenter.Send<string>(noticeStatus, MessageConst.NOTICE_MADE_SETCONTROLROLE);
+                IsLoading = false;
+                if (noticeId == "0")
                 {
-                    NoticeReadStatusDto readStatusDto = new NoticeReadStatusDto();
-                    readStatusDto.NoticeId = Convert.ToInt32(noticeId);
-                    readStatusDto.DisId = disId;
-                    readStatusDto.DepartId = departId;
-                    readStatusDto.InUserId = Convert.ToInt32(CommonContext.Account.UserId);
-                    SetReadStatus(readStatusDto);
-                }
-                if (noticeStatus == "" || noticeStatus == "T")
-                {
+                    NoticeTitle = string.Empty;
+                    NoticeNo = string.Empty;
+                    StartNoticeDate = DateTime.Now;
+                    EndNoticeDate = DateTime.Now;
+                    NoticeReadersSelect = "选择经销商";
+                    NoticeReadersColor = StaticColor.ContentFontColor;
+                    DisHasSelect = false;
+                    NoticeSelectDep = "选择角色";
+                    NoticeColorDep = StaticColor.ContentFontColor;
+                    DepHasSelect = false;
+                    MessagingCenter.Send<List<MultiSelectDto>>(new List<MultiSelectDto>(), MessageConst.NOTICE_DISTRIBUTOR_SHOW);
+                    MessagingCenter.Send<List<MultiSelectDto>>(new List<MultiSelectDto>(), MessageConst.NOTICE_DEPARTMENT_SHOW);
+                    NoticeContent = string.Empty;
+                    ReplySelected = 0;
+                    oldAttachmentList = new List<AttachDto>();
+                    NotifiAttachmentList = new List<AttachDto>();
+                    LstHeight = 0;
                     NoticeMngPageTitle = "通知拟定";
+                    _noticeId = 0;
+                    AllDepItems = new List<MultiSelectDto>();
+                    AllDisItems = new List<MultiSelectDto>();
                 }
                 else
                 {
-                    NoticeMngPageTitle = "通知详细";
-                }
-                _noticeId = Convert.ToInt32(noticeId);
+                    AllDisItems = new List<MultiSelectDto>();
+                    AllDepItems = new List<MultiSelectDto>();
+                    SetNoticeDetail(noticeId);
+                    if ((CommonContext.Account.UserType == "S" || CommonContext.Account.UserType == "D") && noticeStatus == "U")
 
+                    {
+                        NoticeReadStatusDto readStatusDto = new NoticeReadStatusDto();
+                        readStatusDto.NoticeId = Convert.ToInt32(noticeId);
+                        readStatusDto.DisId = disId;
+                        readStatusDto.DepartId = departId;
+                        readStatusDto.InUserId = Convert.ToInt32(CommonContext.Account.UserId);
+                        SetReadStatus(readStatusDto);
+                    }
+                    if (noticeStatus == "" || noticeStatus == "T")
+                    {
+                        NoticeMngPageTitle = "通知拟定";
+                    }
+                    else
+                    {
+                        NoticeMngPageTitle = "通知详细";
+                    }
+                    _noticeId = Convert.ToInt32(noticeId);
+                }
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NotifiMngViewModel");
+                return;
             }
         }
 

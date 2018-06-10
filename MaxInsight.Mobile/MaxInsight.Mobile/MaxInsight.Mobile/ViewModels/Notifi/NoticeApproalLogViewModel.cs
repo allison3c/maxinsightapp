@@ -21,9 +21,17 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
 
         public NoticeApproalLogViewModel()
         {
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _notifiMngService = Resolver.Resolve<INotifiMngService>();
+            try
+            {
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _notifiMngService = Resolver.Resolve<INotifiMngService>();
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NoticeApproalLogViewModel");
+                return;
+            }
         }
 
         #region properties
@@ -54,10 +62,18 @@ namespace MaxInsight.Mobile.ViewModels.Notifi
         #endregion
 
         #region method
-        public void Init(List<ApproalLogDto> dtolist,string pageTitle)
+        public void Init(List<ApproalLogDto> dtolist, string pageTitle)
         {
-            ApproalLogDtoList = dtolist;
-            PageTitle = pageTitle;
+            try
+            {
+                ApproalLogDtoList = dtolist;
+                PageTitle = pageTitle;
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->NoticeApproalLogViewModel");
+                return;
+            }
         }
 
         #endregion

@@ -33,88 +33,96 @@ namespace MaxInsight.Mobile
 
         public RegistScoreViewModel()
         {
-            _tourService = Resolver.Resolve<ITourService>();
-            _commonFun = Resolver.Resolve<ICommonFun>();
-            _commonHelper = Resolver.Resolve<CommonHelper>();
-            _localScoreService = Resolver.Resolve<ILocalScoreService>();
-
-            _tapCommand = new Command(ImageTaped);
-
-            MessagingCenter.Subscribe<List<ItemOfTaskDto>>(this, "PassSystemList", (obj) =>
+            try
             {
-                //if (null != obj)
+                _tourService = Resolver.Resolve<ITourService>();
+                _commonFun = Resolver.Resolve<ICommonFun>();
+                _commonHelper = Resolver.Resolve<CommonHelper>();
+                _localScoreService = Resolver.Resolve<ILocalScoreService>();
+
+                _tapCommand = new Command(ImageTaped);
+
+                MessagingCenter.Subscribe<List<ItemOfTaskDto>>(this, "PassSystemList", (obj) =>
+                {
+                    //if (null != obj)
+                    //{
+                    //	Init(obj, obj.FirstOrDefault().CurrentIndex);
+                    //}
+                });
+
+                //MessagingCenter.Subscribe<RegistScorePage>(this, "InitPage", (obj) =>
                 //{
-                //	Init(obj, obj.FirstOrDefault().CurrentIndex);
-                //}
-            });
+                //    if (null != SystemList && SystemList.Count > 0 && CurrentSystem != null)
+                //    {
+                //        if (_initTimer)
+                //        {
+                //            _initTimer = false;
+                //            Init(SystemList, CurrentSystem);
+                //        }
+                //    }
+                //});
 
-            //MessagingCenter.Subscribe<RegistScorePage>(this, "InitPage", (obj) =>
-            //{
-            //    if (null != SystemList && SystemList.Count > 0 && CurrentSystem != null)
-            //    {
-            //        if (_initTimer)
-            //        {
-            //            _initTimer = false;
-            //            Init(SystemList, CurrentSystem);
-            //        }
-            //    }
-            //});
-
-            MessagingCenter.Subscribe<RegistScorePage>(this, "CheckBoxChanged", (obj) =>
-            {
-                if (CurrentSystem.CSList.Any(p => p.IsCheck == true))
+                MessagingCenter.Subscribe<RegistScorePage>(this, "CheckBoxChanged", (obj) =>
                 {
-                    CurrentScore = "0";
-                    CurrentSystem.Score = 0;
-                }
-                else
+                    if (CurrentSystem.CSList.Any(p => p.IsCheck == true))
+                    {
+                        CurrentScore = "0";
+                        CurrentSystem.Score = 0;
+                    }
+                    else
+                    {
+                        CurrentScore = "1";
+                        CurrentSystem.Score = 1;
+                    }
+                });
+
+                //MessagingCenter.Subscribe<StandardPic>(this, "PreviewLossImage", (obj) =>
+                //{
+                //	if (_previewTimer)
+                //	{
+                //		_previewTimer = false;
+                //		//浏览失分照片
+                //		Preview(obj);
+
+                //		Device.StartTimer(TimeSpan.FromSeconds(2), () => {
+                //			_previewTimer = true;
+                //			return true;
+                //		});
+                //	}
+                //});
+
+                MessagingCenter.Subscribe<StandardPic>(this, "DeleteLossImage", (obj) =>
                 {
-                    CurrentScore = "1";
-                    CurrentSystem.Score = 1;
-                }
-            });
+                    //删除失分照片
+                    DeleteImage(obj);
+                });
 
-            //MessagingCenter.Subscribe<StandardPic>(this, "PreviewLossImage", (obj) =>
-            //{
-            //	if (_previewTimer)
-            //	{
-            //		_previewTimer = false;
-            //		//浏览失分照片
-            //		Preview(obj);
-
-            //		Device.StartTimer(TimeSpan.FromSeconds(2), () => {
-            //			_previewTimer = true;
-            //			return true;
-            //		});
-            //	}
-            //});
-
-            MessagingCenter.Subscribe<StandardPic>(this, "DeleteLossImage", (obj) =>
-            {
-                //删除失分照片
-                DeleteImage(obj);
-            });
-
-            MessagingCenter.Subscribe<PictureStandard>(this, "RegistScoreItemTapped", (obj) =>
-            {
-                UploadStandPic(obj.StandardPicId);
-            });
-
-            MessagingCenter.Subscribe<PictureStandard>(this, "PreviewPlanAttechment", (obj) =>
-            {
-                if (!string.IsNullOrEmpty(obj.Url))
+                MessagingCenter.Subscribe<PictureStandard>(this, "RegistScoreItemTapped", (obj) =>
                 {
-                    PreviewStanderImage(obj.Url);
-                }
-            });
+                    UploadStandPic(obj.StandardPicId);
+                });
 
-            MessagingCenter.Subscribe<PictureStandard>(this, "DeletePlanAttechment", (obj) =>
-            {
-                if (!string.IsNullOrEmpty(obj.Url))
+                MessagingCenter.Subscribe<PictureStandard>(this, "PreviewPlanAttechment", (obj) =>
                 {
-                    DeleteStanderImage(obj);
-                }
-            });
+                    if (!string.IsNullOrEmpty(obj.Url))
+                    {
+                        PreviewStanderImage(obj.Url);
+                    }
+                });
+
+                MessagingCenter.Subscribe<PictureStandard>(this, "DeletePlanAttechment", (obj) =>
+                {
+                    if (!string.IsNullOrEmpty(obj.Url))
+                    {
+                        DeleteStanderImage(obj);
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
+            }
         }
 
         #region useless
@@ -312,51 +320,59 @@ namespace MaxInsight.Mobile
         #region page init
         public void Init(List<ItemOfTaskDto> list, ItemOfTaskDto dto)
         {
-            SystemList = list;
-            CurrentSystem = dto;
-
-            CurrentSystem.ParamSPicList = new ObservableCollection<StandardPic>();
-
-            //_deleteList = new ObservableCollection<StandardPic>();
-            foreach (var spi in CurrentSystem.SPicList)
+            try
             {
-                CurrentSystem.ParamSPicList.Add(spi);
-            }
+                SystemList = list;
+                CurrentSystem = dto;
 
-            IsPreview = true;
-            int index = list.IndexOf(list.FirstOrDefault(p => p.SeqNo == dto.SeqNo));// list.IndexOf(dto) + 1;
-            CurrentPage = index + 1;
-            JumpPage = 1;
-            RowHeight = CurrentSystem.CSList.Count * 50;
-            PicRowHeight = CurrentSystem.PStandardList.Count * 50;
-            LossImageList = CurrentSystem.SPicList.Count * 50;
-            IsLoading = false;
-            CurrentScore = CurrentSystem.Score == -1 ? "" : CurrentSystem.Score.ToString();
-            //IsPreEnable = false;
-            if (SystemList != null && SystemList.Count > 1)
-            {
-                //if (index == SystemList.Count - 1)
-                //{
-                //    IsNextEnable = false;
-                //}
-                //else
-                //{
-                //    IsNextEnable = true;
-                //}
+                CurrentSystem.ParamSPicList = new ObservableCollection<StandardPic>();
 
-                if (index == 0)
+                //_deleteList = new ObservableCollection<StandardPic>();
+                foreach (var spi in CurrentSystem.SPicList)
                 {
-                    IsPreEnable = false;
+                    CurrentSystem.ParamSPicList.Add(spi);
+                }
+
+                IsPreview = true;
+                int index = list.IndexOf(list.FirstOrDefault(p => p.SeqNo == dto.SeqNo));// list.IndexOf(dto) + 1;
+                CurrentPage = index + 1;
+                JumpPage = 1;
+                RowHeight = CurrentSystem.CSList.Count * 50;
+                PicRowHeight = CurrentSystem.PStandardList.Count * 50;
+                LossImageList = CurrentSystem.SPicList.Count * 50;
+                IsLoading = false;
+                CurrentScore = CurrentSystem.Score == -1 ? "" : CurrentSystem.Score.ToString();
+                //IsPreEnable = false;
+                if (SystemList != null && SystemList.Count > 1)
+                {
+                    //if (index == SystemList.Count - 1)
+                    //{
+                    //    IsNextEnable = false;
+                    //}
+                    //else
+                    //{
+                    //    IsNextEnable = true;
+                    //}
+
+                    if (index == 0)
+                    {
+                        IsPreEnable = false;
+                    }
+                    else
+                    {
+                        IsPreEnable = true;
+                    }
                 }
                 else
                 {
-                    IsPreEnable = true;
+                    IsPreEnable = false;
+                    //IsNextEnable = false;
                 }
             }
-            else
+            catch (Exception)
             {
-                IsPreEnable = false;
-                //IsNextEnable = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
             }
         }
         #endregion
@@ -454,133 +470,141 @@ namespace MaxInsight.Mobile
         #region action
         private async void UploadImage()
         {
-            var imageUrl = "";
-            var imageType = "L";
-            var imageName = "";
-            var filePath = "";
-            MediaFile file = null;
-
-            await CrossMedia.Current.Initialize();
-
-            var action = await _commonFun.ShowActionSheet("从相册", "拍照");
-
-            IsLoading = true;
-            if (action == "从相册")
-            {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
-                file = await CrossMedia.Current.PickPhotoAsync();
-            }
-            else if (action == "拍照")
-            {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
-                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-                {
-                    return;
-                }
-                file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
-                {
-                    Directory = "RMMT",
-                    Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
-                                   + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
-                });
-            }
-
-            if (file == null)
-            {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
-                IsLoading = false;
-                return;
-            }
-
-            imageName = file.Path.Substring(file.Path.LastIndexOf('/') + 1);
-            filePath = file.Path;
-
-            //upload file to server
-            //if (_commonHelper.IsNetWorkConnected() == true)
-            //{
             try
             {
-                //var result = await _tourService.UploadFiletoOss(file.GetStream(), file.Path);
-                string result = _commonFun.SaveAttachLocal(file.GetStream(), file.Path);
+                var imageUrl = "";
+                var imageType = "L";
+                var imageName = "";
+                var filePath = "";
+                MediaFile file = null;
 
-                file.Dispose();
+                await CrossMedia.Current.Initialize();
 
-                if (!string.IsNullOrWhiteSpace(result))
+                var action = await _commonFun.ShowActionSheet("从相册", "拍照");
+
+                IsLoading = true;
+                if (action == "从相册")
                 {
-                    imageUrl = result;
-
-                    var addDto = new StandardPic()
-                    {
-                        StandardPicId = 0,
-                        PicName = imageName,
-                        PicType = imageType, //L,G 失分照片／得分照片
-                        TIId = CurrentSystem.TIId,
-                        Url = imageUrl,
-                        FilePath = filePath,
-                        PicId = CurrentSystem.SPicList.Count == 0 ? 1 : CurrentSystem.SPicList.Max(p => p.PicId) + 1
-                    };
-
-                    CurrentSystem.SPicList.Add(addDto);
-                    CurrentSystem.ParamSPicList.Add(addDto);
-
-                    LossImageList = CurrentSystem.SPicList.Count * 50;
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
+                    file = await CrossMedia.Current.PickPhotoAsync();
                 }
-                else
+                else if (action == "拍照")
                 {
-                    _commonFun.AlertLongText("上传失败");
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
+                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                    {
+                        return;
+                    }
+                    file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                    {
+                        Directory = "RMMT",
+                        Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
+                                       + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
+                    });
+                }
+
+                if (file == null)
+                {
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
+                    IsLoading = false;
                     return;
                 }
 
-                //if (result != null)
+                imageName = file.Path.Substring(file.Path.LastIndexOf('/') + 1);
+                filePath = file.Path;
+
+                //upload file to server
+                //if (_commonHelper.IsNetWorkConnected() == true)
                 //{
-                //    var resultInfo = JsonConvert.DeserializeObject<AttachDto>(result.Body);
-                //    if (result.ResultCode == ResultType.Success)
-                //    {
-                //        imageUrl = resultInfo.Url;
+                try
+                {
+                    //var result = await _tourService.UploadFiletoOss(file.GetStream(), file.Path);
+                    string result = _commonFun.SaveAttachLocal(file.GetStream(), file.Path);
 
-                //        var addDto = new StandardPic()
-                //        {
-                //            //ImageStream = ImageSource.FromStream(() => { return displayStream; }),//resource,
-                //            StandardPicId = 0,
-                //            PicName = imageName,
-                //            PicType = imageType, //L,G 失分照片／得分照片
-                //            TIId = CurrentSystem.TIId,
-                //            Url = imageUrl,
-                //            FilePath = filePath,
-                //            PicId = CurrentSystem.SPicList.Count == 0 ? 1 : CurrentSystem.SPicList.Max(p => p.PicId) + 1
-                //        };
+                    file.Dispose();
 
-                //        CurrentSystem.SPicList.Add(addDto);
-                //        CurrentSystem.ParamSPicList.Add(addDto);
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        imageUrl = result;
 
-                //        LossImageList = CurrentSystem.SPicList.Count * 50;
-                //    }
-                //    else
-                //    {
-                //        _commonFun.AlertLongText(result.Msg);
-                //        return;
-                //    }
-                //}
-                //else
-                //{
-                //    _commonFun.AlertLongText("上传失败");
-                //    return;
-                //}
-            }
-            catch (OperationCanceledException)
-            {
-                _commonFun.AlertLongText("上传超时,请重试");
-                return;
+                        var addDto = new StandardPic()
+                        {
+                            StandardPicId = 0,
+                            PicName = imageName,
+                            PicType = imageType, //L,G 失分照片／得分照片
+                            TIId = CurrentSystem.TIId,
+                            Url = imageUrl,
+                            FilePath = filePath,
+                            PicId = CurrentSystem.SPicList.Count == 0 ? 1 : CurrentSystem.SPicList.Max(p => p.PicId) + 1
+                        };
+
+                        CurrentSystem.SPicList.Add(addDto);
+                        CurrentSystem.ParamSPicList.Add(addDto);
+
+                        LossImageList = CurrentSystem.SPicList.Count * 50;
+                    }
+                    else
+                    {
+                        _commonFun.AlertLongText("上传失败");
+                        return;
+                    }
+
+                    //if (result != null)
+                    //{
+                    //    var resultInfo = JsonConvert.DeserializeObject<AttachDto>(result.Body);
+                    //    if (result.ResultCode == ResultType.Success)
+                    //    {
+                    //        imageUrl = resultInfo.Url;
+
+                    //        var addDto = new StandardPic()
+                    //        {
+                    //            //ImageStream = ImageSource.FromStream(() => { return displayStream; }),//resource,
+                    //            StandardPicId = 0,
+                    //            PicName = imageName,
+                    //            PicType = imageType, //L,G 失分照片／得分照片
+                    //            TIId = CurrentSystem.TIId,
+                    //            Url = imageUrl,
+                    //            FilePath = filePath,
+                    //            PicId = CurrentSystem.SPicList.Count == 0 ? 1 : CurrentSystem.SPicList.Max(p => p.PicId) + 1
+                    //        };
+
+                    //        CurrentSystem.SPicList.Add(addDto);
+                    //        CurrentSystem.ParamSPicList.Add(addDto);
+
+                    //        LossImageList = CurrentSystem.SPicList.Count * 50;
+                    //    }
+                    //    else
+                    //    {
+                    //        _commonFun.AlertLongText(result.Msg);
+                    //        return;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    _commonFun.AlertLongText("上传失败");
+                    //    return;
+                    //}
+                }
+                catch (OperationCanceledException)
+                {
+                    _commonFun.AlertLongText("上传超时,请重试");
+                    return;
+                }
+                catch (Exception)
+                {
+                    _commonFun.AlertLongText("上传异常,请重试");
+                    return;
+                }
+                finally
+                {
+                    IsLoading = false;
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
+                }
             }
             catch (Exception)
             {
-                _commonFun.AlertLongText("上传异常,请重试");
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
                 return;
-            }
-            finally
-            {
-                IsLoading = false;
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
             }
             //}
             //else
@@ -595,32 +619,40 @@ namespace MaxInsight.Mobile
 
         void Preview(StandardPic dto)
         {
-            //if (CurrentSystem.SPicList != null && CurrentSystem.SPicList.Count > 0)
-            //{
-            List<ImagePreviewDto> list = new List<ImagePreviewDto>() { new ImagePreviewDto() {
+            try
+            {
+                //if (CurrentSystem.SPicList != null && CurrentSystem.SPicList.Count > 0)
+                //{
+                List<ImagePreviewDto> list = new List<ImagePreviewDto>() { new ImagePreviewDto() {
                     Url = LossPicAttachItem.Url
                 }};
-            //ImagePreviewDto dto;
-            //foreach (var item in CurrentSystem.SPicList)
-            //{
-            //	dto = new ImagePreviewDto();
-            //	dto.Url = item.Url;
-            //	list.Add(dto);
-            //}
+                //ImagePreviewDto dto;
+                //foreach (var item in CurrentSystem.SPicList)
+                //{
+                //	dto = new ImagePreviewDto();
+                //	dto.Url = item.Url;
+                //	list.Add(dto);
+                //}
 
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                if (_previewTimer)
+                Device.BeginInvokeOnMainThread(async () =>
                 {
-                    _previewTimer = false;
-                    await PopupNavigation.PushAsync(new PreviewImagePage(list, 0), true);
-                    Device.StartTimer(TimeSpan.FromSeconds(3), () =>
+                    if (_previewTimer)
                     {
-                        _previewTimer = true;
-                        return false;
-                    });
-                }
-            });
+                        _previewTimer = false;
+                        await PopupNavigation.PushAsync(new PreviewImagePage(list, 0), true);
+                        Device.StartTimer(TimeSpan.FromSeconds(3), () =>
+                        {
+                            _previewTimer = true;
+                            return false;
+                        });
+                    }
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
+            }
             //}
             //else
             //{
@@ -630,77 +662,109 @@ namespace MaxInsight.Mobile
 
         private void DeleteImage(StandardPic item)
         {
-            var index = CurrentSystem.SPicList.IndexOf(item);
-
-            if (CurrentSystem.SPicList != null && CurrentSystem.SPicList.Count > 0
-                && index > -1)
+            try
             {
+                var index = CurrentSystem.SPicList.IndexOf(item);
 
-                //StandardPic dto = new StandardPic();
-                //dto.TIId = item.TIId;
-                //dto.TPId = item.TPId;
+                if (CurrentSystem.SPicList != null && CurrentSystem.SPicList.Count > 0
+                    && index > -1)
+                {
 
-                //CurrentSystem.SPicList.Insert(index, dto);
-                CurrentSystem.SPicList.Remove(item);
-                CurrentSystem.ParamSPicList.FirstOrDefault(p => p.PicId == item.PicId).Url = string.Empty;
+                    //StandardPic dto = new StandardPic();
+                    //dto.TIId = item.TIId;
+                    //dto.TPId = item.TPId;
 
-                LossImageList = CurrentSystem.SPicList.Count * 50;
-                //_deleteList.RemoveAt(index);
+                    //CurrentSystem.SPicList.Insert(index, dto);
+                    CurrentSystem.SPicList.Remove(item);
+                    CurrentSystem.ParamSPicList.FirstOrDefault(p => p.PicId == item.PicId).Url = string.Empty;
+
+                    LossImageList = CurrentSystem.SPicList.Count * 50;
+                    //_deleteList.RemoveAt(index);
+                }
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
             }
         }
 
         private void DeleteStanderImage(PictureStandard item)
         {
-            var index = CurrentSystem.PStandardList.IndexOf(item);
-
-            if (index > -1)
+            try
             {
-                CurrentSystem.PStandardList.Insert(index, new PictureStandard()
+                var index = CurrentSystem.PStandardList.IndexOf(item);
+
+                if (index > -1)
                 {
-                    StandardPicId = item.StandardPicId,
-                    StandardPicName = item.StandardPicName,
-                    TIId = item.TIId,
-                    TPId = item.TPId,
-                    SeqNo = item.SeqNo,
-                    Url = "",
-                    SuccessImage = ""
-                });
-                CurrentSystem.PStandardList.Remove(item);
+                    CurrentSystem.PStandardList.Insert(index, new PictureStandard()
+                    {
+                        StandardPicId = item.StandardPicId,
+                        StandardPicName = item.StandardPicName,
+                        TIId = item.TIId,
+                        TPId = item.TPId,
+                        SeqNo = item.SeqNo,
+                        Url = "",
+                        SuccessImage = ""
+                    });
+                    CurrentSystem.PStandardList.Remove(item);
+                }
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
             }
         }
 
         private void PreviewStanderImage(string url)
         {
-            List<ImagePreviewDto> list = new List<ImagePreviewDto>();
-            ImagePreviewDto dto;
-
-            dto = new ImagePreviewDto();
-            dto.Url = url;
-            list.Add(dto);
-
-            Device.BeginInvokeOnMainThread(async () =>
+            try
             {
-                await PopupNavigation.PushAsync(new PreviewImagePage(list, CurrentPos), true);
-            });
+                List<ImagePreviewDto> list = new List<ImagePreviewDto>();
+                ImagePreviewDto dto;
+
+                dto = new ImagePreviewDto();
+                dto.Url = url;
+                list.Add(dto);
+
+                Device.BeginInvokeOnMainThread(async () =>
+                {
+                    await PopupNavigation.PushAsync(new PreviewImagePage(list, CurrentPos), true);
+                });
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
+            }
         }
 
         private void PrePage()
         {
-            if (CurrentPage <= 1)
+            try
             {
-                return;
-            }
+                if (CurrentPage <= 1)
+                {
+                    return;
+                }
 
-            //CurrentSystem.Score = !string.IsNullOrEmpty(CurrentScore) ? Convert.ToInt32(CurrentScore) : -1;
-            int _store = -1;
-            if (!int.TryParse(CurrentScore, out _store))
+                //CurrentSystem.Score = !string.IsNullOrEmpty(CurrentScore) ? Convert.ToInt32(CurrentScore) : -1;
+                int _store = -1;
+                if (!int.TryParse(CurrentScore, out _store))
+                {
+                    _commonFun.AlertLongText("分数请输入数字");
+                    return;
+                }
+                CurrentSystem.Score = _store;
+                CurrentPage--;
+                UpdateBtnState();
+            }
+            catch (Exception)
             {
-                _commonFun.AlertLongText("分数请输入数字");
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
                 return;
             }
-            CurrentSystem.Score = _store;
-            CurrentPage--;
-            UpdateBtnState();
         }
 
         //private void NextPage()
@@ -744,71 +808,84 @@ namespace MaxInsight.Mobile
         //}
         private void NextPage()
         {
-            if (CurrentPage > SystemList.Count)
+            try
             {
-                return;
-            }
+                if (CurrentPage > SystemList.Count)
+                {
+                    return;
+                }
 
-            CurrentSystem.GRUD = "I";
+                CurrentSystem.GRUD = "I";
 
-            //CurrentSystem.Score = !string.IsNullOrEmpty(CurrentScore) ? Convert.ToInt32(CurrentScore) : -1;
-            int _store = -1;
-            if (!int.TryParse(CurrentScore, out _store))
+                //CurrentSystem.Score = !string.IsNullOrEmpty(CurrentScore) ? Convert.ToInt32(CurrentScore) : -1;
+                int _store = -1;
+                if (!int.TryParse(CurrentScore, out _store))
+                {
+                    _commonFun.AlertLongText("分数请输入数字");
+                    return;
+                }
+                DateTime st;
+                DateTime et;
+                if (DateTime.TryParse(Convert.ToDateTime(CurrentSystem.PlanFinishDate).ToString("yyyy-MM-dd") + " 23:59:59", out st) && st < DateTime.Now)
+                {
+                    _commonFun.AlertLongText("计划完成日期不能小于今天");
+                    return;
+                }
+                if (DateTime.TryParse(Convert.ToDateTime(CurrentSystem.ResultFinishDate).ToString("yyyy-MM-dd") + " 23:59:59", out et) && et < DateTime.Now)
+                {
+                    _commonFun.AlertLongText("结果完成日期不能小于今天");
+                    return;
+                }
+                CurrentSystem.Score = _store;
+                if (CurrentPage < SystemList.Count)
+                {
+                    CurrentPage++;
+                    UpdateBtnState();
+                }
+                else
+                {
+                    _commonFun.AlertLongText("已经是最后一条");
+                }
+            }
+            catch (Exception)
             {
-                _commonFun.AlertLongText("分数请输入数字");
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
                 return;
             }
-            DateTime st;
-            DateTime et;
-            if (DateTime.TryParse(Convert.ToDateTime(CurrentSystem.PlanFinishDate).ToString("yyyy-MM-dd") + " 23:59:59", out st) && st < DateTime.Now)
-            {
-                _commonFun.AlertLongText("计划完成日期不能小于今天");
-                return;
-            }
-            if (DateTime.TryParse(Convert.ToDateTime(CurrentSystem.ResultFinishDate).ToString("yyyy-MM-dd") + " 23:59:59", out et) && et < DateTime.Now)
-            {
-                _commonFun.AlertLongText("结果完成日期不能小于今天");
-                return;
-            }
-            CurrentSystem.Score = _store;
-            if (CurrentPage < SystemList.Count)
-            {
-                CurrentPage++;
-                UpdateBtnState();
-            }
-            else
-            {
-                _commonFun.AlertLongText("已经是最后一条");
-            }
-
         }
 
         private void JumpToPage()
         {
-            //CurrentSystem.Score = !string.IsNullOrEmpty(CurrentScore) ? Convert.ToInt32(CurrentScore) : -1;
-            int _store = -1;
-            if (!int.TryParse(CurrentScore, out _store))
+            try
             {
-                _commonFun.AlertLongText("分数请输入数字");
-                return;
-            }
-            CurrentSystem.Score = _store;
+                //CurrentSystem.Score = !string.IsNullOrEmpty(CurrentScore) ? Convert.ToInt32(CurrentScore) : -1;
+                int _store = -1;
+                if (!int.TryParse(CurrentScore, out _store))
+                {
+                    _commonFun.AlertLongText("分数请输入数字");
+                    return;
+                }
+                CurrentSystem.Score = _store;
 
-            if (JumpPage == 0 || JumpPage > SystemList.Count)
+                if (JumpPage == 0 || JumpPage > SystemList.Count)
+                {
+                    _commonFun.AlertLongText("已经是最后一条");
+                    return;
+                }
+                CurrentPage = JumpPage;
+                UpdateBtnState();
+            }
+            catch (Exception)
             {
-                _commonFun.AlertLongText("已经是最后一条");
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
                 return;
             }
-            CurrentPage = JumpPage;
-            UpdateBtnState();
         }
 
         private async void SaveRegistCore()
         {
             try
             {
-
-
                 if (!CurrentSystem.IsClicked)
                 {
                     _commonFun.AlertLongText("已结束的任务不能再上传");
@@ -955,7 +1032,7 @@ namespace MaxInsight.Mobile
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _commonFun.AlertLongText("保存失败,请重试");
             }
@@ -977,37 +1054,52 @@ namespace MaxInsight.Mobile
         #region pravite method
         public async Task SaveToLocal()
         {
-            IFolder rootFolder = FileSystem.Current.LocalStorage;
-            IFolder folder = await rootFolder.CreateFolderAsync("RMMT",
-                CreationCollisionOption.OpenIfExists);
-            IFile file = await folder.CreateFileAsync("", CreationCollisionOption.ReplaceExisting);
-            await file.WriteAllTextAsync("42");
+            try
+            {
+                IFolder rootFolder = FileSystem.Current.LocalStorage;
+                IFolder folder = await rootFolder.CreateFolderAsync("RMMT",
+                    CreationCollisionOption.OpenIfExists);
+                IFile file = await folder.CreateFileAsync("", CreationCollisionOption.ReplaceExisting);
+                await file.WriteAllTextAsync("42");
+            }
+            catch (Exception)
+            {
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
+            }
         }
 
         private void UpdateBtnState()
         {
-
-            CurrentSystem = SystemList[CurrentPage - 1];
-
-            CurrentSystem.ParamSPicList = new ObservableCollection<StandardPic>();
-            //_deleteList = new ObservableCollection<StandardPic>();
-            foreach (var spi in CurrentSystem.SPicList)
+            try
             {
-                CurrentSystem.ParamSPicList.Add(spi);
+                CurrentSystem = SystemList[CurrentPage - 1];
+
+                CurrentSystem.ParamSPicList = new ObservableCollection<StandardPic>();
+                //_deleteList = new ObservableCollection<StandardPic>();
+                foreach (var spi in CurrentSystem.SPicList)
+                {
+                    CurrentSystem.ParamSPicList.Add(spi);
+                }
+
+                CurrentScore = CurrentSystem.Score == -1 ? "" : CurrentSystem.Score.ToString();
+                RowHeight = CurrentSystem.CSList.Count * 50;
+                PicRowHeight = CurrentSystem.PStandardList.Count * 50;
+                LossImageList = CurrentSystem.SPicList.Count * 50;
+
+                if (CurrentPage == 1)
+                {
+                    IsPreEnable = false;
+                }
+                else
+                {
+                    IsPreEnable = true;
+                }
             }
-
-            CurrentScore = CurrentSystem.Score == -1 ? "" : CurrentSystem.Score.ToString();
-            RowHeight = CurrentSystem.CSList.Count * 50;
-            PicRowHeight = CurrentSystem.PStandardList.Count * 50;
-            LossImageList = CurrentSystem.SPicList.Count * 50;
-
-            if (CurrentPage == 1)
+            catch (Exception)
             {
-                IsPreEnable = false;
-            }
-            else
-            {
-                IsPreEnable = true;
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
+                return;
             }
 
             //if (SystemList != null && SystemList.Count > 1)
@@ -1029,155 +1121,163 @@ namespace MaxInsight.Mobile
 
         private async void UploadStandPic(int picId)
         {
-            var imageUrl = "";
-            var imageType = "G";
-            var imageName = "";
-            var filePath = "";
-            MediaFile file = null;
-
-            await CrossMedia.Current.Initialize();
-
-            var action = await _commonFun.ShowActionSheet("从相册", "拍照");
-
-            IsLoading = true;
-            if (action == "从相册")
+            try
             {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
-                file = await CrossMedia.Current.PickPhotoAsync();
-            }
-            else if (action == "拍照")
-            {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
-                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                var imageUrl = "";
+                var imageType = "G";
+                var imageName = "";
+                var filePath = "";
+                MediaFile file = null;
+
+                await CrossMedia.Current.Initialize();
+
+                var action = await _commonFun.ShowActionSheet("从相册", "拍照");
+
+                IsLoading = true;
+                if (action == "从相册")
                 {
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
+                    file = await CrossMedia.Current.PickPhotoAsync();
+                }
+                else if (action == "拍照")
+                {
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "-1" }, "ResetTaskID");
+                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                    {
+                        return;
+                    }
+                    file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+                    {
+                        Directory = "RMMT",
+                        Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
+                                       + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
+                    });
+                }
+
+                if (file == null)
+                {
+                    MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
+                    IsLoading = false;
                     return;
                 }
-                file = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+
+                imageName = file.Path.Substring(file.Path.LastIndexOf('/') + 1);
+                filePath = file.Path;
+
+                //upload file to server
+                if (_commonHelper.IsNetWorkConnected() == true)
                 {
-                    Directory = "RMMT",
-                    Name = DateTime.Now.ToString("yy-MM-dd").Replace("-", "")
-                                   + DateTime.Now.ToString("HH:mm:ss").Replace(":", "")
-                });
-            }
-
-            if (file == null)
-            {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
-                IsLoading = false;
-                return;
-            }
-
-            imageName = file.Path.Substring(file.Path.LastIndexOf('/') + 1);
-            filePath = file.Path;
-
-            //upload file to server
-            if (_commonHelper.IsNetWorkConnected() == true)
-            {
-                try
-                {
-                    //var result = await _tourService.UploadFiletoOss(file.GetStream(), file.Path);
-                    string result = _commonFun.SaveAttachLocal(file.GetStream(), file.Path);
-
-                    file.Dispose();
-
-                    if (!string.IsNullOrWhiteSpace(result))
+                    try
                     {
-                        imageUrl = result;
+                        //var result = await _tourService.UploadFiletoOss(file.GetStream(), file.Path);
+                        string result = _commonFun.SaveAttachLocal(file.GetStream(), file.Path);
 
-                        Device.BeginInvokeOnMainThread(() =>
+                        file.Dispose();
+
+                        if (!string.IsNullOrWhiteSpace(result))
                         {
-                            var item = CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId);
-                            var index = CurrentSystem.PStandardList.IndexOf(item);
+                            imageUrl = result;
 
-                            if (index > -1)
+                            Device.BeginInvokeOnMainThread(() =>
                             {
-                                CurrentSystem.PStandardList.Insert(index, new PictureStandard()
+                                var item = CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId);
+                                var index = CurrentSystem.PStandardList.IndexOf(item);
+
+                                if (index > -1)
                                 {
-                                    StandardPicId = item.StandardPicId,
-                                    StandardPicName = item.StandardPicName,
-                                    TIId = item.TIId,
-                                    TPId = item.TPId,
-                                    SeqNo = item.SeqNo,
-                                    Url = imageUrl,
-                                    SuccessImage = "icon_success"
-                                });
-                                CurrentSystem.PStandardList.Remove(item);
-                            }
+                                    CurrentSystem.PStandardList.Insert(index, new PictureStandard()
+                                    {
+                                        StandardPicId = item.StandardPicId,
+                                        StandardPicName = item.StandardPicName,
+                                        TIId = item.TIId,
+                                        TPId = item.TPId,
+                                        SeqNo = item.SeqNo,
+                                        Url = imageUrl,
+                                        SuccessImage = "icon_success"
+                                    });
+                                    CurrentSystem.PStandardList.Remove(item);
+                                }
 
                             //CurrentSystem.PStandardList.Insert(
                             //CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId).Url = imageUrl;
                         });
+                        }
+                        else
+                        {
+                            _commonFun.AlertLongText("上传失败");
+                            return;
+                        }
+                        //if (result != null)
+                        //{
+                        //    var resultInfo = JsonConvert.DeserializeObject<AttachDto>(result.Body);
+                        //    if (result.ResultCode == ResultType.Success)
+                        //    {
+                        //        imageUrl = resultInfo.Url;
+
+                        //        Device.BeginInvokeOnMainThread(() =>
+                        //        {
+                        //            var item = CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId);
+                        //            var index = CurrentSystem.PStandardList.IndexOf(item);
+
+                        //            if (index > -1)
+                        //            {
+                        //                CurrentSystem.PStandardList.Insert(index, new PictureStandard()
+                        //                {
+                        //                    StandardPicId = item.StandardPicId,
+                        //                    StandardPicName = item.StandardPicName,
+                        //                    TIId = item.TIId,
+                        //                    TPId = item.TPId,
+                        //                    SeqNo = item.SeqNo,
+                        //                    Url = imageUrl,
+                        //                    SuccessImage = "icon_success"
+                        //                });
+                        //                CurrentSystem.PStandardList.Remove(item);
+                        //            }
+
+                        //            //CurrentSystem.PStandardList.Insert(
+                        //            //CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId).Url = imageUrl;
+                        //        });
+                        //    }
+                        //    else
+                        //    {
+                        //        _commonFun.AlertLongText(result.Msg);
+                        //        return;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    _commonFun.AlertLongText("上传失败");
+                        //    return;
+                        //}
                     }
-                    else
+                    catch (OperationCanceledException)
                     {
-                        _commonFun.AlertLongText("上传失败");
+                        _commonFun.AlertLongText("上传超时,请重试");
                         return;
                     }
-                    //if (result != null)
-                    //{
-                    //    var resultInfo = JsonConvert.DeserializeObject<AttachDto>(result.Body);
-                    //    if (result.ResultCode == ResultType.Success)
-                    //    {
-                    //        imageUrl = resultInfo.Url;
-
-                    //        Device.BeginInvokeOnMainThread(() =>
-                    //        {
-                    //            var item = CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId);
-                    //            var index = CurrentSystem.PStandardList.IndexOf(item);
-
-                    //            if (index > -1)
-                    //            {
-                    //                CurrentSystem.PStandardList.Insert(index, new PictureStandard()
-                    //                {
-                    //                    StandardPicId = item.StandardPicId,
-                    //                    StandardPicName = item.StandardPicName,
-                    //                    TIId = item.TIId,
-                    //                    TPId = item.TPId,
-                    //                    SeqNo = item.SeqNo,
-                    //                    Url = imageUrl,
-                    //                    SuccessImage = "icon_success"
-                    //                });
-                    //                CurrentSystem.PStandardList.Remove(item);
-                    //            }
-
-                    //            //CurrentSystem.PStandardList.Insert(
-                    //            //CurrentSystem.PStandardList.FirstOrDefault(p => p.StandardPicId == picId).Url = imageUrl;
-                    //        });
-                    //    }
-                    //    else
-                    //    {
-                    //        _commonFun.AlertLongText(result.Msg);
-                    //        return;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    _commonFun.AlertLongText("上传失败");
-                    //    return;
-                    //}
+                    catch (Exception)
+                    {
+                        _commonFun.AlertLongText("上传异常,请重试");
+                        return;
+                    }
+                    finally
+                    {
+                        IsLoading = false;
+                        MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
+                    }
                 }
-                catch (OperationCanceledException)
+                else
                 {
-                    _commonFun.AlertLongText("上传超时,请重试");
-                    return;
-                }
-                catch (Exception)
-                {
-                    _commonFun.AlertLongText("上传异常,请重试");
-                    return;
-                }
-                finally
-                {
-                    IsLoading = false;
                     MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
+                    file.Dispose();
+                    _commonFun.AlertLongText("网络连接异常");
+                    IsLoading = false;
+                    return;
                 }
             }
-            else
+            catch (Exception)
             {
-                MessagingCenter.Send<CommonMessage>(new CommonMessage() { TaskID = "0" }, "ResetTaskID");
-                file.Dispose();
-                _commonFun.AlertLongText("网络连接异常");
-                IsLoading = false;
+                _commonFun.AlertLongText("操作异常,请重试。-->RegistScoreViewModel");
                 return;
             }
         }

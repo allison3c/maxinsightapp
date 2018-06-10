@@ -17,11 +17,17 @@ namespace MaxInsight.Mobile.Pages.Improve
         public StatusPopupPage()
         {
             InitializeComponent();
-            List<ImpStatusDto> impStatusLst = new List<ImpStatusDto>();
-            impStatusLst.Add(new ImpStatusDto { ImpStatusCode = "", ImpStatusName = "全部",StatusKind=0 });
-            impStatusLst.AddRange(CommonContext.Account.ImpStatusList);
-            impStatusLstView.ItemsSource = impStatusLst;
-            impStatusLstView.HeightRequest = impStatusLst.Count * 45;
+            try
+            {
+                List<ImpStatusDto> impStatusLst = new List<ImpStatusDto>();
+                impStatusLst.Add(new ImpStatusDto { ImpStatusCode = "", ImpStatusName = "全部", StatusKind = 0 });
+                impStatusLst.AddRange(CommonContext.Account.ImpStatusList);
+                impStatusLstView.ItemsSource = impStatusLst;
+                impStatusLstView.HeightRequest = impStatusLst.Count * 45;
+            }
+            catch (Exception)
+            {
+            }
         }
         //public StatusPopupPage(int statusType)
         //{
@@ -59,12 +65,24 @@ namespace MaxInsight.Mobile.Pages.Improve
         //}
         public void PassImpStatus(object sender, ItemTappedEventArgs e)
         {
-            Navigation.PopPopupAsync();
-            MessagingCenter.Send<ImpStatusDto>((impStatusLstView.SelectedItem as ImpStatusDto), MessageConst.IMPSTATUSLIST_SEND);
+            try
+            {
+                Navigation.PopPopupAsync();
+                MessagingCenter.Send<ImpStatusDto>((impStatusLstView.SelectedItem as ImpStatusDto), MessageConst.IMPSTATUSLIST_SEND);
+            }
+            catch (Exception)
+            {
+            }
         }
         private void Cancel(object sender, EventArgs e)
         {
-            Navigation.PopPopupAsync();
+            try
+            {
+                Navigation.PopPopupAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

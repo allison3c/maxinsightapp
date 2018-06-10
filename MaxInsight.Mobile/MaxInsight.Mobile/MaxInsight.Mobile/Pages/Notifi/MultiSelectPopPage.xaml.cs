@@ -16,7 +16,7 @@ namespace MaxInsight.Mobile.Pages.Notifi
 {
     public partial class MultiSelectPopPage : PopupPage
     {
-       
+
         public MultiSelectPopPage()
         {
             InitializeComponent();
@@ -29,80 +29,115 @@ namespace MaxInsight.Mobile.Pages.Notifi
         #endregion
         protected override void OnAppearing()
         {
-            if (ParamData == null || ParamData.Count == 0)
+            try
             {
-                List<ServerDto> serverList = new List<ServerDto>();
-                foreach (var item in CommonContext.Account.ZionList[0].AreaList)
+                if (ParamData == null || ParamData.Count == 0)
                 {
-                    serverList.AddRange(item.ServerList);
-                }
-                List<MultiSelectDto> source = new List<MultiSelectDto>();
-                foreach (ServerDto item in serverList)
-                    source.Add(new MultiSelectDto { DisCode = item.SId, DisName = item.SName, IsChecked = false });
-                _lvMulstiselectSample.ItemsSource = source;
-                _lvMulstiselectSample.HeightRequest = source.Count * 45;
+                    List<ServerDto> serverList = new List<ServerDto>();
+                    foreach (var item in CommonContext.Account.ZionList[0].AreaList)
+                    {
+                        serverList.AddRange(item.ServerList);
+                    }
+                    List<MultiSelectDto> source = new List<MultiSelectDto>();
+                    foreach (ServerDto item in serverList)
+                        source.Add(new MultiSelectDto { DisCode = item.SId, DisName = item.SName, IsChecked = false });
+                    _lvMulstiselectSample.ItemsSource = source;
+                    _lvMulstiselectSample.HeightRequest = source.Count * 45;
 
+                }
+                else
+                {
+                    _lvMulstiselectSample.ItemsSource = ParamData;
+                    _lvMulstiselectSample.HeightRequest = ParamData.Count * 45;
+                }
+                MessagingCenter.Send<string>("F", MessageConst.NOTICE_DISTRIBUTOR_ONE);
             }
-            else
+            catch (Exception)
             {
-                _lvMulstiselectSample.ItemsSource = ParamData;
-                _lvMulstiselectSample.HeightRequest = ParamData.Count * 45;
             }
-            MessagingCenter.Send<string>("F", MessageConst.NOTICE_DISTRIBUTOR_ONE);
             base.OnAppearing();
         }
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            if (ParamType == "NoticeMade")
+            try
             {
-                List<MultiSelectDto> resultList = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource == null ? null : ((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource).FindAll(a => a.IsChecked);
-                if (resultList == null) resultList = new List<MultiSelectDto>();
-                MessagingCenter.Send<List<MultiSelectDto>>(resultList, MessageConst.NOTICE_DISTRIBUTOR_SET);
-                MessagingCenter.Send<List<MultiSelectDto>>((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource, MessageConst.NOTICE_DISTRIBUTOR_SHOW);
-            }else if(ParamType == "NoticeList")
-            {
-                List<MultiSelectDto> resultList = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource == null ? null : ((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource).FindAll(a => a.IsChecked);
-                if (resultList == null) resultList = new List<MultiSelectDto>();
-                MessagingCenter.Send<List<MultiSelectDto>>(resultList, MessageConst.NOTICE_DISTRIBUTOR_SET_LIST);
-                MessagingCenter.Send<List<MultiSelectDto>>((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource, MessageConst.NOTICE_DISTRIBUTOR_SHOW_LIST);
+                if (ParamType == "NoticeMade")
+                {
+                    List<MultiSelectDto> resultList = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource == null ? null : ((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource).FindAll(a => a.IsChecked);
+                    if (resultList == null) resultList = new List<MultiSelectDto>();
+                    MessagingCenter.Send<List<MultiSelectDto>>(resultList, MessageConst.NOTICE_DISTRIBUTOR_SET);
+                    MessagingCenter.Send<List<MultiSelectDto>>((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource, MessageConst.NOTICE_DISTRIBUTOR_SHOW);
+                }
+                else if (ParamType == "NoticeList")
+                {
+                    List<MultiSelectDto> resultList = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource == null ? null : ((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource).FindAll(a => a.IsChecked);
+                    if (resultList == null) resultList = new List<MultiSelectDto>();
+                    MessagingCenter.Send<List<MultiSelectDto>>(resultList, MessageConst.NOTICE_DISTRIBUTOR_SET_LIST);
+                    MessagingCenter.Send<List<MultiSelectDto>>((List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource, MessageConst.NOTICE_DISTRIBUTOR_SHOW_LIST);
+                }
             }
-
+            catch (Exception)
+            {
+            }
         }
         public void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
-            if (e.SelectedItem == null) return; // has been set to null, do not 'process' tapped event
-            ((ListView)sender).SelectedItem = null; // de-select the row
+            try
+            {
+                if (e.SelectedItem == null) return; // has been set to null, do not 'process' tapped event
+                ((ListView)sender).SelectedItem = null; // de-select the row
+            }
+            catch (Exception)
+            {
+            }
         }
         public void OnCheckedChanged(object sender, EventArgs e)
         {
-            var mi = ((CheckBox)sender);
-            List<MultiSelectDto> checkBoxSource = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource;
-            foreach(MultiSelectDto item in checkBoxSource)
+            try
             {
-                
-                item.IsChecked = mi.Checked;
+                var mi = ((CheckBox)sender);
+                List<MultiSelectDto> checkBoxSource = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource;
+                foreach (MultiSelectDto item in checkBoxSource)
+                {
+                    item.IsChecked = mi.Checked;
+                }
+            }
+            catch (Exception)
+            {
             }
         }
         public void OnOneCheckedChanged(object sender, EventArgs e)
         {
-            string checkallornot = "Y";
-            List<MultiSelectDto> checkBoxSource = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource;
-            if (checkBoxSource != null)
+            try
             {
-                int checkCount = checkBoxSource.FindAll(one => one.IsChecked).Count;
-                int allCount = checkBoxSource.Count;
-                if (allCount > 0 && checkCount == allCount)
-                    checkallornot = "Y";
-                //this.IsAllChecked = true;
-                else
-                    checkallornot = "N";
+                string checkallornot = "Y";
+                List<MultiSelectDto> checkBoxSource = (List<MultiSelectDto>)_lvMulstiselectSample.ItemsSource;
+                if (checkBoxSource != null)
+                {
+                    int checkCount = checkBoxSource.FindAll(one => one.IsChecked).Count;
+                    int allCount = checkBoxSource.Count;
+                    if (allCount > 0 && checkCount == allCount)
+                        checkallornot = "Y";
+                    //this.IsAllChecked = true;
+                    else
+                        checkallornot = "N";
+                }
+                MessagingCenter.Send<string>(checkallornot, MessageConst.NOTICE_DISTRIBUTOR_ONE);
             }
-            MessagingCenter.Send<string>(checkallornot, MessageConst.NOTICE_DISTRIBUTOR_ONE);
+            catch (Exception)
+            {
+            }
         }
         private async void ClosePopupPage(object sender, EventArgs e)
         {
-            await Navigation.PopPopupAsync();
+            try
+            {
+                await Navigation.PopPopupAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }
